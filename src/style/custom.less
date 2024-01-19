@@ -1,0 +1,64 @@
+@import './mixin.less';
+@import './theme.less';
+
+// @projectGreen: @project-color-green;
+
+.@{prefix}-menu {
+  &-vertical-left {
+    border-right: none;
+  }
+  &-item {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  &.@{prefix}-menu-inline,
+  &.@{prefix}-menu-vertical,
+  &.@{prefix}-menu-vertical-left {
+    border-right: none;
+  }
+  &-root > .@{prefix}-menu-item,
+  .@{prefix}-menu-submenu-title {
+    font-family: @font-family-bold;
+
+    // color: #333333;
+  }
+  .@{prefix}-menu-item-selected {
+    position: relative;
+    &::after {
+      content: none !important;
+    }
+    // background-color: red;
+    // &:before {
+    //   content: ' ';
+    //   position: absolute;
+    //   left: 0px;
+    //   width: 4px;
+    //   border-radius: 0 20px 20px 0;
+    //   top: 0px;
+    //   bottom: 0px;
+    //   background: @projectGreen;
+    // }
+  }
+  &.@{prefix}-menu-dark {
+    .@{prefix}-menu-submenu {
+      font-family: @font-family-bold;
+    }
+  }
+}
+
+.@{prefix}-layout {
+  .@{prefix}-layout-sider {
+    .@{prefix}-menu {
+      // max-height: calc(100vh - 140px - 40px);
+      overflow-y: auto;
+      .scrollbar();
+      overflow-x: hidden;
+      // 子菜单效果鼠标经过背景色，antd没有提供可配置主题
+      // &.@{prefix}-menu-dark {
+      //   .@{prefix}-menu-submenu-title:hover {
+      //     background-color: @menu-dark-item-hover-bg;
+      //   }
+      // }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+@import './theme.less';
+
+.hideScrollbar() {
+  &::-webkit-scrollbar {
+    width: 0.16rem;
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0.08rem;
+    background-color: rgba(255, 255, 255, 0);
+    box-shadow: 0px 1px 3px 0px rgba(44, 47, 49, 0);
+  }
+  /*滚动条的上下两端的按钮*/
+  &::-webkit-scrollbar-button {
+    height: 0px;
+  }
+}
+
+.scrollbar() {
+  &::-webkit-scrollbar {
+    width: 4px;
+    border-radius: 2px;
+    // background-color: rgba(@primary-color,0.1);
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 2px;
+    background-color: #fff;
+    // background-color: rgba(@primary-color,0.1);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0.08rem;
+    background-color: @scroll-bar-color;
+  }
+  // /*滚动条的上下两端的按钮*/
+  // &::-webkit-scrollbar-button {
+  //   height: 0px;
+  // }
+}

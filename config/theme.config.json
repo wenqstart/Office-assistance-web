@@ -1,0 +1,53 @@
+{
+  "theme": [
+    {
+      "key": "normal",
+      "fileName": "normal.css",
+      "modifyVars": {
+        "primary-color": "#226EE7"
+      }
+    },
+    {
+      "key": "dark",
+      "fileName": "dark.css",
+      "modifyVars": {}
+    },
+    {
+      "key": "orange",
+      "fileName": "orange.css",
+      "modifyVars": {
+        "ant-prefix": "micro",
+        "primary-color": "orange",
+        "link-color": "#226EE7",
+        "success-color": "#0AB283",
+        "warning-color": "#FFA726",
+        "error-color": "#D04443",
+        "font-size-base": "12px",
+        "line-height-base": "1.5715",
+        "heading-color": "#fff",
+        "text-color": "#646A88",
+        "text-color-secondary": "#0F173E",
+        "disabled-color": "rgba(0, 0, 0, 0.25)",
+        "border-radius-base": "4px",
+        "border-color-base": "#d9d9d9",
+        "layout-header-background": "transparent",
+        "layout-header-height": "64px",
+        "layout-header-padding": "0 20px",
+        "layout-header-color": "#646A88",
+        "layout-sider-background": "#fff",
+        "menu-item-height": "40px",
+        "menu-collapsed-width": "60px",
+        "menu-bg": "#fff",
+        "menu-item-color": "orange",
+        "menu-highlight-color": "darkorange",
+        "menu-item-active-bg": "lightgoldenrodyellow",
+        "menu-inline-submenu-bg": "#fff",
+        "input-placeholder-color": "#8F95B2",
+        "input-height-lg": "40px"
+      }
+    }
+  ],
+  "ignoreAntd": false,
+  "ignoreProLayout": false,
+  "cache": true
+}

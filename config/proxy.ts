@@ -1,0 +1,36 @@
+interface proxyProps {
+  [key: string]: unknown;
+}
+
+const api = '/api';
+// const devApi = 'http://10.1.11.156:33123';
+
+const myPathRewrite = (target: string) => {
+  // 子应用单独运行没有设置路由前缀的情况下需配置
+  return function (path: string) {
+    if (path.indexOf('/api/') >= 0) {
+      // 忽略api代理的重写
+      return path;
+    } else {
+      return path.replace(target, '');
+    }
+  };
+};
+
+const proxy: proxyProps = {
+  '/grafana/api/live/ws': {
+    target: 'http://10.10.102.202:33035/',
+    ws: true,
+    pathRewrite: {
+      '^/grafana/api/live/ws': '/grafana/api/live/ws',
+    },
+  },
+  '/grafana/api': {
+    target: 'http://10.10.102.202:33035/',
+    pathRewrite: {
+      '^/grafana/api': '/grafana/api',
+    },
+  },
+};
+
+export default proxy;
