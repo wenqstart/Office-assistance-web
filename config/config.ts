@@ -8,6 +8,16 @@ const proxyData = proxy;
 
 export default defineConfig({
   // favicon: '/favicon_hc.ico', // 浏览器icon
+  qiankun: {
+    master: {
+      apps: [
+        {
+          name: 'doc-edit',
+          entry: '//localhost:3000',
+        },
+      ],
+    },
+  },
   title: false, // 浏览器标题
   mountElementId: 'masterRoot',
   theme, // 主题色号改动

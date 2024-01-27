@@ -47,3 +47,19 @@ export const antd: RuntimeAntdConfig = (memo) => {
 
   return memo;
 };
+
+// src/app.ts
+export const qiankun = {
+  apps: [
+    {
+      name: 'doc-edit',
+      entry: '//localhost:3000',
+    },
+  ],
+  lifeCycles: {
+    // 所有子应用在挂载完成时，打印 props 信息
+    async afterMount(props) {
+      console.log(props);
+    },
+  },
+};
