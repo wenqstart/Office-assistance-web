@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.1 (89650) - https://sketch.com -->
+    <title>矩形</title>
+    <desc>Created with Sketch.</desc>
+    <g id="style02" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组-51">
+            <rect id="矩形" fill-opacity="0" fill="#D8D8D8" x="0" y="0" width="12" height="12"></rect>
+            <path d="M8.35079896,9.15124489 C8.54700855,9.34745448 8.54700855,9.65663322 8.35079896,9.85284281 C8.15458937,10.0490524 7.84541063,10.0490524 7.64920104,9.85284281 L4.14715719,6.35079896 C3.9509476,6.15458937 3.9509476,5.84541063 4.14715719,5.64920104 L7.64920104,2.14715719 C7.84541063,1.9509476 8.15458937,1.9509476 8.35079896,2.14715719 C8.54700855,2.34336678 8.54700855,2.65254552 8.35079896,2.84875511 L5.19955407,6 L8.35079896,9.15124489 Z" id="路径" fill="#1B2348" fill-rule="nonzero" transform="translate(6.248978, 6.000000) scale(-1, 1) translate(-6.248978, -6.000000) "></path>
+        </g>
+    </g>
+</svg>

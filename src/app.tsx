@@ -12,7 +12,6 @@ export async function getInitialState(): Promise<{ name: string }> {
 }
 
 export const layout: RunTimeLayoutConfig  = () => {
-  console.log('layout', layout)
   return {
     logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
     menu: {
@@ -49,17 +48,17 @@ export const antd: RuntimeAntdConfig = (memo) => {
 };
 
 // src/app.ts
-export const qiankun = {
-  apps: [
-    {
-      name: 'doc-edit',
-      entry: '//localhost:3000',
-    },
-  ],
-  lifeCycles: {
-    // 所有子应用在挂载完成时，打印 props 信息
-    async afterMount(props) {
-      console.log(props);
-    },
-  },
-};
+// export const qiankun = {
+//   // apps: [
+//   //   {
+//   //     name: 'doc-edit',
+//   //     entry: '//localhost:8009',
+//   //   },
+//   // ],
+//   lifeCycles: {
+//     // 所有子应用在挂载完成时，打印 props 信息
+//     async afterMount(props) {
+//       console.log(props);
+//     },
+//   },
+// };

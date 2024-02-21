@@ -2,22 +2,22 @@ import { defineConfig } from 'umi';
 import path from 'path';
 import routes from './routes';
 import proxy from '../config/proxy';
-import theme from './theme.hc.ts';
+import theme from './theme.hc';
 import {DEFAULT_NAME} from "../src/constants";
 const proxyData = proxy;
 
 export default defineConfig({
   // favicon: '/favicon_hc.ico', // 浏览器icon
-  qiankun: {
-    master: {
-      apps: [
-        {
-          name: 'doc-edit',
-          entry: '//localhost:3000',
-        },
-      ],
-    },
-  },
+  // qiankun: {
+  //   master: {
+  //     apps: [
+  //       {
+  //         name: 'doc-edit',
+  //         entry: '//localhost:8001',
+  //       },
+  //     ],
+  //   },
+  // },
   title: false, // 浏览器标题
   mountElementId: 'masterRoot',
   theme, // 主题色号改动
@@ -34,7 +34,9 @@ export default defineConfig({
   access: {},
   model: {},
   initialState: {},
-  request: {},
+  request: {
+    dataField: 'data'
+  },
   layout: {
     title: DEFAULT_NAME,
   },
@@ -64,4 +66,7 @@ export default defineConfig({
   routes,
   ignoreMomentLocale: true, // 忽略 moment 的 locale 文件
   proxy: proxyData,
+  define: {
+    'process.env.API_USER': '/api/user', // 用户管理转发接口
+  }
 });

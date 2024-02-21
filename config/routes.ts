@@ -11,65 +11,44 @@ interface RouteProps {
 const routes: RouteProps[] = [
   {
     path: '/',
-    redirect: '/home',
+    component: '@/pages/EntryPage',
+    routes: [
+      {
+        name: '登录',
+        path: '/login',
+        exact: true,
+        component: '@/pages/Login',
+      },
+      {
+        name: '首页',
+        path: '/home',
+        exact: true,
+        component: '@/pages/Home',
+      },
+      // {
+      //   path: '/',
+      //   component: '@/pages/EntryPage/AuthorizedEntry', // 用户认证
+      //   routes: [
+      //     {
+      //       path: '/',
+      //       component: '@/layout',
+      //       routes: [
+      //         { path: '/', exact: true, component: '@/pages/LoadingPage' },
+      //         { path: '/404', component: '@/pages/Error/404' },
+      //         { path: '/noAuth', component: '@/pages/Error/noAuth' },
+      //         {
+      //           path: '/personCenter',
+      //           exact: true,
+      //           component: '@/pages/PersonCenter',
+      //         },
+      //         { path: '/*', component: '@/pages/Error/404' },
+      //       ],
+      //     },
+      //   ],
+      // },
+    ]
   },
-  {
-    name: '首页',
-    path: '/home',
-    component: './Home',
-  },
-  {
-    name: '权限演示',
-    path: '/access',
-    component: './Access',
-  },
-  {
-    name: ' CRUD 示例',
-    path: '/table',
-    component: './Table',
-  },
-  {
-    name: 'doc-edit',
-    path: '/doc-edit',
-    component: './WqDoc',
-    // routes: [
-    //   // {
-    //   //   path: '/app1',
-    //   //   component: '@/layouts/app-layout.tsx',
-    //   //   routes: [
-    //   //     // 配置微应用 app1 关联的路由
-    //   //     {
-    //   //       // 带上 * 通配符意味着将 /app1/project 下所有子路由都关联给微应用 app1
-    //   //       path: '/project/*',
-    //   //       microApp: 'app1',
-    //   //     },
-    //   //   ],
-    //   // },
-    //   // 配置 app2 关联的路由
-    //   {
-    //     path: '/doc-edit/*',
-    //     microApp: 'doc-edit',
-    //   },
-    // ],
-  },
-  // Codemirror 代码编辑器
-  // {
-  //   name: 'Codemirror',
-  //   path: '/docEdit',
-  //   component: './DocEdit',
-  // },
-  // quill编辑器
-  {
-    name: 'QuillDocEditor',
-    path: '/QuillDocEditor',
-    component: './QuillDocEditor',
-  },
-  // wangeditor编辑器
-  {
-    name: 'WangDocEditor',
-    path: '/WangDocEditor',
-    component: './WangDocEditor',
-  },
+
 ];
 
 export default routes;

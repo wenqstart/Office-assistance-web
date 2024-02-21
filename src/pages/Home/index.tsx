@@ -6,10 +6,13 @@ import styles from './index.less';
 
 const HomePage: React.FC = () => {
   const { name } = useModel('global');
+  console.log('name', name);
+  
   return (
     <PageContainer ghost>
       <div className={styles.container}>
-        <Guide name={trim(name)} />
+        {/* <Guide name={trim(name)} /> */}
+        wqwqwq
       </div>
     </PageContainer>
   );

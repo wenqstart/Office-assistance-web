@@ -1,0 +1,88 @@
+.login {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('../../assets/login_gb.jpg') no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+  position: relative;
+  .login_mask {
+    border-radius: 20px;
+    position: absolute;
+    backdrop-filter: blur(5px); // 毛玻璃效果
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .login_box {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 100%;
+
+    .login_box_left {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      transform: translateY(-50%);
+      // border: solid red 1px;
+      height: 350px;
+      .login_box_left_logo {
+        i {
+          font-size: 120px;
+          color: var(--main-color);
+        }
+      }
+      .login_box_left_tip {
+        margin-top: 20px;
+        li {
+          color: #fff;
+          font-size: 22px;
+          margin: 20px 0;
+        }
+      }
+    }
+    .login_box_form {
+      position: absolute;
+      right: 10%;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #fff;
+      width: 25%;
+      height: auto;
+      border-radius: 10px;
+      padding: 20px;
+
+      .login_box_form_label {
+        width: 80px;
+      }
+    }
+  }
+}
+.LoginAnimation {
+  animation: ease-in-out forwards 1.3s login;
+}
+
+.RegisterAnimation {
+  animation: ease-in-out forwards 1.3s register;
+}
+@keyframes login {
+  from {
+    transform: translateX(calc(-100% - 5px));
+  }
+  to {
+    transform: translateX(-5px);
+  }
+}
+
+@keyframes register {
+  from {
+    transform: translateX(-5px);
+  }
+  to {
+    transform: translateX(calc(-100% - 5px));
+  }
+}
