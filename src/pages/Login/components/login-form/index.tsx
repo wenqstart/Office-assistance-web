@@ -1,5 +1,6 @@
 import { Button, Checkbox, Form, Input } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
+import { useModel } from 'umi';
 import styles from './index.less';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -15,6 +16,7 @@ const LoginForm: React.FC = () => {
   const loginFormRef = useRef(null);
   const [form] = Form.useForm();
   const [clientReady, setClientReady] = useState<boolean>(false);
+  const { setIsLogin } = useModel('login')
 
   // To disable submit button at the beginning.
   useEffect(() => {
@@ -30,6 +32,7 @@ const LoginForm: React.FC = () => {
   
   function toRegister() {
     console.log('register');
+    setIsLogin(false)
   }
   return (
     <Form

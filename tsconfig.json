@@ -1,5 +1,18 @@
 {
   "extends": "./src/.umi/tsconfig.json",
-  "noImplicitAny": true,
-  "strict": true,
+  "include": ["env.d.ts", "src/**/*", "src/**/*.tsx"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@@/*": ["./src/.umi/*"] // 解决 umi 找不到部分模块的问题
+    },
+    
+    /* Linting */
+    "strict": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowJs": true
+  },
 }

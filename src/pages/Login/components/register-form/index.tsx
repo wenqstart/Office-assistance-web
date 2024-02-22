@@ -1,5 +1,6 @@
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
+import { useModel } from 'umi';
 import styles from './index.less';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -15,6 +16,7 @@ const RegisterForm: React.FC = () => {
   const loginFormRef = useRef(null);
   const [form] = Form.useForm();
   const [clientReady, setClientReady] = useState<boolean>(false);
+  const { setIsLogin } = useModel('login')
 
   // To disable submit button at the beginning.
   useEffect(() => {
@@ -28,8 +30,8 @@ const RegisterForm: React.FC = () => {
     console.log('Failed:', errorInfo);
   };
   
-  function toRegister() {
-    console.log('register');
+  function toLogin() {
+    setIsLogin(true)
   }
   return (
     <Form
@@ -41,19 +43,29 @@ const RegisterForm: React.FC = () => {
     >
       <Form.Item
         name="username"
-        rules={[{ required: true, message: '请输入账号!' }]}
+        rules={[{ required: true, message: '请输入您的账号!' }]}
       >
-        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入账号" />
+        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入您的账号" />
       </Form.Item>
 
       <Form.Item
          name="password"
-         rules={[{ required: true, message: '请输入密码!' }]}
+         rules={[{ required: true, message: '请输入您的密码!' }]}
       >
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="请输入密码"
+          placeholder="请输入您的密码"
+        />
+      </Form.Item>
+      <Form.Item
+         name="password_comfirm"
+         rules={[{ required: true, message: '请再次输入密码!' }]}
+      >
+        <Input
+          prefix={<LockOutlined className="site-form-item-icon" />}
+          type="password"
+          placeholder="请再次输入密码"
         />
       </Form.Item>
       <Form.Item shouldUpdate>
@@ -68,7 +80,7 @@ const RegisterForm: React.FC = () => {
               !!form.getFieldsError().filter(({ errors }) => errors.length).length
             }
           >
-            登录
+            注册
           </Button >
         )}
         </Form.Item>
@@ -77,7 +89,7 @@ const RegisterForm: React.FC = () => {
         <div className={styles.registerTip}>
           <span>
             已有账号？请
-            <Button type="link" onClick={toRegister}>
+            <Button type="link" onClick={toLogin}>
               前往登录
             </Button>
           </span>

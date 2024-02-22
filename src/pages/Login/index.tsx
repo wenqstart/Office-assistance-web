@@ -1,19 +1,30 @@
+import * as React from 'react';
+import { useMemo } from 'react';
+import { useModel } from 'umi';
 import { Tabs } from 'antd';
 import LoginForm from './components/login-form';
+import RegisterForm from './components/register-form';
 import styles from './index.less';
 
 const LoginPage: React.FC = () => {
-  // const { name } = useModel('global');
-  const items: TabsProps['items'] = [
+  const { isLogin } = useModel('login')
+  const loginItems = [
     {
       key: '1',
-      label: 'Tab 1',
+      label: '登录',
       children: <LoginForm />,
     },
   ];
-  function handleChange(e) {
-    console.log('e', e);
-  }
+  const registerItems = [
+    {
+      key: '2',
+      label: '注册',
+      children: <RegisterForm />,
+    },
+  ];
+  const renderItems = useMemo(() => {
+    return isLogin ? loginItems : registerItems
+  }, [isLogin])
   return (
     <div className={styles.login}>
       <div className={styles.login_mask}></div>
@@ -24,14 +35,14 @@ const LoginPage: React.FC = () => {
           </div>
           <div className={styles.login_box_left_tip}>
             <ul>
-              <li>多人协作在线编辑器-Multi Person Online Editor</li>
+              <li>办公辅助系统-Office auxiliary system</li>
               <li>支持Word、Excel、TXT、Markdown等多文件类型</li>
               <li>效率高、低成本、时效性、多版本控制</li>
             </ul>
           </div>
         </div>
         <div className={styles.login_box_form}>
-          <Tabs defaultActiveKey="1" items={items} onChange={handleChange} />
+          <Tabs defaultActiveKey="1" items={renderItems} />
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
 // 运行时配置
-import { RunTimeLayoutConfig, RuntimeAntdConfig  } from '@umijs';
+import { RunTimeLayoutConfig, RuntimeAntdConfig  } from '@umijs/max';
 import { theme } from 'antd';
 import { DEFAULT_NAME } from "@/constants";
+import { useLocation } from "umi";
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
 export async function getInitialState(): Promise<{ name: string }> {
@@ -12,13 +13,15 @@ export async function getInitialState(): Promise<{ name: string }> {
 }
 
 export const layout: RunTimeLayoutConfig  = () => {
+  const location = useLocation()
   return {
     logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
     menu: {
       locale: false,
     },
     title: '办公辅助系统',
-    logout: (initialState: any) => {},
+    // logout: (initialState: any) => {},
+    pure: location.pathname === '/login' ? true : false, //如果为登录页面就隐藏系统布局
     // rightRender: (initialState: any) => <div>rightRender</div>,
     // footerRender: (initialState: any) => <div>footerRender</div>,
     // rightContentRender: () => <div>rightContentRender</div>,
