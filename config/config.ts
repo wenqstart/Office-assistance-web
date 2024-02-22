@@ -61,12 +61,15 @@ export default defineConfig({
     'process.env.SHOW_PROJECT_NAME': false, // 是否显示登录界面右下角应用名称
     'process.env.PROJECT_NAME': DEFAULT_NAME, // 登录页展示名称
     'process.env.PROJECT_LOGO': '@/assets/logo.svg', // 项目logo，目前UI风格设计成不展示，但是需要配置
+    'process.env.API_USER': '/api/user', // 用户管理转发接口
+  
   },
   forkTSChecker: {}, // ts编译时类型检查
   routes,
   ignoreMomentLocale: true, // 忽略 moment 的 locale 文件
   proxy: proxyData,
-  define: {
-    'process.env.API_USER': '/api/user', // 用户管理转发接口
-  }
+  favicons: [
+    // 此时将指向 `/favicon.png` ，确保你的项目含有 `public/favicon.png`
+    '/favicon.svg'
+  ]
 });

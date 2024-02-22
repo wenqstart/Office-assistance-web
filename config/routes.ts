@@ -7,17 +7,21 @@ interface RouteProps {
   routes?: RouteProps[];
   redirect?: string;
   authentication?: boolean;
+  wrappers?: string[];
 }
 const routes: RouteProps[] = [
   {
+    name: '登录',
+    path: '/login',
+    component: '@/pages/Login',
+  },
+  {
     path: '/',
-    component: '@/pages/EntryPage',
+    wrappers: ['@/pages/EntryPage/AuthorizedEntry'],
     routes: [
       {
-        name: '登录',
-        path: '/login',
-        exact: true,
-        component: '@/pages/Login',
+        path: '/',
+        redirect: '/home',
       },
       {
         name: '首页',
@@ -25,30 +29,16 @@ const routes: RouteProps[] = [
         exact: true,
         component: '@/pages/Home',
       },
-      // {
-      //   path: '/',
-      //   component: '@/pages/EntryPage/AuthorizedEntry', // 用户认证
-      //   routes: [
-      //     {
-      //       path: '/',
-      //       component: '@/layout',
-      //       routes: [
-      //         { path: '/', exact: true, component: '@/pages/LoadingPage' },
-      //         { path: '/404', component: '@/pages/Error/404' },
-      //         { path: '/noAuth', component: '@/pages/Error/noAuth' },
-      //         {
-      //           path: '/personCenter',
-      //           exact: true,
-      //           component: '@/pages/PersonCenter',
-      //         },
-      //         { path: '/*', component: '@/pages/Error/404' },
-      //       ],
-      //     },
-      //   ],
-      // },
-    ]
+      { path: '/404', component: '@/pages/Error/404' },
+      { path: '/noAuth', component: '@/pages/Error/noAuth' },
+      {
+        path: '/personCenter',
+        exact: true,
+        component: '@/pages/PersonCenter',
+      },
+      { path: '/*', component: '@/pages/Error/404' },
+    ],
   },
-
 ];
 
 export default routes;

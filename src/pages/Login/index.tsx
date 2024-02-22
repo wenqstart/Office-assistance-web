@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useMemo } from 'react';
 import { useModel } from 'umi';
-import { Tabs } from 'antd';
+import { Tabs, Image } from 'antd';
 import LoginForm from './components/login-form';
 import RegisterForm from './components/register-form';
 import styles from './index.less';
+import circulation from '../../assets/login/circulation.svg'; 
 
 const LoginPage: React.FC = () => {
   const { isLogin } = useModel('login')
@@ -31,7 +32,7 @@ const LoginPage: React.FC = () => {
       <div className={styles.login_box}>
         <div className={styles.login_box_left}>
           <div className={styles.login_box_left_logo}>
-            <i className="iconfont icon-circulation"></i>
+          <Image width={150} src={circulation} preview={false}/>
           </div>
           <div className={styles.login_box_left_tip}>
             <ul>

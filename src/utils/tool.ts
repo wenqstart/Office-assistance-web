@@ -1,7 +1,7 @@
 import { history } from 'umi';
 
 const getToken = () => {
-  return localStorage.getItem('userToken');
+  return localStorage.getItem('office_system_token');
 };
 const goHome = () => {
   history.push('/');
