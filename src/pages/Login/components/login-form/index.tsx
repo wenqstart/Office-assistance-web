@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useModel } from 'umi';
 import styles from './index.less';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-
+import { goHome } from '@/utils/tool';
 
 
 // type FieldType = {
@@ -16,7 +16,9 @@ const LoginForm: React.FC = () => {
   const loginFormRef = useRef(null);
   const [form] = Form.useForm();
   const [clientReady, setClientReady] = useState<boolean>(false);
+  const [loginLoading, setLoginLoading] = useState<boolean>(false);
   const { setIsLogin } = useModel('login')
+  const { setToken } = useModel('user')
 
   // To disable submit button at the beginning.
   useEffect(() => {
@@ -25,6 +27,15 @@ const LoginForm: React.FC = () => {
 
   const onFinish = (values: any) => {
     console.log('Finish:', values);
+    const { username, password } = values
+    setLoginLoading(true)
+    if(username === 'wq' && password === '123') {
+      setToken('wqwqwq')
+      localStorage.setItem('office_system_token', 'wqwqwq');
+
+      goHome()
+    }
+    setLoginLoading(false)
   };
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
@@ -64,6 +75,7 @@ const LoginForm: React.FC = () => {
           <Button
             type="primary"
             htmlType="submit"
+            loading={loginLoading}
             style={{ width: '100%' }}
             disabled={
               !clientReady ||
@@ -79,7 +91,7 @@ const LoginForm: React.FC = () => {
       <Form.Item >
         <div className={styles.registerTip}>
           <span>
-            <Checkbox size="small" />&nbsp;
+            <Checkbox />&nbsp;
             记住账号
           </span>
           <span>

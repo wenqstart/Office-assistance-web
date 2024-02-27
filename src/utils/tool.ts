@@ -1,5 +1,8 @@
 import { history } from 'umi';
 
+const setToken = (token: string) => {
+  return localStorage.setItem('office_system_token', token);
+};
 const getToken = () => {
   return localStorage.getItem('office_system_token');
 };
@@ -7,7 +10,7 @@ const goHome = () => {
   history.push('/');
 };
 const clearUserInfo = () => {
-  localStorage.removeItem('userToken');
+  localStorage.removeItem('office_system_token');
   localStorage.removeItem('userInfo');
 };
 const isLogin = () => {
@@ -40,6 +43,7 @@ const goBack = () => {
 };
 export {
   clearUserInfo,
+  setToken,
   getToken,
   goBack,
   goHome,

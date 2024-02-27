@@ -11,13 +11,13 @@ interface RouteProps {
 }
 const routes: RouteProps[] = [
   {
-    name: '登录',
     path: '/login',
     component: '@/pages/Login',
   },
   {
     path: '/',
-    wrappers: ['@/pages/EntryPage/AuthorizedEntry'],
+    component: '@/layouts',
+    wrappers: ['@/wrappers/auth'],
     routes: [
       {
         path: '/',
@@ -25,9 +25,21 @@ const routes: RouteProps[] = [
       },
       {
         name: '首页',
-        path: '/home',
+        path: 'home',
         exact: true,
         component: '@/pages/Home',
+      },
+      {
+        name: '账号管理',
+        path: 'account',
+        exact: true,
+        component: '@/pages/AccountManage',
+      },
+      {
+        name: '任务管理',
+        path: 'task',
+        exact: true,
+        component: '@/pages/TaskManage',
       },
       { path: '/404', component: '@/pages/Error/404' },
       { path: '/noAuth', component: '@/pages/Error/noAuth' },

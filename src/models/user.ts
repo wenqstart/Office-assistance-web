@@ -25,7 +25,6 @@ export interface UserModelState {
   userInfo?: any;
   token?: string | null;
   fetchUser?: FunctionType;
-  permissions?: string[];
   prefixCls?: string;
 }
 export interface LoginModelState {
@@ -38,10 +37,8 @@ export default function useUser() {
   const [userInfo, setUserInfo] = useState<userProps | null>(null);
   const [token, setToken] = useState<string | null>('');
   const [isLogin, setIsLogin] = useState<boolean>(false);
-  const [permissions] = useState<any>({});
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
   const [prefixCls, setPrefixCls] = useState<string>(localStorage.getItem('theme') || 'micro');
-  const [systemPermission, setSystemPermission] = useState<boolean>(false);
   const pubKey =
     'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoUYIgzTFpppvfYudUWdAl38Q5NxzuP/msHDDep9Khy0dB3E2BmgtpeKHw0IOQWVAbUNm5vEuyrghskaPlrEttAfxk1b56BiOnPsjb4Q9wNW5FMTOD1pio8WO8r9lyj7KmJcmThavGWJBjP8utepnHo6ppFCkIEv4T/7aW4/LHMm/rckYHJyafh3K+/AQbYHN/TSFnC/xmhDwbHPB3ymBwiepuYTyCVmnBRy6a1b0IKamKcfjmhmTIA4G1ThfhO45Vv70CVlwNt+ta8HmK9kwQfjMUnFGE/fLBOsHUGDFsaJPgDuMCZ5OLnJbLELg4PyBqf9XWpXI3t2M6JeYoVnkzQIDAQAB';
 
@@ -57,10 +54,8 @@ export default function useUser() {
     return await fetchUserInfo()
       .then(async (res) => {
         let data = res.data;
-
         setUserInfo(data);
         localStorage.setItem('userInfo', JSON.stringify(data));
-        await fetchUserOrgInfo();
         return res;
       })
       .catch((e) => {
@@ -68,60 +63,58 @@ export default function useUser() {
       });
   }, []);
   // 修改密码
-  const changePassword = useCallback((data) => {
+  const changePassword = useCallback(async (data) => {
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey(pubKey);
-    return changeUserPassword({
-      newPassword: encrypt.encrypt(data.newPassword),
-      password: encrypt.encrypt(data.password),
-      secondNewPassword: encrypt.encrypt(data.secondNewPassword),
-      // newPassword: window.btoa(data.newPassword),
-      // password: window.btoa(data.password),
-      // secondNewPassword: window.btoa(data.secondNewPassword),
-      // ...data,
-      organId: '1',
-    })
-      .then(() => {
-        message.success('修改成功！');
-        clearUserInfo();
-        goToLogin();
-      })
-      .catch((err: any) => {
-        message.error(err.msg || '修改失败！');
+    try {
+      await changeUserPassword({
+        newPassword: encrypt.encrypt(data.newPassword),
+        password: encrypt.encrypt(data.password),
+        secondNewPassword: encrypt.encrypt(data.secondNewPassword),
+        // newPassword: window.btoa(data.newPassword),
+        // password: window.btoa(data.password),
+        // secondNewPassword: window.btoa(data.secondNewPassword),
+        // ...data,
+        organId: '1',
       });
+      message.success('修改成功！');
+      clearUserInfo();
+      goToLogin();
+    } catch (err) {
+      message.error(err.msg || '修改失败！');
+    }
   }, []);
 
   // 修改用户信息
   const changeUserInfo = useCallback(
-    (data) => {
-      return changeUserInfoData({ ...data })
-        .then((res) => {
-          message.success('保存成功！');
-        })
-        .catch((err: any) => {
-          message.error(err.msg || '修改失败！');
-        });
+    async (data) => {
+      try {
+        const res = await changeUserInfoData({ ...data });
+        message.success('保存成功！');
+      } catch (err) {
+        message.error(err.msg || '修改失败！');
+      }
     },
     [userInfo],
   );
 
-  const signIn = (data: any) => {
+  const signIn = async (data: any) => {
     setLoginLoading(true);
-    return accountSignIn(data)
-      .then((res: any) => {
-        const { data } = res;
-        setToken(data.token);
+    try {
+      try {
+        const res = await accountSignIn(data);
+        const { data: data_2 } = res;
+        setToken(data_2.token);
         setIsLogin(true);
-        cookie.save('token', data.token);
-        localStorage.setItem('userToken', data.token);
-      })
-      .catch((e: any) => {
+        cookie.save('token', data_2.token);
+        localStorage.setItem('office_system_token', data_2.token);
+      } catch (e) {
         message.error(e.msg);
-        return Promise.reject(e);
-      })
-      .finally(() => {
-        setLoginLoading(false);
-      });
+        return await Promise.reject(e);
+      }
+    } finally {
+      setLoginLoading(false);
+    }
   };
 
   const clearLoginInfo = () => {
@@ -129,14 +122,7 @@ export default function useUser() {
     clearUserInfo();
     setToken('');
     cookie.remove('token');
-    cookie.remove('Amp-Organ-Id');
     setUserInfo(null);
-    setAppList([]);
-    setSystemApp(null);
-    setActivedApp(null);
-    setSystemPermission(false);
-    sessionStorage.removeItem('collaborationParams');
-    // localStorage.removeItem('organId');
   };
   const signOut = useCallback(() => {
     accountSignOut().then(() => {
@@ -147,16 +133,14 @@ export default function useUser() {
 
 
   return {
-    userInfo,
     token,
-    permissions,
-    setUserInfo,
     setToken,
+    userInfo,
+    setUserInfo,
     fetchUser,
     changePassword,
     changeUserInfo,
     loginLoading,
-    systemPermission,
     signIn,
     signOut,
     clearLoginInfo,
