@@ -1,10 +1,9 @@
+import { goHome } from '@/utils/tool';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input } from 'antd';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useModel } from 'umi';
 import styles from './index.less';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { goHome } from '@/utils/tool';
-
 
 // type FieldType = {
 //   username?: string;
@@ -17,33 +16,46 @@ const LoginForm: React.FC = () => {
   const [form] = Form.useForm();
   const [clientReady, setClientReady] = useState<boolean>(false);
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
-  const { setIsLogin } = useModel('login')
-  const { setToken } = useModel('user')
-
-  // To disable submit button at the beginning.
+  const { setIsLogin } = useModel('login');
+  const { setToken, setLoggedInInfo, getLoggedInInfo, removeLoggedInInfo } = useModel('user');
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const initLoggedInInfo = async () => {
+    const { rememberMe, username, password } = await getLoggedInInfo();
+    console.log(Boolean(rememberMe), username, password)
+    if (Boolean(rememberMe) && username && password) {
+      form.setFieldsValue({
+        username,
+        password
+      })
+      setRememberMe(Boolean(rememberMe));
+    }
+  };
   useEffect(() => {
     setClientReady(true);
+    initLoggedInInfo();
   }, []);
 
   const onFinish = (values: any) => {
-    console.log('Finish:', values);
-    const { username, password } = values
-    setLoginLoading(true)
-    if(username === 'wq' && password === '123') {
-      setToken('wqwqwq')
+    const { username, password } = values;
+    setLoginLoading(true);
+    if (username === 'wq' && password === '123') {
+      setToken('wqwqwq');
       localStorage.setItem('office_system_token', 'wqwqwq');
-
-      goHome()
+      if (rememberMe) {
+        setLoggedInInfo(username, password, String(rememberMe));
+      } else {
+        removeLoggedInInfo()
+      }
+      goHome();
     }
-    setLoginLoading(false)
+    setLoginLoading(false);
   };
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
-  
+
   function toRegister() {
-    console.log('register');
-    setIsLogin(false)
+    setIsLogin(false);
   }
   return (
     <Form
@@ -57,12 +69,15 @@ const LoginForm: React.FC = () => {
         name="username"
         rules={[{ required: true, message: '请输入账号!' }]}
       >
-        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入账号" />
+        <Input
+          prefix={<UserOutlined className="site-form-item-icon" />}
+          placeholder="请输入账号"
+        />
       </Form.Item>
 
       <Form.Item
-         name="password"
-         rules={[{ required: true, message: '请输入密码!' }]}
+        name="password"
+        rules={[{ required: true, message: '请输入密码!' }]}
       >
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
@@ -80,19 +95,23 @@ const LoginForm: React.FC = () => {
             disabled={
               !clientReady ||
               !form.isFieldsTouched(true) ||
-              !!form.getFieldsError().filter(({ errors }) => errors.length).length
+              !!form.getFieldsError().filter(({ errors }) => errors.length)
+                .length
             }
           >
             登录
-          </Button >
+          </Button>
         )}
-        </Form.Item>
+      </Form.Item>
 
-      <Form.Item >
+      <Form.Item>
         <div className={styles.registerTip}>
           <span>
-            <Checkbox />&nbsp;
-            记住账号
+            <Checkbox
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+            &nbsp; 记住账号
           </span>
           <span>
             还没有账号？请

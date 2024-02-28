@@ -3,3 +3,8 @@ declare module '*.less' {
     export = resource;
   }
   
+declare module '*.svg' {
+    const resource: string;
+    export = resource;
+  }
+  

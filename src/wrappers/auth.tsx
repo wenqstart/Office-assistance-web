@@ -1,6 +1,6 @@
 // 登录鉴权
 import { goToLogin } from '@/utils/tool';
-import { notification } from 'antd';
+// import { notification } from 'antd';
 import React, { useEffect } from 'react';
 import { Outlet, history, useModel } from 'umi';
 
@@ -8,7 +8,7 @@ const AuthorizedEntry = () => {
   const { token, fetchUser, isLogin, setIsLogin } = useModel('user') || {};
   console.log('token', token);
 
-  const [noticeApi, contextHolder] = notification.useNotification();
+  // const [noticeApi, contextHolder] = notification.useNotification();
   const Context = React.createContext({ name: 'Default' });
   // const [noticeSocket, setNoticeSocket] = useState();
 
@@ -39,9 +39,9 @@ const AuthorizedEntry = () => {
   return (
     <div>
       <Outlet />
-      <Context.Provider value={{ name: 'Ant Design' }}>
+      {/* <Context.Provider value={{ name: 'Ant Design' }}>
         {contextHolder}
-      </Context.Provider>
+      </Context.Provider> */}
     </div>
   );
 };

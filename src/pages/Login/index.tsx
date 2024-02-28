@@ -1,14 +1,14 @@
+import { Image, Tabs } from 'antd';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { useModel } from 'umi';
-import { Tabs, Image } from 'antd';
+import circulation from '../../assets/login/circulation.svg';
 import LoginForm from './components/login-form';
 import RegisterForm from './components/register-form';
 import styles from './index.less';
-import circulation from '../../assets/login/circulation.svg'; 
 
 const LoginPage: React.FC = () => {
-  const { isLogin } = useModel('login')
+  const { isLogin } = useModel('login');
   const loginItems = [
     {
       key: '1',
@@ -24,25 +24,29 @@ const LoginPage: React.FC = () => {
     },
   ];
   const renderItems = useMemo(() => {
-    return isLogin ? loginItems : registerItems
-  }, [isLogin])
+    return isLogin ? loginItems : registerItems;
+  }, [isLogin]);
   return (
-    <div className={styles.login}>
+    <div className={`${styles.login} `}>
       <div className={styles.login_mask}></div>
       <div className={styles.login_box}>
         <div className={styles.login_box_left}>
           <div className={styles.login_box_left_logo}>
-          <Image width={150} src={circulation} preview={false}/>
+            <Image width={150} src={circulation} preview={false} />
           </div>
           <div className={styles.login_box_left_tip}>
             <ul>
               <li>办公辅助系统-Office auxiliary system</li>
-              <li>支持Word、Excel、TXT、Markdown等多文件类型</li>
-              <li>效率高、低成本、时效性、多版本控制</li>
+              <li>支持任务发布、学生任务反馈等</li>
+              <li>效率高、低成本、时效性、多人协同合作</li>
             </ul>
           </div>
         </div>
-        <div className={styles.login_box_form}>
+        <div
+          className={`${styles.login_box_form} ${
+            isLogin ? styles.fadeIn : styles.fadeOut
+          }`}
+        >
           <Tabs defaultActiveKey="1" items={renderItems} />
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { history } from 'umi';
-
 const setToken = (token: string) => {
   return localStorage.setItem('office_system_token', token);
 };

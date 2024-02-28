@@ -1,17 +1,17 @@
-import { useState, useCallback, useEffect } from 'react';
 import {
-  fetchUserInfo,
-  changeUserPassword,
-  changeUserInfoData,
   accountSignIn,
-  accountSignOut
+  accountSignOut,
+  changeUserInfoData,
+  changeUserPassword,
+  fetchUserInfo,
 } from '@/services/user';
-import { getToken, clearUserInfo, goToLogin } from '@/utils/tool';
+import { decrypt, encrypt } from '@/utils/jsencrypt';
+import { clearUserInfo, getToken, goToLogin } from '@/utils/tool';
 import { message } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
 // import { useModel, history } from 'umi';
-import cookie from 'react-cookies';
 import JSEncrypt from 'jsencrypt';
-
+import cookie from 'react-cookies';
 interface userProps {
   id: string;
   username: string;
@@ -36,12 +36,12 @@ export interface LoginModelState {
 export default function useUser() {
   const [userInfo, setUserInfo] = useState<userProps | null>(null);
   const [token, setToken] = useState<string | null>('');
+  const [pubKey, setPubKey] = useState<string | null>('');
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
-  const [prefixCls, setPrefixCls] = useState<string>(localStorage.getItem('theme') || 'micro');
-  const pubKey =
-    'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoUYIgzTFpppvfYudUWdAl38Q5NxzuP/msHDDep9Khy0dB3E2BmgtpeKHw0IOQWVAbUNm5vEuyrghskaPlrEttAfxk1b56BiOnPsjb4Q9wNW5FMTOD1pio8WO8r9lyj7KmJcmThavGWJBjP8utepnHo6ppFCkIEv4T/7aW4/LHMm/rckYHJyafh3K+/AQbYHN/TSFnC/xmhDwbHPB3ymBwiepuYTyCVmnBRy6a1b0IKamKcfjmhmTIA4G1ThfhO45Vv70CVlwNt+ta8HmK9kwQfjMUnFGE/fLBOsHUGDFsaJPgDuMCZ5OLnJbLELg4PyBqf9XWpXI3t2M6JeYoVnkzQIDAQAB';
-
+  const [prefixCls, setPrefixCls] = useState<string>(
+    localStorage.getItem('theme') || 'micro',
+  );
   // 进入项目，初始化用户信息、当前项目信息、当前组织信息
   useEffect(() => {
     if (getToken()) {
@@ -129,8 +129,31 @@ export default function useUser() {
       clearLoginInfo();
     });
   }, []);
-
-
+  const setLoggedInInfo = async (
+    username: string,
+    password: string,
+    rememberMe: string,
+  ) => {
+    const loggedInUser = {
+      username: await encrypt(username),
+      password: await encrypt(password),
+      rememberMe: await encrypt(rememberMe),
+    };
+    cookie.save('LoggedInInfo', JSON.stringify(loggedInUser), { path: '/' });
+  };
+  const getLoggedInInfo = async () => {
+    const loggedInInfo = cookie.load('LoggedInInfo') || {};
+    const rememberMe = await decrypt(loggedInInfo.rememberMe);
+    if (Boolean(rememberMe) === true) {
+      const username = await decrypt(loggedInInfo.username);
+      const password = await decrypt(loggedInInfo.password);
+      return { rememberMe, username, password };
+    }
+    return {};
+  };
+  const removeLoggedInInfo = () => {
+    cookie.remove('LoggedInInfo')
+  }
 
   return {
     token,
@@ -149,5 +172,8 @@ export default function useUser() {
     setPrefixCls,
     isLogin,
     setIsLogin,
+    setLoggedInInfo,
+    getLoggedInInfo,
+    removeLoggedInInfo
   };
 }

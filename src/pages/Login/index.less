@@ -63,27 +63,28 @@
     }
   }
 }
-.LoginAnimation {
-  animation: ease-in-out forwards 1.3s login;
+.fadeIn {
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.RegisterAnimation {
-  animation: ease-in-out forwards 1.3s register;
+.fadeOut {
+  animation: fadeOut 0.5s ease-in-out;
 }
-@keyframes login {
+
+@keyframes fadeIn {
   from {
-    transform: translateX(calc(-100% - 5px));
+    opacity: 0;
   }
   to {
-    transform: translateX(-5px);
+    opacity: 1;
   }
 }
 
-@keyframes register {
+@keyframes fadeOut {
   from {
-    transform: translateX(-5px);
+    opacity: 1;
   }
   to {
-    transform: translateX(calc(-100% - 5px));
+    opacity: 0;
   }
 }
