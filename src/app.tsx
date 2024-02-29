@@ -1,22 +1,22 @@
 // 运行时配置
 import { RunTimeLayoutConfig, RuntimeAntdConfig  } from '@umijs/max';
 import { theme } from 'antd';
-import { DEFAULT_NAME } from "@/constants";
-import { useLocation } from "umi";
+import { LOGOUT_NAME } from "@/constants";
+import { history } from "umi";
 import { clearUserInfo, goToLogin } from '@/utils/tool';
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
+// useModel("@@initialState");
 export async function getInitialState(): Promise<{ name: string }> {
   return {
-    name: DEFAULT_NAME,
+    name: LOGOUT_NAME,
 
   };
 }
 
 export const layout: RunTimeLayoutConfig  = () => {
-  const location = useLocation()
   return {
-    logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
+    logo: '/favicon.svg',
     menu: {
       locale: false,
     },
@@ -25,7 +25,7 @@ export const layout: RunTimeLayoutConfig  = () => {
       clearUserInfo()
       goToLogin()
     },
-    pure: location.pathname === '/login' ? true : false, //如果为登录页面就隐藏系统布局
+    pure: history.location.pathname === '/login' ? true : false, //如果为登录页面就隐藏系统布局
     // rightRender: (initialState: any) => <div>rightRender</div>,
     // footerRender: (initialState: any) => <div>footerRender</div>,
     // rightContentRender: () => <div>rightContentRender</div>,

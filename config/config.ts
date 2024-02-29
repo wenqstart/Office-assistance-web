@@ -3,7 +3,7 @@ import path from 'path';
 import routes from './routes';
 import proxy from '../config/proxy';
 import theme from './theme.hc';
-import {DEFAULT_NAME} from "../src/constants";
+import {SYSTEM_NAME} from "../src/constants";
 const proxyData = proxy;
 
 export default defineConfig({
@@ -18,6 +18,9 @@ export default defineConfig({
   //     ],
   //   },
   // },
+  clickToComponent: {},
+  icons: { autoInstall: {} },
+  verifyCommit: {},
   title: false, // 浏览器标题
   mountElementId: 'masterRoot',
   theme, // 主题色号改动
@@ -38,7 +41,7 @@ export default defineConfig({
     dataField: 'data'
   },
   layout: {
-    title: DEFAULT_NAME,
+    title: SYSTEM_NAME,
   },
   dva: {
     hmr: true,
@@ -59,7 +62,7 @@ export default defineConfig({
   define: {
     'process.env.SHOW_LOGO': true, // 是否显示logo
     'process.env.SHOW_PROJECT_NAME': false, // 是否显示登录界面右下角应用名称
-    'process.env.PROJECT_NAME': DEFAULT_NAME, // 登录页展示名称
+    'process.env.PROJECT_NAME': SYSTEM_NAME, // 登录页展示名称
     'process.env.PROJECT_LOGO': '@/assets/logo.svg', // 项目logo，目前UI风格设计成不展示，但是需要配置
     'process.env.API_USER': '/api/user', // 用户管理转发接口
   
