@@ -1,8 +1,8 @@
 interface proxyProps {
-  [key: string]: unknown;
+  [key: string]: unknown
 }
 
-const api = '/api';
+const api = '/api'
 // const devApi = 'http://10.1.11.156:33123';
 
 const myPathRewrite = (target: string) => {
@@ -10,12 +10,12 @@ const myPathRewrite = (target: string) => {
   return function (path: string) {
     if (path.indexOf('/api/') >= 0) {
       // 忽略api代理的重写
-      return path;
+      return path
     } else {
-      return path.replace(target, '');
+      return path.replace(target, '')
     }
-  };
-};
+  }
+}
 
 const proxy: proxyProps = {
   '/grafana/api/live/ws': {
@@ -25,12 +25,12 @@ const proxy: proxyProps = {
       '^/grafana/api/live/ws': '/grafana/api/live/ws',
     },
   },
-  '/grafana/api': {
-    target: 'http://10.10.102.202:33035/',
+  '/api': {
+    target: 'http://10.33.105.179:8081/',
     pathRewrite: {
-      '^/grafana/api': '/grafana/api',
+      '^/api': '',
     },
   },
-};
+}
 
-export default proxy;
+export default proxy

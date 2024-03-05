@@ -1,13 +1,20 @@
 // import Guide from '@/components/Guide';
 // import { trim } from '@/utils/format';
-import { PageContainer } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
-import styles from './index.less';
+import { getUserTemplate } from '@/api/modules/admin'
+import { PageContainer } from '@ant-design/pro-components'
+import { useModel } from '@umijs/max'
+import React, { useEffect } from 'react'
+import styles from './index.less'
 
 const HomePage: React.FC = () => {
-  const { name } = useModel('global');
-  console.log('name', name);
-  
+  const { name } = useModel('global')
+  console.log('name', name)
+
+  useEffect(() => {
+    getUserTemplate().then((res) => {
+      console.log(res)
+    })
+  })
   return (
     <PageContainer ghost>
       <div className={styles.container}>
@@ -15,7 +22,7 @@ const HomePage: React.FC = () => {
         wqwqwq
       </div>
     </PageContainer>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage
