@@ -19,7 +19,7 @@ const HomePage: React.FC = () => {
     <PageContainer ghost>
       <div className={styles.container}>
         {/* <Guide name={trim(name)} /> */}
-        wqwqwq
+        www
       </div>
     </PageContainer>
   )

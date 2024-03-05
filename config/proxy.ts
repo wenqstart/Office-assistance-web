@@ -18,17 +18,12 @@ const myPathRewrite = (target: string) => {
 }
 
 const proxy: proxyProps = {
-  '/grafana/api/live/ws': {
-    target: 'http://10.10.102.202:33035/',
+  '/data-structure': {
+    target: 'http://localhost:8080/',
+    changeOrigin: true,
     ws: true,
     pathRewrite: {
-      '^/grafana/api/live/ws': '/grafana/api/live/ws',
-    },
-  },
-  '/api': {
-    target: 'http://10.33.105.179:8081/',
-    pathRewrite: {
-      '^/api': '',
+      '^/data-structure': '',
     },
   },
 }

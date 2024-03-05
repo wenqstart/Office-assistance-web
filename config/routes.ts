@@ -101,6 +101,17 @@ const routes: RouteProps[] = [
         exact: true,
         component: '@/pages/PersonCenter',
       },
+      // 为了实现菜单高亮
+      {
+        path: '/data-structure',
+        name: '数据结构',
+        icon: 'DatabaseOutlined',
+        component: '@/pages/data-structure',
+      },
+      {
+        path: '/data-structure/*',
+        component: '@/pages/data-structure',
+      },
       { path: '/*', component: '@/pages/Error/404' },
     ],
   },

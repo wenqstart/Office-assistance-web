@@ -8,16 +8,24 @@ const proxyData = proxy;
 
 export default defineConfig({
   // favicon: '/favicon_hc.ico', // 浏览器icon
-  // qiankun: {
-  //   master: {
-  //     apps: [
-  //       {
-  //         name: 'doc-edit',
-  //         entry: '//localhost:8001',
-  //       },
-  //     ],
-  //   },
-  // },
+  favicons: [
+    // 此时将指向 `/favicon.png` ，确保你的项目含有 `public/favicon.png`
+    '/favicon.svg'
+  ],
+  qiankun: {
+    master: {
+      apps: [
+        // {
+        //   name: 'doc-edit',
+        //   entry: '//localhost:3000',
+        // },
+        {
+          name: 'data-structure',
+          entry: '//localhost:8100'
+        }
+      ],
+    },
+  },
   clickToComponent: {},
   icons: { autoInstall: {} },
   verifyCommit: {},
@@ -70,9 +78,5 @@ export default defineConfig({
   forkTSChecker: {}, // ts编译时类型检查
   routes,
   ignoreMomentLocale: true, // 忽略 moment 的 locale 文件
-  proxy: proxyData,
-  favicons: [
-    // 此时将指向 `/favicon.png` ，确保你的项目含有 `public/favicon.png`
-    '/favicon.svg'
-  ]
+  // proxy: proxyData,
 });
