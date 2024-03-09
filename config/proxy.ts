@@ -26,6 +26,12 @@ const proxy: proxyProps = {
       '^/data-structure': '',
     },
   },
+  '/api': {
+    target: 'http://10.33.105.179:8081',
+    pathRewrite: {
+      '^/api': '',
+    },
+  },
 }
 
 export default proxy

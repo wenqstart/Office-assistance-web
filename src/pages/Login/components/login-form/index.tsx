@@ -1,10 +1,10 @@
-import { goHome } from '@/utils/tool';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
-import { useModel } from 'umi';
-import styles from './index.less';
-
+import { login } from '@/api/modules/common'
+import { goHome } from '@/utils/tool'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Form, Input } from 'antd'
+import React, { useEffect, useRef, useState } from 'react'
+import { useModel } from 'umi'
+import styles from './index.less'
 // type FieldType = {
 //   username?: string;
 //   password?: string;
@@ -12,50 +12,53 @@ import styles from './index.less';
 // };
 
 const LoginForm: React.FC = () => {
-  const loginFormRef = useRef(null);
-  const [form] = Form.useForm();
-  const [clientReady, setClientReady] = useState<boolean>(false);
-  const [loginLoading, setLoginLoading] = useState<boolean>(false);
-  const { setIsLogin } = useModel('login');
-  const { setToken, setLoggedInInfo, getLoggedInInfo, removeLoggedInInfo } = useModel('user');
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const loginFormRef = useRef(null)
+  const [form] = Form.useForm()
+  const [clientReady, setClientReady] = useState<boolean>(false)
+  const [loginLoading, setLoginLoading] = useState<boolean>(false)
+  const { setIsLogin } = useModel('login')
+  const { setToken, setLoggedInInfo, getLoggedInInfo, removeLoggedInInfo } =
+    useModel('user')
+  const [rememberMe, setRememberMe] = useState<boolean>(false)
   const initLoggedInInfo = async () => {
-    const { rememberMe, username, password } = await getLoggedInInfo();
+    const { rememberMe, username, password } = await getLoggedInInfo()
     console.log(Boolean(rememberMe), username, password)
     if (Boolean(rememberMe) && username && password) {
       form.setFieldsValue({
         username,
-        password
+        password,
       })
-      setRememberMe(Boolean(rememberMe));
+      setRememberMe(Boolean(rememberMe))
     }
-  };
+  }
   useEffect(() => {
-    setClientReady(true);
-    initLoggedInInfo();
-  }, []);
+    setClientReady(true)
+    initLoggedInInfo()
+  }, [])
 
-  const onFinish = (values: any) => {
-    const { username, password } = values;
-    setLoginLoading(true);
-    if (username === 'wq' && password === '123') {
-      setToken('wqwqwq');
-      localStorage.setItem('office_system_token', 'wqwqwq');
+  const onFinish = async (values: any) => {
+    const { username, password } = values
+    setLoginLoading(true)
+    const { data, code } = await login({ username, password })
+
+    if (code === 200 && data) {
+      setToken(data)
+      localStorage.setItem('office_system_token', data)
       if (rememberMe) {
-        setLoggedInInfo(username, password, String(rememberMe));
+        setLoggedInInfo(username, password, String(rememberMe))
       } else {
         removeLoggedInInfo()
       }
-      goHome();
+      goHome()
     }
-    setLoginLoading(false);
-  };
+    setLoginLoading(false)
+  }
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
+    console.log('Failed:', errorInfo)
+  }
 
   function toRegister() {
-    setIsLogin(false);
+    setIsLogin(false)
   }
   return (
     <Form
@@ -122,7 +125,7 @@ const LoginForm: React.FC = () => {
         </div>
       </Form.Item>
     </Form>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm
