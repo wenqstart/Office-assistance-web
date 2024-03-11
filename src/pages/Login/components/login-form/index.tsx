@@ -40,6 +40,7 @@ const LoginForm: React.FC = () => {
     const { username, password } = values
     setLoginLoading(true)
     const { data, code } = await login({ username, password })
+    goHome()
 
     if (code === 200 && data) {
       setToken(data)
@@ -49,7 +50,7 @@ const LoginForm: React.FC = () => {
       } else {
         removeLoggedInInfo()
       }
-      goHome()
+      // goHome()
     }
     setLoginLoading(false)
   }
