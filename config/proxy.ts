@@ -1,7 +1,3 @@
-interface proxyProps {
-  [key: string]: unknown
-}
-
 const api = '/api'
 // const devApi = 'http://10.1.11.156:33123';
 
@@ -17,17 +13,10 @@ const myPathRewrite = (target: string) => {
   }
 }
 
-const proxy: proxyProps = {
-  '/data-structure': {
-    target: 'http://localhost:8080/',
-    changeOrigin: true,
-    ws: true,
-    pathRewrite: {
-      '^/data-structure': '',
-    },
-  },
+const proxy = {
   '/api': {
-    target: 'http://10.33.105.179:8081',
+    target: 'http://62137560yh.vicp.fun',
+    changeOrigin: true,
     pathRewrite: {
       '^/api': '',
     },

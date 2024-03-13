@@ -8,5 +8,5 @@ export type TLoginData = {
 export const login = (loginData: TLoginData) =>
   request('/api/user/login', {
     method: 'post',
-    data: qs.stringify(loginData),
+    params: { username: loginData.username, password: loginData.password },
   })

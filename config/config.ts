@@ -78,5 +78,5 @@ export default defineConfig({
   forkTSChecker: {}, // ts编译时类型检查
   routes,
   ignoreMomentLocale: true, // 忽略 moment 的 locale 文件
-  // proxy: proxyData,
+  proxy: proxyData,
 });
