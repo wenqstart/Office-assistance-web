@@ -1,16 +1,16 @@
-import { defineConfig } from 'umi';
-import path from 'path';
-import routes from './routes';
-import proxy from '../config/proxy';
-import theme from './theme.hc';
-import {SYSTEM_NAME} from "../src/constants";
-const proxyData = proxy;
+import { defineConfig } from 'umi'
+import path from 'path'
+import routes from './routes'
+import proxy from '../config/proxy'
+import theme from './theme.hc'
+import { SYSTEM_NAME } from '../src/constants'
+const proxyData = proxy
 
 export default defineConfig({
   // favicon: '/favicon_hc.ico', // 浏览器icon
   favicons: [
     // 此时将指向 `/favicon.png` ，确保你的项目含有 `public/favicon.png`
-    '/favicon.svg'
+    '/favicon.svg',
   ],
   qiankun: {
     master: {
@@ -21,8 +21,8 @@ export default defineConfig({
         // },
         {
           name: 'data-structure',
-          entry: '//localhost:8100'
-        }
+          entry: '//localhost:8100',
+        },
       ],
     },
   },
@@ -46,7 +46,7 @@ export default defineConfig({
   model: {},
   initialState: {},
   request: {
-    dataField: 'data'
+    dataField: 'data',
   },
   layout: {
     title: SYSTEM_NAME,
@@ -54,17 +54,17 @@ export default defineConfig({
   dva: {
     hmr: true,
   },
-  chainWebpack: (config) => {
-    const oneOfsMap = config.module.rule('less').oneOfs.values();
-    oneOfsMap.forEach((item) => {
+  chainWebpack: (config: any) => {
+    const oneOfsMap = config.module.rule('less').oneOfs.values()
+    oneOfsMap.forEach((item: any) => {
       item
         .use('sass-resources-loader')
         .loader('sass-resources-loader')
         .options({
           resources: path.resolve(__dirname, '../src/style/theme.less'),
         })
-        .end();
-    });
+        .end()
+    })
   },
   npmClient: 'pnpm',
   define: {
@@ -73,10 +73,9 @@ export default defineConfig({
     'process.env.PROJECT_NAME': SYSTEM_NAME, // 登录页展示名称
     'process.env.PROJECT_LOGO': '@/assets/logo.svg', // 项目logo，目前UI风格设计成不展示，但是需要配置
     'process.env.API_USER': '/api/user', // 用户管理转发接口
-  
   },
   forkTSChecker: {}, // ts编译时类型检查
   routes,
   ignoreMomentLocale: true, // 忽略 moment 的 locale 文件
   proxy: proxyData,
-});
+})

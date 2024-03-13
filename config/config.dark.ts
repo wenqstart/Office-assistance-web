@@ -1,6 +1,7 @@
-import { defineConfig } from 'umi';
-import theme from './theme.dark.ts';
+import { defineConfig } from 'umi'
+import theme from './theme.dark'
+
 export default defineConfig({
   theme,
   scripts: ['localStorage.setItem("theme", "dark");'],
-});
+})

@@ -39,19 +39,20 @@ const LoginForm: React.FC = () => {
   const onFinish = async (values: any) => {
     const { username, password } = values
     setLoginLoading(true)
-    const { data, code } = await login({ username, password })
+    // const { data, code } = await login({ username, password })
     goHome()
-
-    if (code === 200 && data) {
-      setToken(data.token)
-      localStorage.setItem('office_system_token', data.token)
-      if (rememberMe) {
-        setLoggedInInfo(username, password, String(rememberMe))
-      } else {
-        removeLoggedInInfo()
-      }
-      // goHome()
-    }
+    setToken('test')
+    localStorage.setItem('office_system_token', 'test')
+    // if (code === 200 && data) {
+    //   setToken(data)
+    //   localStorage.setItem('office_system_token', data)
+    //   if (rememberMe) {
+    //     setLoggedInInfo(username, password, String(rememberMe))
+    //   } else {
+    //     removeLoggedInInfo()
+    //   }
+    //   // goHome()
+    // }
     setLoginLoading(false)
   }
   const onFinishFailed = (errorInfo: any) => {

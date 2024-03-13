@@ -1,27 +1,27 @@
 /* eslint-disable */
 // 该文件由 OneAPI 自动生成，请勿手动修改！
-import { request } from '@umijs/max';
+import { request } from '@umijs/max'
 
 /** 此处后端没有提供注释 GET /api/v1/queryUserList */
 export async function queryUserList(
   params: {
     // query
     /** keyword */
-    keyword?: string;
+    keyword?: string
     /** current */
-    current?: number;
+    current?: number
     /** pageSize */
-    pageSize?: number;
+    pageSize?: number
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_PageInfo_UserInfo__>('/api/v1/queryUserList', {
+  return request('/api/v1/queryUserList', {
     method: 'GET',
     params: {
       ...params,
     },
     ...(options || {}),
-  });
+  }) as Promise<API.Result_PageInfo_UserInfo__>
 }
 
 /** 此处后端没有提供注释 POST /api/v1/user */
@@ -29,14 +29,14 @@ export async function addUser(
   body?: API.UserInfoVO,
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_UserInfo_>('/api/v1/user', {
+  return request('/api/v1/user', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     data: body,
     ...(options || {}),
-  });
+  }) as Promise<API.Result_UserInfo_>
 }
 
 /** 此处后端没有提供注释 GET /api/v1/user/${param0} */
@@ -44,16 +44,16 @@ export async function getUserDetail(
   params: {
     // path
     /** userId */
-    userId?: string;
+    userId?: string
   },
   options?: { [key: string]: any },
 ) {
-  const { userId: param0 } = params;
-  return request<API.Result_UserInfo_>(`/api/v1/user/${param0}`, {
+  const { userId: param0 } = params
+  return request(`/api/v1/user/${param0}`, {
     method: 'GET',
     params: { ...params },
     ...(options || {}),
-  });
+  }) as Promise<API.Result_UserInfo_>
 }
 
 /** 此处后端没有提供注释 PUT /api/v1/user/${param0} */
@@ -61,13 +61,13 @@ export async function modifyUser(
   params: {
     // path
     /** userId */
-    userId?: string;
+    userId?: string
   },
   body?: API.UserInfoVO,
   options?: { [key: string]: any },
 ) {
-  const { userId: param0 } = params;
-  return request<API.Result_UserInfo_>(`/api/v1/user/${param0}`, {
+  const { userId: param0 } = params
+  return request(`/api/v1/user/${param0}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ export async function modifyUser(
     params: { ...params },
     data: body,
     ...(options || {}),
-  });
+  }) as Promise<API.Result_UserInfo_>
 }
 
 /** 此处后端没有提供注释 DELETE /api/v1/user/${param0} */
@@ -83,14 +83,14 @@ export async function deleteUser(
   params: {
     // path
     /** userId */
-    userId?: string;
+    userId?: string
   },
   options?: { [key: string]: any },
 ) {
-  const { userId: param0 } = params;
-  return request<API.Result_string_>(`/api/v1/user/${param0}`, {
+  const { userId: param0 } = params
+  return request(`/api/v1/user/${param0}`, {
     method: 'DELETE',
     params: { ...params },
     ...(options || {}),
-  });
+  }) as Promise<API.Result_string_>
 }
