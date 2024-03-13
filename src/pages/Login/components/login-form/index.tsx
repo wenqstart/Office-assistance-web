@@ -43,8 +43,8 @@ const LoginForm: React.FC = () => {
     goHome()
 
     if (code === 200 && data) {
-      setToken(data)
-      localStorage.setItem('office_system_token', data)
+      setToken(data.token)
+      localStorage.setItem('office_system_token', data.token)
       if (rememberMe) {
         setLoggedInInfo(username, password, String(rememberMe))
       } else {
