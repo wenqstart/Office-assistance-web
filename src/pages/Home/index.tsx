@@ -1,6 +1,6 @@
 // import Guide from '@/components/Guide';
 // import { trim } from '@/utils/format';
-import { getUserTemplate } from '@/api/modules/admin'
+// import { getUserTemplate } from '@/api/modules/admin'
 import { PageContainer } from '@ant-design/pro-components'
 import { useModel } from '@umijs/max'
 import React, { useEffect } from 'react'
@@ -11,9 +11,9 @@ const HomePage: React.FC = () => {
   console.log('name', name)
 
   useEffect(() => {
-    getUserTemplate().then((res) => {
-      console.log(res)
-    })
+    // getUserTemplate().then((res) => {
+    //   console.log(res)
+    // })
   })
   return (
     <PageContainer ghost>

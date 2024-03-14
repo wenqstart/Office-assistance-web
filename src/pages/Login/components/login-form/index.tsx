@@ -1,5 +1,4 @@
-import { login } from '@/api/modules/common'
-import { goHome } from '@/utils/tool'
+// import { goHome } from '@/utils/tool'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
@@ -15,14 +14,12 @@ const LoginForm: React.FC = () => {
   const loginFormRef = useRef(null)
   const [form] = Form.useForm()
   const [clientReady, setClientReady] = useState<boolean>(false)
-  const [loginLoading, setLoginLoading] = useState<boolean>(false)
   const { setIsLogin } = useModel('login')
-  const { setToken, setLoggedInInfo, getLoggedInInfo, removeLoggedInInfo } =
+  const { setLoggedInInfo, getLoggedInInfo, removeLoggedInInfo, signIn, loginLoading } =
     useModel('user')
   const [rememberMe, setRememberMe] = useState<boolean>(false)
   const initLoggedInInfo = async () => {
     const { rememberMe, username, password } = await getLoggedInInfo()
-    console.log(Boolean(rememberMe), username, password)
     if (Boolean(rememberMe) && username && password) {
       form.setFieldsValue({
         username,
@@ -38,22 +35,14 @@ const LoginForm: React.FC = () => {
 
   const onFinish = async (values: any) => {
     const { username, password } = values
-    setLoginLoading(true)
-    // const { data, code } = await login({ username, password })
-    goHome()
-    setToken('test')
-    localStorage.setItem('office_system_token', 'test')
-    // if (code === 200 && data) {
-    //   setToken(data)
-    //   localStorage.setItem('office_system_token', data)
-    //   if (rememberMe) {
-    //     setLoggedInInfo(username, password, String(rememberMe))
-    //   } else {
-    //     removeLoggedInInfo()
-    //   }
-    //   // goHome()
-    // }
-    setLoginLoading(false)
+    // goHome()
+    signIn({ username, password }).then(() => {
+      if (rememberMe) {
+        setLoggedInInfo(username, password, String(rememberMe))
+      } else {
+        removeLoggedInInfo()
+      }
+    })
   }
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)

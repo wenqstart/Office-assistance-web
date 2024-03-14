@@ -72,7 +72,7 @@ export default defineConfig({
     'process.env.SHOW_PROJECT_NAME': false, // 是否显示登录界面右下角应用名称
     'process.env.PROJECT_NAME': SYSTEM_NAME, // 登录页展示名称
     'process.env.PROJECT_LOGO': '@/assets/logo.svg', // 项目logo，目前UI风格设计成不展示，但是需要配置
-    'process.env.API_USER': '/api/user', // 用户管理转发接口
+    'process.env.BASE_API': '/api', // 用户管理转发接口
   },
   forkTSChecker: {}, // ts编译时类型检查
   routes,

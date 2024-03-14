@@ -1,16 +1,20 @@
 import { history } from 'umi';
-const setToken = (token: string) => {
-  return localStorage.setItem('office_system_token', token);
-};
 const getToken = () => {
   return localStorage.getItem('office_system_token');
+};
+const getUsername = () => {
+  return localStorage.getItem('office_system_username');
+};
+const getUserinfo = () => {
+  return JSON.parse(localStorage.getItem('office_system_userinfo') || '{}');
 };
 const goHome = () => {
   history.push('/');
 };
 const clearUserInfo = () => {
   localStorage.removeItem('office_system_token');
-  localStorage.removeItem('userInfo');
+  localStorage.removeItem('office_system_username');
+  localStorage.removeItem('office_system_userinfo');
 };
 const isLogin = () => {
   return !!getToken();
@@ -42,8 +46,9 @@ const goBack = () => {
 };
 export {
   clearUserInfo,
-  setToken,
   getToken,
+  getUsername,
+  getUserinfo,
   goBack,
   goHome,
   goTo,

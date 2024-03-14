@@ -1,37 +1,37 @@
-const API_USER = process.env.API_USER;
+const BASE_API = process.env.BASE_API
 import { request } from '@@/plugin-request'
-
+const user_api = BASE_API + '/user'
 // 获取用户信息
-export const fetchUserInfo = () => {
-  return request(`${API_USER}/provider/users`, {
+export const fetchUserInfo = (number: string) => {
+  return request(`${user_api}/getUserInfo`, {
     method: 'get',
-    // headers: { 'Amp-Organ-Id': '1' },
-  });
-};
+    params: { number },
+  })
+}
 export const changeUserPassword = (data: any, token = '') => {
-  return request(`${API_USER}/users/password`, {
+  return request(`${user_api}/users/password`, {
     method: 'post',
     data,
     headers: { Authorization: token },
-  });
-};
+  })
+}
 export const changeUserInfoData = (data: any) => {
-  return request(`${API_USER}/users/update`, {
+  return request(`${user_api}/users/update`, {
     method: 'post',
     data,
-  });
-};
+  })
+}
 // 用户登录
-export const accountSignIn = (data: any) => {
-  return request(`${API_USER}/users/noCode/login`, {
+export const accountSignIn = (loginData: any) => {
+  return request(`${user_api}/login`, {
     method: 'post',
-    data,
-  });
-};
+    data: loginData
+  })
+}
 
 // 用户登出
 export const accountSignOut = () => {
-  return request(`${API_USER}/users/logout`, {
+  return request(`${user_api}/users/logout`, {
     method: 'post',
-  });
-};
+  })
+}

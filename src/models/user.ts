@@ -10,6 +10,8 @@ import { clearUserInfo, getToken, goToLogin } from '@/utils/tool'
 import { message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 // import { useModel, history } from 'umi';
+import { goHome } from '@/utils/tool'
+
 import JSEncrypt from 'jsencrypt'
 import cookie from 'react-cookies'
 interface userProps {
@@ -36,6 +38,7 @@ export interface LoginModelState {
 export default function useUser() {
   const [userInfo, setUserInfo] = useState<userProps | null>(null)
   const [token, setToken] = useState<string | null>('')
+  const [role, setRole] = useState<string | null>('')
   const [pubKey, setPubKey] = useState<string | null>('')
   const [isLogin, setIsLogin] = useState<boolean>(false)
   const [loginLoading, setLoginLoading] = useState<boolean>(false)
@@ -50,12 +53,12 @@ export default function useUser() {
   }, [])
 
   // 获取用户信息
-  const fetchUser = useCallback(async () => {
-    return await fetchUserInfo()
+  const fetchUser = useCallback(async (number: string) => {
+    return await fetchUserInfo(number)
       .then(async (res) => {
-        let data = res.data
-        setUserInfo(data)
-        localStorage.setItem('userInfo', JSON.stringify(data))
+        console.log('res', res)
+        setUserInfo(res.data)
+        localStorage.setItem('office_system_userinfo', JSON.stringify(res.data))
         return res
       })
       .catch((e) => {
@@ -100,23 +103,26 @@ export default function useUser() {
     [userInfo],
   )
 
-  const signIn = async (data: any) => {
+  const signIn = async (loginData: any) => {
     setLoginLoading(true)
-    try {
-      try {
-        const res = await accountSignIn(data)
-        const { data: data_2 } = res
-        setToken(data_2.token)
-        setIsLogin(true)
-        cookie.save('token', data_2.token, {})
-        localStorage.setItem('office_system_token', data_2.token)
-      } catch (e: any) {
-        message.error(e.msg)
-        return await Promise.reject(e)
-      }
-    } finally {
-      setLoginLoading(false)
-    }
+    return accountSignIn(loginData).then((res: any) => {
+      const { data } = res
+      setToken(data.token)
+      setRole(data.role)
+      fetchUser(loginData.username)
+      // 后续用于第三方登录
+      setIsLogin(true)
+      // cookie.save('token', data.token, { path: '/' })
+      localStorage.setItem('office_system_token', data.token)
+      localStorage.setItem('office_system_username', loginData.username)
+      goHome()
+    }).catch((e: any) => {
+      message.error(e.msg);
+      return Promise.reject(e);
+    })
+    .finally(() => {
+      setLoginLoading(false);
+    });
   }
 
   const clearLoginInfo = () => {

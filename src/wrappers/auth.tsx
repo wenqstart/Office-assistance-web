@@ -1,5 +1,5 @@
 // 登录鉴权
-import { goToLogin } from '@/utils/tool';
+import { goToLogin, getUsername } from '@/utils/tool';
 // import { notification } from 'antd';
 import React, { useEffect } from 'react';
 import { Outlet, history, useModel } from 'umi';
@@ -7,6 +7,7 @@ import { Outlet, history, useModel } from 'umi';
 const AuthorizedEntry = () => {
   const { token, fetchUser, isLogin, setIsLogin } = useModel('user') || {};
   console.log('token', token);
+  console.log('isLogin', isLogin);
 
   // const [noticeApi, contextHolder] = notification.useNotification();
   const Context = React.createContext({ name: 'Default' });
@@ -15,7 +16,7 @@ const AuthorizedEntry = () => {
   useEffect(() => {
     if (token) {
       if (!isLogin) {
-        fetchUser();
+        fetchUser(getUsername());
         setIsLogin(true);
       }
     } else {
