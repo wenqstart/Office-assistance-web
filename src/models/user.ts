@@ -71,16 +71,13 @@ export default function useUser() {
   const changePassword = useCallback(async (data: any) => {
     let encrypt = new JSEncrypt()
     encrypt.setPublicKey(pubKey || '')
+    console.log('data', data.password, encrypt)
+    console.log('data', encrypt.encrypt(data.password))
+    console.log('data', encrypt.encrypt('333'))
     try {
       await changeUserPassword({
-        newPassword: encrypt.encrypt(data.newPassword),
+        number: data.number,
         password: encrypt.encrypt(data.password),
-        secondNewPassword: encrypt.encrypt(data.secondNewPassword),
-        // newPassword: window.btoa(data.newPassword),
-        // password: window.btoa(data.password),
-        // secondNewPassword: window.btoa(data.secondNewPassword),
-        // ...data,
-        organId: '1',
       })
       message.success('修改成功！')
       clearUserInfo()
@@ -93,8 +90,10 @@ export default function useUser() {
   // 修改用户信息
   const changeUserInfo = useCallback(
     async (data: any) => {
+      console.log('data', data)
       try {
         const res = await changeUserInfoData({ ...data })
+        fetchUser(data.number)
         message.success('保存成功！')
       } catch (err: any) {
         message.error(err.msg || '修改失败！')

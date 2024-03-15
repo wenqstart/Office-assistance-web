@@ -1,17 +1,19 @@
 import { useModel, history } from 'umi';
 import { Form, Input, Button, Space } from 'antd';
 import styles from './index.less';
+import { getUsername } from '@/utils/tool'
 
 const ChangePwd = () => {
   const { changePassword } = useModel('user') || {};
   const [form] = Form.useForm();
+  const username = getUsername()
 
   const cancelForm = () => {
     form.resetFields();
     history.goBack();
   };
   const onFinish = (values: any) => {
-    changePassword(values);
+    changePassword({number: username, password: values.newPassword});
   };
   // const pwdPattern = /^[A-Za-z0-9]{8,16}$/;
   const pwdPattern = /(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,16}/;

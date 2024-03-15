@@ -5,7 +5,6 @@ import { RunTimeLayoutConfig, RuntimeAntdConfig } from '@umijs/max'
 import { message, notification, theme } from 'antd'
 import type { RequestConfig } from 'umi'
 import { history } from 'umi'
-
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
 // useModel("@@initialState");
@@ -27,6 +26,7 @@ export const layout: typeof RunTimeLayoutConfig = () => {
       goToLogin()
     },
     pure: history.location.pathname === '/login' ? true : false, //如果为登录页面就隐藏系统布局
+    siderWidth: 180,
     // rightRender: (initialState: any) => <div>rightRender</div>,
     // footerRender: (initialState: any) => <div>footerRender</div>,
     // rightContentRender: () => <div>rightContentRender</div>,
@@ -124,7 +124,13 @@ export const request: typeof RequestConfig = {
       } else if (error.response) {
         // Axios 的错误
         // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
-        message.error(`Response status:${error.response.status}`)
+        if (error.response.status === 401) {
+          goToLogin()
+          clearUserInfo()
+          message.error(`用户登录认证过期，请重新登录`)
+        } else {
+          message.error(`Response status:${error.response.status}`)
+        }
       } else if (error.request) {
         // 请求已经成功发起，但没有收到响应
         // \`error.request\` 在浏览器中是 XMLHttpRequest 的实例，

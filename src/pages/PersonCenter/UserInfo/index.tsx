@@ -1,24 +1,26 @@
-import { useEffect } from 'react';
-import { useModel } from 'umi';
-import { Form, Input, Button } from 'antd';
-import styles from './index.less';
-import userLogo from '@/assets/avatar.svg';
-import { SvgImg } from '@/components';
+import userLogo from '@/assets/avatar.svg'
+import { SvgImg } from '@/components'
+import { Button, Form, Input, InputNumber, Radio } from 'antd'
+import { useEffect } from 'react'
+import { useModel } from 'umi'
+import styles from './index.less'
+import { getUsername } from '@/utils/tool'
 
 const UserInfo = () => {
-  const { userInfo, changeUserInfo } = useModel('user') || {};
-  const [form] = Form.useForm();
+  const { userInfo, changeUserInfo } = useModel('user') || {}
+  const [form] = Form.useForm()
+  const username = getUsername()
   const onFinish = (values: any) => {
-    changeUserInfo(values);
-  };
+    changeUserInfo({number: username, userDto: values})
+  }
   useEffect(() => {
-    form.setFieldsValue(userInfo);
-  }, [userInfo]);
+    form.setFieldsValue(userInfo)
+  }, [userInfo])
 
   return (
     <div className={styles.userInfo}>
       <div className={styles.leftPanel}>
-        <SvgImg src={userInfo?.avatar || userLogo} className={styles.avatar} />
+        <SvgImg src={userInfo?.icon || userLogo} className={styles.avatar} />
       </div>
       <Form
         className={styles.rightForm}
@@ -27,15 +29,24 @@ const UserInfo = () => {
         onFinish={onFinish}
         form={form}
       >
-        <Form.Item label="账号">{userInfo?.username}</Form.Item>
+        <Form.Item label="账号">{userInfo?.number}</Form.Item>
 
         <Form.Item label="姓名" name="name">
           <Input />
         </Form.Item>
+        <Form.Item label="性别" name="sex">
+          <Radio.Group>
+            <Radio value={1}>男</Radio>
+            <Radio value={2}>女</Radio>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item label="年龄" name="age">
+          <InputNumber min={0} />
+        </Form.Item>
 
         <Form.Item
           label="手机号"
-          name="mobile"
+          name="phone"
           rules={[
             {
               pattern: /^[1][0-9]{10}$/,
@@ -67,7 +78,7 @@ const UserInfo = () => {
         </div>
       </Form>
     </div>
-  );
-};
+  )
+}
 
-export default UserInfo;
+export default UserInfo

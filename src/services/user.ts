@@ -8,24 +8,30 @@ export const fetchUserInfo = (number: string) => {
     params: { number },
   })
 }
-export const changeUserPassword = (data: any, token = '') => {
-  return request(`${user_api}/users/password`, {
-    method: 'post',
-    data,
-    headers: { Authorization: token },
-  })
-}
+// 修改用户信息
 export const changeUserInfoData = (data: any) => {
-  return request(`${user_api}/users/update`, {
+  const { number, userDto } = data
+  return request(`${user_api}/getUserInfo`, {
     method: 'post',
-    data,
+    params: { number },
+    data: userDto,
   })
 }
+// 修改用户密码
+export const changeUserPassword = (data: any) => {
+  const { number, password } = data
+  return request(`${user_api}/updatePassword`, {
+    method: 'put',
+    params: { number },
+    data: { password },
+  })
+}
+
 // 用户登录
 export const accountSignIn = (loginData: any) => {
   return request(`${user_api}/login`, {
     method: 'post',
-    data: loginData
+    data: loginData,
   })
 }
 

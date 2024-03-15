@@ -69,14 +69,14 @@ const routes: RouteProps[] = [
       {
         name: '联系人',
         path: 'contact',
-        icon: '',
+        icon: 'CommentOutlined',
         exact: true,
         component: '@/pages/Contact',
       },
       {
         name: '工作台',
         path: 'work',
-        icon: '',
+        icon: 'FundProjectionScreenOutlined',
         exact: true,
         component: '@/pages/Work',
       },
@@ -96,21 +96,22 @@ const routes: RouteProps[] = [
       },
       { path: '/404', component: '@/pages/Error/404' },
       { path: '/noAuth', component: '@/pages/Error/noAuth' },
-      {
-        path: '/personCenter',
-        exact: true,
-        component: '@/pages/PersonCenter',
-      },
       // 为了实现菜单高亮
       {
         path: '/data-structure',
         name: '数据结构',
         icon: 'DatabaseOutlined',
-        component: '@/pages/data-structure',
+        component: '@/pages/DataStructure',
+      },
+      {
+        path: '/person-center',
+        name: '个人中心',
+        icon: 'UserOutlined',
+        component: '@/pages/PersonCenter',
       },
       {
         path: '/data-structure/*',
-        component: '@/pages/data-structure',
+        component: '@/pages/DataStructure',
       },
       { path: '/*', component: '@/pages/Error/404' },
     ],
