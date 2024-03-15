@@ -104,24 +104,30 @@ export default function useUser() {
 
   const signIn = async (loginData: any) => {
     setLoginLoading(true)
-    return accountSignIn(loginData).then((res: any) => {
-      const { data } = res
-      setToken(data.token)
-      setRole(data.role)
-      fetchUser(loginData.username)
-      // 后续用于第三方登录
-      setIsLogin(true)
-      // cookie.save('token', data.token, { path: '/' })
-      localStorage.setItem('office_system_token', data.token)
-      localStorage.setItem('office_system_username', loginData.username)
-      goHome()
-    }).catch((e: any) => {
-      message.error(e.msg);
-      return Promise.reject(e);
-    })
-    .finally(() => {
-      setLoginLoading(false);
-    });
+    return accountSignIn(loginData)
+      .then((res: any) => {
+        const { data, message } = res
+        if (!data) {
+          console.log(message)
+          return
+        }
+        setToken(data.token)
+        setRole(data.role)
+        fetchUser(loginData.username)
+        // 后续用于第三方登录
+        setIsLogin(true)
+        // cookie.save('token', data.token, { path: '/' })
+        localStorage.setItem('office_system_token', data.token)
+        localStorage.setItem('office_system_username', loginData.username)
+        goHome()
+      })
+      .catch((e: any) => {
+        message.error(e.msg)
+        return Promise.reject(e)
+      })
+      .finally(() => {
+        setLoginLoading(false)
+      })
   }
 
   const clearLoginInfo = () => {
