@@ -1,4 +1,5 @@
 {
+  "extends": "./src/.umi/tsconfig.json",
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
