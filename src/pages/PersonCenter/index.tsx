@@ -1,10 +1,9 @@
 import { Page } from '@/components'
 import { Tabs } from 'antd'
 import type { TabsProps } from 'antd';
-
 import { FC, useEffect, useState } from 'react'
-import ChangePwd from './ChangePwd'
-import UserInfo from './UserInfo'
+import ChangePwd from './components/ChangePwd'
+import UserInfo from './components/UserInfo'
 
 const PersonCenter: FC = (props: any) => {
   const [activeKey, setActiveKey] = useState('userInfo')

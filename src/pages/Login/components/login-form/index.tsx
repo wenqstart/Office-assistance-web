@@ -16,7 +16,7 @@ const LoginForm: React.FC = () => {
   const loginFormRef = useRef(null)
   const [form] = Form.useForm()
   const [clientReady, setClientReady] = useState<boolean>(false)
-  const { setIsLogin } = useModel('login')
+  const { setIsLogin } = useModel('Login.login')
   const {
     setLoggedInInfo,
     getLoggedInInfo,

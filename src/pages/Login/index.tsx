@@ -8,7 +8,9 @@ import RegisterForm from './components/register-form';
 import styles from './index.less';
 
 const LoginPage: React.FC = () => {
-  const { isLogin } = useModel('login');
+  const { isLogin } = useModel('Login.login');
+  console.log('isLogin', isLogin);
+  
   const loginItems = [
     {
       key: '1',
