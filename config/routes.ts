@@ -113,7 +113,6 @@ const routes: RouteProps[] = [
       // 为了实现菜单高亮
       {
         path: '/data-structure',
-        name: '数据结构',
         icon: 'DatabaseOutlined',
         component: '@/pages/DataStructure',
       },

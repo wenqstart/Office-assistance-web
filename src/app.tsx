@@ -125,7 +125,6 @@ export const request: typeof RequestConfig = {
         // Axios 的错误
         // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
         if (error.response.status === 401) {
-          goToLogin()
           clearUserInfo()
           message.error(`用户登录认证过期，请重新登录`)
         } else {
@@ -147,7 +146,6 @@ export const request: typeof RequestConfig = {
   requestInterceptors: [
     (config: any) => {
       // 拦截请求配置，进行个性化处理。
-      console.log('config', config)
       const accessToken = getToken()
       if (accessToken) {
         config.headers.Authorization = accessToken

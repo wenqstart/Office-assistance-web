@@ -15,15 +15,18 @@ const AuthorizedEntry = () => {
 
   useEffect(() => {
     if (token) {
+      // 页面手动刷新需要重新获取 userinfo
       if (!isLogin) {
         fetchUser(getUsername());
         setIsLogin(true);
       }
     } else {
+      // 场景：接口 401 需要重定向至登录页
       if (isLogin) {
         goToLogin();
         setIsLogin(false);
       } else {
+        // 场景：直接复制浏览器 url 进入（需要在登录后回到目标页面）
         goToLogin(history.location.pathname + history.location.search);
       }
     }

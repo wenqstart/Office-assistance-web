@@ -45,10 +45,11 @@ export default function useUser() {
   const [prefixCls, setPrefixCls] = useState<string>(
     localStorage.getItem('theme') || 'micro',
   )
-  // 进入项目，初始化用户信息、当前项目信息、当前组织信息
+  // 进入项目，初始化用户信息
   useEffect(() => {
-    if (getToken()) {
-      setToken(getToken())
+    const cacheToken = getToken()
+    if (cacheToken) {
+      setToken(cacheToken)
     }
   }, [])
 

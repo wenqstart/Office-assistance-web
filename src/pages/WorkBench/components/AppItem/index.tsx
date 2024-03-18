@@ -1,4 +1,5 @@
 import styles from './index.less'
+import { history } from 'umi';
 
 export type TAppItem = {
   appName: string
@@ -12,6 +13,7 @@ const AppItem = (props: { appItem: TAppItem }) => {
 
   const toApp = () => {
     console.log(appLink)
+    history.replace(appLink);
   }
 
   return (

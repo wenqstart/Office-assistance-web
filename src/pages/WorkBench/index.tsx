@@ -1,36 +1,35 @@
-import * as React from 'react'
+import type { TabsProps } from 'antd'
 import { Tabs } from 'antd'
+import * as React from 'react'
+import { useState } from 'react'
+
 import AppList from './components/AppList'
-import AppItem from './components/AppItem'
+import { allAppList, interactionList } from './components/AppList/data'
 
 const WorkBench: React.FC = () => {
-  const { TabPane } = Tabs
-  const tabList = ['全部应用', '教学互动']
-  const contentList = [
+  const items: TabsProps['items'] = [
     {
-      appName: '数据结构',
-      appLink: '',
-      icon: '',
-      desc: '',
+      key: 'allApp',
+      label: '全部应用',
+      children: <AppList appListData={allAppList} />,
+    },
+    {
+      key: 'interaction',
+      label: '教学互动',
+      children: <AppList appListData={interactionList} />,
     },
   ]
-
-  const onChange = (key: string) => {
-    console.log(key)
-  }
+  const [activeKey, setActiveKey] = useState('allApp')
 
   return (
     <div>
       <div>工作台</div>
-      <Tabs onChange={onChange} type="card">
-        {tabList.map((item, i) => {
-          return (
-            <TabPane key={i} tab={item}>
-              <AppList appListData={contentList}></AppList>
-            </TabPane>
-          )
-        })}
-      </Tabs>
+      <Tabs
+        onChange={(value: string) => setActiveKey(value)}
+        items={items}
+        activeKey={activeKey}
+        type="card"
+      />
     </div>
   )
 }

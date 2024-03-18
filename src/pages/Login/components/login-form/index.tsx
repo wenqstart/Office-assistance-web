@@ -1,9 +1,11 @@
 // import { goHome } from '@/utils/tool'
+import { getToken, goHome } from '@/utils/tool'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { useModel } from 'umi'
 import styles from './index.less'
+
 // type FieldType = {
 //   username?: string;
 //   password?: string;
@@ -15,8 +17,13 @@ const LoginForm: React.FC = () => {
   const [form] = Form.useForm()
   const [clientReady, setClientReady] = useState<boolean>(false)
   const { setIsLogin } = useModel('login')
-  const { setLoggedInInfo, getLoggedInInfo, removeLoggedInInfo, signIn, loginLoading } =
-    useModel('user')
+  const {
+    setLoggedInInfo,
+    getLoggedInInfo,
+    removeLoggedInInfo,
+    signIn,
+    loginLoading,
+  } = useModel('user')
   const [rememberMe, setRememberMe] = useState<boolean>(false)
   const initLoggedInInfo = async () => {
     const { rememberMe, username, password } = await getLoggedInInfo()
@@ -32,7 +39,28 @@ const LoginForm: React.FC = () => {
     setClientReady(true)
     initLoggedInInfo()
   }, [])
-
+  useEffect(() => {
+    // @ts-ignore
+    // const { token, back } = location.query
+    // if (token) {
+    //   // 用户通过第三方免登录方式跳转
+    //   clearLoginInfo();
+    //   setToken(token);
+    //   localStorage.setItem('userToken', token);
+    //   setTimeout(() => {
+    //     if (back) {
+    //       history.push(back.toString());
+    //     } else {
+    //       project.goHome();
+    //     }
+    //   }, 0);
+    // }
+    // 登录未失效
+    const cacheToken = getToken()
+    if (cacheToken) {
+      goHome()
+    }
+  }, [])
   const onFinish = async (values: any) => {
     const { username, password } = values
     // goHome()

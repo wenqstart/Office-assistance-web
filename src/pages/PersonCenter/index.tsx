@@ -7,7 +7,7 @@ import ChangePwd from './ChangePwd'
 import UserInfo from './UserInfo'
 
 const PersonCenter: FC = (props: any) => {
-  const [defaultActiveKey, setDefaultActiveKey] = useState('userInfo')
+  const [activeKey, setActiveKey] = useState('userInfo')
   const items: TabsProps['items'] = [
     {
       key: 'userInfo',
@@ -22,15 +22,15 @@ const PersonCenter: FC = (props: any) => {
   ]
   useEffect(() => {
     if (props?.location?.state?.tabKey) {
-      setDefaultActiveKey(props.location.state.tabKey)
+      setActiveKey(props.location.state.tabKey)
     }
   }, [props])
   return (
     <Page>
       <Tabs
-        activeKey={defaultActiveKey}
+        activeKey={activeKey}
         items={items}
-        onChange={(value: string) => setDefaultActiveKey(value)}
+        onChange={(value: string) => setActiveKey(value)}
       />
     </Page>
   )
