@@ -25,6 +25,7 @@ const LoginForm: React.FC = () => {
     loginLoading,
   } = useModel('user')
   const [rememberMe, setRememberMe] = useState<boolean>(false)
+
   const initLoggedInInfo = async () => {
     const { rememberMe, username, password } = await getLoggedInInfo()
     if (Boolean(rememberMe) && username && password) {
@@ -63,7 +64,6 @@ const LoginForm: React.FC = () => {
   }, [])
   const onFinish = async (values: any) => {
     const { username, password } = values
-    // goHome()
     signIn({ username, password }).then(() => {
       if (rememberMe) {
         setLoggedInInfo(username, password, String(rememberMe))

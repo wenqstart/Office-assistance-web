@@ -15,6 +15,7 @@
     "@ant-design/pro-components": "^2.4.4",
     "@umijs/max": "^4.1.0",
     "@umijs/plugin-model": "^2.6.2",
+    "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-react": "^1.0.6",
     "antd": "^5.4.0",
     "jsencrypt": "^3.3.2",
