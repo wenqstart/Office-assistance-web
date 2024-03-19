@@ -3,8 +3,8 @@ import { LOGOUT_NAME } from '@/constants'
 import { clearUserInfo, getToken, goToLogin } from '@/utils/tool'
 import { RunTimeLayoutConfig, RuntimeAntdConfig } from '@umijs/max'
 import { message, notification, theme } from 'antd'
-import type { RequestConfig } from 'umi'
-import { history } from 'umi'
+import type { RequestConfig } from '@umijs/max'
+import { history } from '@umijs/max'
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
 // useModel("@@initialState");

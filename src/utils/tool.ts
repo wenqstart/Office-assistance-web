@@ -1,4 +1,4 @@
-import { history } from 'umi';
+import { history } from '@umijs/max';
 const getToken = () => {
   return localStorage.getItem('office_system_token');
 };

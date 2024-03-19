@@ -1,4 +1,4 @@
-import { useModel, history } from 'umi';
+import { useModel, history } from '@umijs/max';
 import { Form, Input, Button, Space } from 'antd';
 import styles from './index.less';
 import { getUsername } from '@/utils/tool'

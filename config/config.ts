@@ -1,4 +1,4 @@
-import { defineConfig } from 'umi'
+import { defineConfig } from '@umijs/max'
 import path from 'path'
 import routes from './routes'
 import proxy from '../config/proxy'
@@ -8,6 +8,7 @@ const proxyData = proxy
 
 export default defineConfig({
   // favicon: '/favicon_hc.ico', // 浏览器icon
+  // plugins: ['@umijs/plugin-helmet'],
   favicons: [
     // 此时将指向 `/favicon.png` ，确保你的项目含有 `public/favicon.png`
     '/favicon.svg',
@@ -25,6 +26,9 @@ export default defineConfig({
         },
       ],
     },
+  },
+  mfsu: {
+    strategy: 'normal',
   },
   clickToComponent: {},
   icons: { autoInstall: {} },
@@ -51,9 +55,7 @@ export default defineConfig({
   layout: {
     title: SYSTEM_NAME,
   },
-  dva: {
-    hmr: true,
-  },
+  fastRefresh: true,
   chainWebpack: (config: any) => {
     const oneOfsMap = config.module.rule('less').oneOfs.values()
     oneOfsMap.forEach((item: any) => {

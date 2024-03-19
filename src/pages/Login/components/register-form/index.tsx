@@ -1,6 +1,6 @@
 import { Button, Form, Input } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
-import { useModel } from 'umi';
+import { useModel } from '@umijs/max';
 import styles from './index.less';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 

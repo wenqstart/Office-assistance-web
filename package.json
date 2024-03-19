@@ -23,6 +23,7 @@
     "react-cookies": "^0.1.1",
     "react-infinite-scroll-component": "^6.1.0",
     "react-svg": "^16.1.33",
+    "react-viewer": "^3.2.2",
     "sass-resources-loader": "^2.2.4"
   },
   "devDependencies": {

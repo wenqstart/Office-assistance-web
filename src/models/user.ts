@@ -9,7 +9,7 @@ import { decrypt, encrypt } from '@/utils/jsencrypt'
 import { clearUserInfo, getToken, goToLogin } from '@/utils/tool'
 import { message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
-// import { useModel, history } from 'umi';
+// import { useModel, history } from '@umijs/max';
 import { goHome } from '@/utils/tool'
 
 import JSEncrypt from 'jsencrypt'

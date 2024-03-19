@@ -1,4 +1,4 @@
-import { defineConfig } from 'umi'
+import { defineConfig } from '@umijs/max'
 import theme from './theme.orange'
 export default defineConfig({
   theme,

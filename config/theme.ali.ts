@@ -1,4 +1,4 @@
-import { Redirect } from 'umi';
+import { Redirect } from '@umijs/max';
 
 const leftNavBg = '#f5f5f5';
 const menuDarkBg = '#226EE7';

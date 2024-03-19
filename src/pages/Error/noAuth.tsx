@@ -1,6 +1,6 @@
 import { Button, Result } from 'antd';
 import React from 'react';
-import { history } from 'umi';
+import { history } from '@umijs/max';
 import styles from './index.less';
 
 const NoAuthPage: React.FC = () => {

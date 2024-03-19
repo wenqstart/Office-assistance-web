@@ -3,7 +3,7 @@ import { getToken, goHome } from '@/utils/tool'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
-import { useModel } from 'umi'
+import { useModel } from '@umijs/max'
 import styles from './index.less'
 
 // type FieldType = {

@@ -1,7 +1,7 @@
 import { Image, Tabs } from 'antd';
 import * as React from 'react';
 import { useMemo } from 'react';
-import { useModel } from 'umi';
+import { useModel } from '@umijs/max';
 import circulation from '../../assets/login/circulation.svg';
 import LoginForm from './components/login-form';
 import RegisterForm from './components/register-form';

@@ -2,7 +2,7 @@ import userLogo from '@/assets/avatar.svg'
 import { SvgImg } from '@/components'
 import { Button, Form, Input, InputNumber, Radio } from 'antd'
 import { useEffect } from 'react'
-import { useModel } from 'umi'
+import { useModel } from '@umijs/max'
 import styles from './index.less'
 import { getUsername } from '@/utils/tool'
 

@@ -2,7 +2,7 @@
 import { goToLogin, getUsername } from '@/utils/tool';
 // import { notification } from 'antd';
 import React, { useEffect } from 'react';
-import { Outlet, history, useModel } from 'umi';
+import { Outlet, history, useModel } from '@umijs/max';
 
 const AuthorizedEntry = () => {
   const { token, fetchUser, isLogin, setIsLogin } = useModel('user') || {};

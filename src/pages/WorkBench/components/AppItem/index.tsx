@@ -1,5 +1,5 @@
 import styles from './index.less'
-import { history } from 'umi'
+import { history } from '@umijs/max';
 
 export type TAppItem = {
   appName: string
