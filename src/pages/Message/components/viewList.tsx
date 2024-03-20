@@ -44,7 +44,7 @@ const ViewList: React.FC = () => {
 
   return (
     <div
-      id="scrollableDiv"
+      id="viewList"
       style={{
         height: '75vh',
         overflow: 'auto',
@@ -58,7 +58,7 @@ const ViewList: React.FC = () => {
         hasMore={data.length < 50}
         loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
         endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
-        scrollableTarget="scrollableDiv"
+        scrollableTarget="viewList"
       >
         <List
           dataSource={data}

@@ -3,8 +3,8 @@
   justify-content: space-between;
   align-items: center;
   padding-left: 20px;
-//   position: absolute;
-//   top: 0;
+  //   position: absolute;
+  //   top: 0;
   border-bottom: 1px solid #eee;
   padding-bottom: 10px;
   width: 100%;
@@ -25,12 +25,30 @@
   align-items: center;
   justify-content: center;
   background-color: #fff;
-
   flex: 1;
+  .messageWrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    .renderItem {
+      width: 100%;
+      overflow: hidden;
+      // display: flex;
+      // justify-content: space-between;
+      .renderRight {
+        width: 100%;
+        float: right;
+      }
+      .renderLeft {
+        width: 100%;
+        float: left;
+      }
+    }
+  }
 }
 .footerContent {
-    // height: 54px;
-    // background-color: #fff;
-    border-top: 1px #eee solid;
-    box-shadow: #eee;
+  // height: 54px;
+  // background-color: #fff;
+  border-top: 1px #eee solid;
+  box-shadow: #eee;
 }
