@@ -18,6 +18,16 @@ const UserChat = () => {
     emptyContent,
     footerContent,
   } = styles
+  // 使用 ctrl+enter 或 cmd+enter 换行。
+  function handleKeydown(params: any) {
+    const { keyCode, ctrlKey, metaKey } = params
+    // ctrl 17 enter 13 meta 91
+    // 发送消息
+    if (keyCode === 13 && !ctrlKey && !metaKey) {
+      console.log('send')
+    }
+    console.log(params)
+  }
   return (
     <>
       <div className={topHeader}>
@@ -38,7 +48,11 @@ const UserChat = () => {
         )}
       </div>
       <div className={footerContent}>
-        <WangEditor content={'www'} toolbarConfig={toolbarConfig}/>
+        <WangEditor
+          content={'www'}
+          toolbarConfig={toolbarConfig}
+          handleKeydown={handleKeydown}
+        />
       </div>
     </>
   )

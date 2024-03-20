@@ -127,6 +127,7 @@ export const request: typeof RequestConfig = {
         if (error.response.status === 401) {
           clearUserInfo()
           message.error(`用户登录认证过期，请重新登录`)
+          goToLogin()
         } else {
           message.error(`Response status:${error.response.status}`)
         }

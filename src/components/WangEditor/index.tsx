@@ -16,12 +16,21 @@ interface PageProps {
   toolbarConfig?: Partial<IToolbarConfig>
   content: string
   style?: any
+  handleKeydown?: (params: any) => void
 }
 
 let imgList: any[] = []
 
 const MyEditor: React.FC<PageProps> = (props, ref) => {
-  const { toolbarConfig = defaultToolBarConfig, content, style } = props
+  function defaultKeydown(params: any) {
+    console.log('params', params)
+  }
+  const {
+    toolbarConfig = defaultToolBarConfig,
+    content,
+    style,
+    handleKeydown = defaultKeydown,
+  } = props
   const [editor, setEditor] = useState<IDomEditor | null>(null)
 
   const [html, setHtml] = useState('')
@@ -168,17 +177,7 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
       } else return true
     },
   }
-  // 使用 ctrl+enter 或 cmd+enter 换行。
-  function handleKeydown(params: any) {
-    const { keyCode, ctrlKey, metaKey } = params
-    // ctrl 17 enter 13 meta 91
-      // 发送消息
-      if (keyCode === 13 && !ctrlKey && !metaKey) {
-        console.log('send');
-        
-      }
-    console.log(params)
-  }
+
   useEffect(() => {
     document.addEventListener('keydown', handleKeydown)
     return () => {
@@ -204,7 +203,6 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
           value={html}
           onCreated={setEditor}
           onChange={(editor) => setHtml(editor.getHtml())}
-          onKeydown={handleKeydown}
           mode="default"
           style={{ height: '100px', overflowY: 'hidden', ...style }}
         />

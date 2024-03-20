@@ -123,7 +123,6 @@ export default function useUser() {
         goHome()
       })
       .catch((e: any) => {
-        message.error(e.msg)
         return Promise.reject(e)
       })
       .finally(() => {
