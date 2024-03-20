@@ -17,6 +17,7 @@
     "@umijs/plugin-model": "^2.6.2",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-react": "^1.0.6",
+    "@wangeditor/plugin-ctrl-enter": "^1.1.2",
     "antd": "^5.4.0",
     "jsencrypt": "^3.3.2",
     "qs": "^6.11.2",

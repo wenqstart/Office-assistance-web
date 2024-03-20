@@ -1,13 +1,13 @@
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import { Boot } from '@wangeditor/editor'
+import ctrlEnterModule from '@wangeditor/plugin-ctrl-enter'
 
+Boot.registerModule(ctrlEnterModule)
+
+// Then create editor and toolbar
 import { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
-import React, {
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react'
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react'
 // import { addAttachment, download } from '@/services/attachment';
 import Viewer from 'react-viewer'
 import { defaultToolBarConfig } from './data'
@@ -168,6 +168,23 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
       } else return true
     },
   }
+  // 使用 ctrl+enter 或 cmd+enter 换行。
+  function handleKeydown(params: any) {
+    const { keyCode, ctrlKey, metaKey } = params
+    // ctrl 17 enter 13 meta 91
+      // 发送消息
+      if (keyCode === 13 && !ctrlKey && !metaKey) {
+        console.log('send');
+        
+      }
+    console.log(params)
+  }
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeydown)
+    return () => {
+      document.removeEventListener('keydown', handleKeydown)
+    }
+  }, [])
 
   useEffect(() => {
     return () => {
@@ -180,17 +197,14 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
   return (
     <>
       <div>
-        <Toolbar
-          editor={editor}
-          defaultConfig={toolbarConfig}
-          mode="default"
-        />
+        <Toolbar editor={editor} defaultConfig={toolbarConfig} mode="default" />
         <Editor
           className="editorContent"
           defaultConfig={editorConfig}
           value={html}
           onCreated={setEditor}
           onChange={(editor) => setHtml(editor.getHtml())}
+          onKeydown={handleKeydown}
           mode="default"
           style={{ height: '100px', overflowY: 'hidden', ...style }}
         />
