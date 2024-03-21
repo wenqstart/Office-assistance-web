@@ -13,7 +13,7 @@ const NoAuthPage: React.FC = () => {
       subTitle="当前用户暂无访问该链接的权限，请联系组织管理员分配应用权限"
       className={styles.errorPage}
       extra={
-        <Button type="primary" onClick={() => history.push('/home')}>
+        <Button type="primary" onClick={() => history.push('/workBench')}>
           Back Home
         </Button>
       }

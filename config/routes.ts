@@ -50,14 +50,7 @@ const routes: RouteProps[] = [
     routes: [
       {
         path: '/',
-        redirect: '/home',
-      },
-      {
-        name: '首页',
-        path: 'home',
-        icon: 'home',
-        exact: true,
-        component: '@/pages/Home',
+        redirect: '/workBench',
       },
       {
         name: '消息',
@@ -67,32 +60,32 @@ const routes: RouteProps[] = [
         component: '@/pages/Message',
       },
       {
-        name: '联系人',
-        path: 'contact',
-        icon: 'CommentOutlined',
-        exact: true,
-        component: '@/pages/Contact',
-      },
-      {
-        name: '资料中心',
-        path: 'dataCenter',
-        icon: '',
-        exact: true,
-        component: '@/pages/DataCenter',
-      },
-      {
         name: '邮件',
         path: 'email',
-        icon: '',
+        icon: 'ProjectOutlined',
         exact: true,
         component: '@/pages/Email',
       },
       {
         name: '工作台',
         path: 'workBench',
-        icon: '',
+        icon: 'FundProjectionScreenOutlined',
         exact: true,
         component: '@/pages/WorkBench',
+      },
+      {
+        name: '联系人',
+        path: 'contact',
+        icon: 'TeamOutlined',
+        exact: true,
+        component: '@/pages/Contact',
+      },
+      {
+        name: '资料中心',
+        path: 'dataCenter',
+        icon: 'HddOutlined',
+        exact: true,
+        component: '@/pages/DataCenter',
       },
       {
         name: '账号管理',

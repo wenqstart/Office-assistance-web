@@ -14,7 +14,7 @@ const NoFoundPage: React.FC = () => {
       subTitle="Sorry, the page you visited does not exist."
       className={styles.errorPage}
       extra={
-        <Button type="primary" onClick={() => history.push('/home')}>
+        <Button type="primary" onClick={() => history.push('/workBench')}>
           Back Home
         </Button>
       }

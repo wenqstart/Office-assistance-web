@@ -14,7 +14,7 @@ const NoFoundPage: React.FC = () => {
       subTitle="啊哦～，服务器崩溃了"
       className={styles.errorPage}
       extra={
-        <Button type="primary" onClick={() => history.push('/home')}>
+        <Button type="primary" onClick={() => history.push('/workBench')}>
           Back Home
         </Button>
       }
