@@ -81,7 +81,7 @@ const routes: RouteProps[] = [
         component: '@/pages/Contact',
       },
       {
-        name: '资料中心',
+        name: '文档中心',
         path: 'dataCenter',
         icon: 'HddOutlined',
         exact: true,

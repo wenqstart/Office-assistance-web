@@ -1,11 +1,41 @@
 .box {
+  display: flex;
+  align-items: center;
   width: 300px;
   height: 120px;
+  padding-left: 40px;
   background-color: white;
   border-radius: 12px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 10%);
+
+  .icon {
+    width: 60px;
+    height: 60px;
+    color: white;
+    text-align: center;
+    line-height: 60px;
+    background-color: rgb(34, 119, 255);
+    border-radius: 6px;
+    font-size: 36px;
+  }
+
+  .textBox {
+    display: flex;
+    flex-direction: column;
+    height: 60px;
+    margin-left: 10px;
+
+    & > span:first-child {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    & > span:last-child {
+      color: rgba(157, 160, 163, 100%);
+    }
+  }
 
   &:hover {
-    border: 1px solid #0ea3f1;
-    background-color: aqua;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 20%);
   }
 }

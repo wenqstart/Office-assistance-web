@@ -1,11 +1,17 @@
-import * as React from 'react'
-import { Button, Flex, Modal } from 'antd'
-import EmailEditor from './components/EmailEditor'
-import TabList from './components/TabList'
+import { Button, Flex } from 'antd'
+import React, { useState } from 'react'
 import EmailList from './components/EmailList'
+import TabList from './components/TabList'
 import './index.less'
 
 const Email: React.FC = () => {
+  const [activeTab, setActiveTab] = useState(0)
+
+  const tabClick = (tabNum: number) => {
+    console.log('tabNum', tabNum)
+    setActiveTab(tabNum)
+  }
+
   return (
     <div>
       <div>
@@ -16,8 +22,8 @@ const Email: React.FC = () => {
         </Flex>
       </div>
       <div className="content">
-        <TabList></TabList>
-        <EmailList></EmailList>
+        <TabList tabClick={tabClick}></TabList>
+        <EmailList activeTab={activeTab}></EmailList>
       </div>
     </div>
   )

@@ -1,10 +1,8 @@
-import type { TabsProps } from 'antd'
-import { Tabs } from 'antd'
-import * as React from 'react'
-import { useState } from 'react'
-
+import { Tabs, type TabsProps } from 'antd'
+import React, { useState } from 'react'
 import AppList from './components/AppList'
 import { allAppList, interactionList } from './components/AppList/data'
+import styles from './index.less'
 
 const WorkBench: React.FC = () => {
   const items: TabsProps['items'] = [
@@ -23,7 +21,7 @@ const WorkBench: React.FC = () => {
 
   return (
     <div>
-      <div>工作台</div>
+      <div className={styles.title}>工作台</div>
       <Tabs
         onChange={(value: string) => setActiveKey(value)}
         items={items}

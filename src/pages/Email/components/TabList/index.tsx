@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './index.less'
 
-const TabList: React.FC = () => {
+const TabList: React.FC<any> = (props) => {
   const listData = [
     {
       text: '收件箱',
@@ -25,6 +25,7 @@ const TabList: React.FC = () => {
 
   const clickItem = (i: number) => {
     setActiveId(i)
+    props.tabClick(i)
     console.log(activeId)
   }
 

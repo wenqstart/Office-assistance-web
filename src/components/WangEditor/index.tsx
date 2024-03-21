@@ -1,5 +1,5 @@
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { Boot } from '@wangeditor/editor'
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import ctrlEnterModule from '@wangeditor/plugin-ctrl-enter'
 
 Boot.registerModule(ctrlEnterModule)
@@ -7,7 +7,7 @@ Boot.registerModule(ctrlEnterModule)
 // Then create editor and toolbar
 import { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
-import React, { useEffect, useImperativeHandle, useRef, useState } from 'react'
+import React, { useEffect, useImperativeHandle, useState } from 'react'
 // import { addAttachment, download } from '@/services/attachment';
 import Viewer from 'react-viewer'
 import { defaultToolBarConfig } from './data'

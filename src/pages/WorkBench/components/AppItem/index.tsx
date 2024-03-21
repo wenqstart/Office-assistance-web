@@ -1,5 +1,5 @@
+import { history } from '@umijs/max'
 import styles from './index.less'
-import { history } from '@umijs/max';
 
 export type TAppItem = {
   appName: string
@@ -18,7 +18,11 @@ const AppItem = (props: { appItem: TAppItem }) => {
 
   return (
     <div className={styles.box} onClick={toApp}>
-      {appName}
+      <div className={styles.icon}>DS</div>
+      <div className={styles.textBox}>
+        <span>{appName}</span>
+        <span>{desc}</span>
+      </div>
     </div>
   )
 }
