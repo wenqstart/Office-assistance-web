@@ -10,7 +10,7 @@ import { clearUserInfo, getToken, goToLogin } from '@/utils/tool'
 import { message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 // import { useModel, history } from '@umijs/max';
-import { goHome } from '@/utils/tool'
+import { goHome, getUserinfo } from '@/utils/tool'
 
 import JSEncrypt from 'jsencrypt'
 import cookie from 'react-cookies'
@@ -36,7 +36,7 @@ export interface LoginModelState {
 }
 
 export default function useUser() {
-  const [userInfo, setUserInfo] = useState<userProps | null>(null)
+  const [userInfo, setUserInfo] = useState<userProps | null>(getUserinfo())
   const [token, setToken] = useState<string | null>('')
   const [role, setRole] = useState<string | null>('')
   const [pubKey, setPubKey] = useState<string | null>('')

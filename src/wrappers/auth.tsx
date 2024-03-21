@@ -6,8 +6,8 @@ import { Outlet, history, useModel } from '@umijs/max';
 
 const AuthorizedEntry = () => {
   const { token, fetchUser, isLogin, setIsLogin } = useModel('user') || {};
-  console.log('token', token);
-  console.log('isLogin', isLogin);
+  // console.log('token', token);
+  // console.log('isLogin', isLogin);
 
   // const [noticeApi, contextHolder] = notification.useNotification();
   const Context = React.createContext({ name: 'Default' });

@@ -2,11 +2,11 @@ import WangEditor from '@/components/WangEditor'
 import { UserOutlined } from '@ant-design/icons'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Avatar, Divider, List, Skeleton, Empty } from 'antd'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useMemo } from 'react'
 import { useModel } from '@umijs/max'
 import styles from './index.less'
 import { toolbarConfig } from './data'
-
+import { getUsersChatId } from '@/services/chat'
 const UserChat = () => {
   const defaultMessageList = [
     {
@@ -52,12 +52,25 @@ const UserChat = () => {
       message: '消息 6',
     },
   ]
-  const [messageList, setMessageList] = useState([])
+  // const [messageList, setMessageList] = useState([])
   const { userInfo } = useModel('user')
+  const {
+    socketInit,
+    chatId,
+    setChatId,
+    sendMessage,
+    currentMsg,
+    getChatMessage,
+    messageList,
+  } = useModel('websocket')
   const [loading, setLoading] = useState(false)
 
   const inputRef = useRef()
+  const editorRef = useRef()
+  const scrollViewRef = useRef()
   const userId = userInfo?.id
+  const userName = userInfo?.name
+  const userNumber = userInfo?.number
   const {
     userChat,
     topHeader,
@@ -70,39 +83,95 @@ const UserChat = () => {
     renderItem,
     renderRight,
     renderLeft,
+    listItemStart,
+    listItemEnd,
+    messageStart,
+    messageEnd,
+    titleEnd,
+    titleStart,
+    createTimeStart,
+    createTimeEnd
   } = styles
   // 使用 ctrl+enter 或 cmd+enter 换行。
-  function handleKeydown(params: any) {
-    const { keyCode, ctrlKey, metaKey } = params
+  function handleKeydown(event: any) {
+    console.log('handleKeydown', chatId)
+
+    const { keyCode, ctrlKey, metaKey } = event
+
+    console.log(sessionStorage.getItem('chatId'))
+
     // ctrl 17 enter 13 meta 91
     // 发送消息
     if (keyCode === 13 && !ctrlKey && !metaKey) {
-      console.log('send')
+      sendMessage({
+        userId: userId,
+        chatId: chatId || sessionStorage.getItem('chatId'),
+        number: userNumber,
+        content: editorRef.current?.html,
+      })
     }
-    console.log(params)
+    console.log(event)
   }
-  function loadMoreData(params: type) {
+  function loadMoreData(params: any) {
     console.log('loadMoreData')
-    if (loading) {
-      return
-    }
-    setLoading(true)
-    setMessageList([...messageList, ...defaultMessageList])
-    setLoading(false)
+    // if (loading) {
+    //   return
+    // }
+    // setLoading(true)
+
+    // setTimeout(() => {
+    //   setMessageList([...messageList, ...defaultMessageList])
+    //   // 需要手动移动滚动条，防止一直触发
+    //   if (scrollViewRef.current && scrollViewRef.current.el) {
+    //     scrollViewRef.current.el.scrollTop += 150
+    //   }
+    //   console.log('scrollViewRef', scrollViewRef.current)
+    //   // userChatRef.scrollTop = 30
+    //   setLoading(false)
+    // }, 1000)
   }
+  async function getCurrentChatId() {
+    try {
+      const res = await getUsersChatId({
+        numberA: userNumber,
+        numberB: currentMsg.number,
+      })
+      console.log(res.data)
+      sessionStorage.setItem('chatId', res.data)
+      setChatId(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  // useEffect(() => {
+  //   loadMoreData()
+  // }, [])
+
   useEffect(() => {
-    loadMoreData()
-  }, [])
+    if (currentMsg.number) {
+      getCurrentChatId()
+    }
+  }, [currentMsg])
+  useEffect(() => {
+    if (chatId) {
+      getChatMessage()
+    }
+  }, [chatId])
+  const editorConfig = useMemo(() => {
+    console.log('currentMsg', !currentMsg.name)
+
+    return { readOnly: !currentMsg.name }
+  }, [currentMsg])
   return (
     <>
       <div className={topHeader}>
         <div className={topLeft}>
           <Avatar size={32} icon={<UserOutlined />} />
-          <div className={title}>Jensen</div>
+          <div className={title}>{currentMsg.name?.last}</div>
         </div>
       </div>
       <div className={mainContent}>
-        {messageList.length === 0 ? (
+        {messageList?.length === 0 ? (
           <Empty description={false} imageStyle={{ height: 100 }} />
         ) : (
           // <div className={messageWrap}>
@@ -127,22 +196,23 @@ const UserChat = () => {
             id="userChat"
             style={{
               width: '100%',
-              paddingLeft: '30px',
+              padding: '0 16px 0 30px',
               height: '55vh',
               overflow: 'auto',
-              paddingRight: '16px',
+              display: 'flex',
+              flexDirection: 'column-reverse',
             }}
           >
             <InfiniteScroll
+              ref={scrollViewRef}
               dataLength={messageList.length}
               next={loadMoreData}
               style={{
                 display: 'flex',
                 flexDirection: 'column-reverse',
               }}
-              hasMore={messageList.length < 10}
+              hasMore={messageList.length < 50}
               inverse={true}
-              initialScrollY={100}
               loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
               endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
               scrollableTarget="userChat"
@@ -152,18 +222,47 @@ const UserChat = () => {
                 bordered={false}
                 split={false}
                 renderItem={(item, index) => (
-                  <List.Item key={index}>
-                    <List.Item.Meta
-                      avatar={
-                        <Avatar size={32}>
-                          {item.senderName?.slice(0, 1)}
+                  <>
+                    {item.number === userNumber ? (
+                      <List.Item className={listItemEnd} key={index}>
+                        <div className={messageEnd}>
+                          <span className={titleEnd}><span className={createTimeEnd}>{item.createTime}</span> {userName}</span>
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: item.content,
+                            }}
+                          >
+                          </div>
+                        </div>
+                        <Avatar
+                          shape="square"
+                          size={32}
+                          style={{ backgroundColor: '#377DF7' }}
+                        >
+                          {userName?.slice(0, 1)}
                         </Avatar>
-                      }
-                      title={<a href="https://ant.design">{item.senderName}</a>}
-                      // description={item.email}
-                    />
-                    <div>{item.message}</div>
-                  </List.Item>
+                      </List.Item>
+                    ) : (
+                      <List.Item className={listItemStart} key={index}>
+                        <Avatar
+                          shape="square"
+                          size={32}
+                          style={{ backgroundColor: '#377DF7' }}
+                        >
+                          {currentMsg?.fullnName?.slice(0, 1)}
+                        </Avatar>
+                        <div className={messageStart}>
+                          <span className={titleStart}>{currentMsg?.fullnName} <span className={createTimeStart}>{item.createTime}</span></span>
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: item.content,
+                            }}
+                          >
+                          </div>
+                        </div>
+                      </List.Item>
+                    )}
+                  </>
                 )}
               />
             </InfiniteScroll>
@@ -171,11 +270,14 @@ const UserChat = () => {
         )}
       </div>
       <div className={footerContent}>
-        <WangEditor
-          content={'www'}
-          toolbarConfig={toolbarConfig}
-          handleKeydown={handleKeydown}
-        />
+        {currentMsg?.name && (
+          <WangEditor
+            ref={editorRef}
+            content={'www'}
+            toolbarConfig={toolbarConfig}
+            handleKeydown={handleKeydown}
+          />
+        )}
       </div>
     </>
   )
