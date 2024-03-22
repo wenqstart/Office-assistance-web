@@ -6,7 +6,6 @@ import { useRef, useState, useEffect, useMemo } from 'react'
 import { useModel } from '@umijs/max'
 import styles from './index.less'
 import { toolbarConfig } from './data'
-import { getUsersChatId } from '@/services/chat'
 const UserChat = () => {
   const defaultMessageList = [
     {
@@ -55,12 +54,10 @@ const UserChat = () => {
   // const [messageList, setMessageList] = useState([])
   const { userInfo } = useModel('user')
   const {
-    socketInit,
     chatId,
     setChatId,
     sendMessage,
     currentMsg,
-    getChatMessage,
     messageList,
   } = useModel('websocket')
   const [loading, setLoading] = useState(false)
@@ -98,14 +95,14 @@ const UserChat = () => {
 
     const { keyCode, ctrlKey, metaKey } = event
 
-    console.log(sessionStorage.getItem('chatId'))
+    // console.log(sessionStorage.getItem('chatId'))
 
     // ctrl 17 enter 13 meta 91
     // 发送消息
     if (keyCode === 13 && !ctrlKey && !metaKey) {
       sendMessage({
         userId: userId,
-        chatId: chatId || sessionStorage.getItem('chatId'),
+        chatId: chatId,
         number: userNumber,
         content: editorRef.current?.html,
       })
@@ -130,38 +127,10 @@ const UserChat = () => {
     //   setLoading(false)
     // }, 1000)
   }
-  async function getCurrentChatId() {
-    try {
-      const res = await getUsersChatId({
-        numberA: userNumber,
-        numberB: currentMsg.number,
-      })
-      console.log(res.data)
-      sessionStorage.setItem('chatId', res.data)
-      setChatId(res.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+
   // useEffect(() => {
   //   loadMoreData()
   // }, [])
-
-  useEffect(() => {
-    if (currentMsg.number) {
-      getCurrentChatId()
-    }
-  }, [currentMsg])
-  useEffect(() => {
-    if (chatId) {
-      getChatMessage()
-    }
-  }, [chatId])
-  const editorConfig = useMemo(() => {
-    console.log('currentMsg', !currentMsg.name)
-
-    return { readOnly: !currentMsg.name }
-  }, [currentMsg])
   return (
     <>
       <div className={topHeader}>

@@ -21,7 +21,7 @@ interface DataType {
 
 const ViewList: React.FC = () => {
   const [loading, setLoading] = useState(false)
-  const { setCurrentMsg } = useModel('websocket')
+  const { chooseMessage } = useModel('websocket')
 
   const [data, setData] = useState<DataType[]>([
     {
@@ -33,7 +33,7 @@ const ViewList: React.FC = () => {
         last: '泉',
       },
       number: '200030111',
-      email: 'jackson.may@example.com',
+      email: 'wq.may@example.com',
       picture: {
         large: 'https://randomuser.me/api/portraits/men/79.jpg',
         medium: 'https://randomuser.me/api/portraits/med/men/79.jpg',
@@ -50,7 +50,7 @@ const ViewList: React.FC = () => {
         last: '三',
       },
       number: '2000301209',
-      email: 'jackson.may@example.com',
+      email: 'zs.may@example.com',
       picture: {
         large: 'https://randomuser.me/api/portraits/men/79.jpg',
         medium: 'https://randomuser.me/api/portraits/med/men/79.jpg',
@@ -79,9 +79,6 @@ const ViewList: React.FC = () => {
       .catch(() => {
         setLoading(false)
       })
-  }
-  function chooseMessage(msgInfo: any) {
-    setCurrentMsg(msgInfo)
   }
   useEffect(() => {
     loadMoreData()
