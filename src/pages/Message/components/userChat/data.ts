@@ -19,4 +19,3 @@ export const toolbarConfig = {
   ],
 };
 
-export const key = 'enumValue';
