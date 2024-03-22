@@ -4,22 +4,36 @@ import EmailListItem from '../EmailListItem'
 import './index.less'
 
 const EmailList: React.FC<{ activeTab: number }> = (props) => {
-  const [activeEmail, setActiveEmail] = useState(-1)
+  const [activeEmail, setActiveEmail] = useState(0)
 
+  const test = [
+    {
+      type: 0,
+      title: 'xx老师',
+      subtitle: 'xx作业',
+      desc: 'xx任务',
+    },
+    {
+      type: 1,
+      title: 'xx老师',
+      subtitle: 'xx公告',
+      desc: 'xx内容',
+    },
+  ]
   const clickItem = (i: number) => {
-    console.log(i)
     setActiveEmail(i)
   }
 
   return (
     <div className="container">
       <div className="emailList">
-        {new Array(props.activeTab + 1).fill(0).map((item, i) => {
+        {test.map((item, i) => {
           return (
             <EmailListItem
               key={i}
               onClick={() => clickItem(i)}
               selected={i === activeEmail}
+              emailData={item}
             ></EmailListItem>
           )
         })}

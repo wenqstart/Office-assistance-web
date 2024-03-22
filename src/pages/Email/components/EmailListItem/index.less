@@ -1,15 +1,45 @@
 .box {
+  display: flex;
   width: 300px;
   height: 100px;
-  margin-bottom: 20px;
-  border-radius: 12px;
-  background-color: antiquewhite;
+  padding: 20px 20px 0;
+  border-radius: 6px;
+
+  .emailLabel {
+    width: 50px;
+    height: 50px;
+    color: rgb(34, 119, 255);
+    text-align: center;
+    line-height: 46px;
+    border: 2px solid rgb(34, 119, 255);
+    border-radius: 50%;
+    font-size: 20px;
+    box-sizing: border-box;
+  }
+
+  .emailTextList {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-left: 10px;
+    border-bottom: 2px solid rgb(230, 230, 228);
+
+    & > span:first-child {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    & > span:last-child {
+      margin-top: 5px;
+      color: rgb(152, 155, 158);
+    }
+  }
 
   &:hover {
-    background-color: gray;
+    background-color: rgb(230, 230, 228);
   }
 }
 
 .active {
-  background-color: skyblue !important;
+  background-color: rgb(215, 228, 246) !important;
 }

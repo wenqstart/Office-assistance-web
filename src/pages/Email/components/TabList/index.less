@@ -1,21 +1,24 @@
 .list {
   display: flex;
   flex-direction: column;
+  border-bottom: 1px solid rgb(210, 210, 210);
 
   .item {
-    width: 150px;
-    height: 60px;
-    padding: 24px;
-    border-radius: 12px;
+    width: 130px;
+    height: 30px;
+    border-radius: 6px;
     margin-bottom: 5px;
+    padding-left: 20px;
+    line-height: 30px;
 
     &:hover {
-      background-color: gray;
+      background-color: rgb(230, 230, 228);
     }
   }
 
   .activeItem {
-    background-color: skyblue !important;
+    background-color: rgb(215, 228, 246) !important;
     color: black;
+    font-weight: 600;
   }
 }
