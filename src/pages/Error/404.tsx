@@ -2,6 +2,7 @@ import { Button, Result } from 'antd';
 import React from 'react';
 import { history } from '@umijs/max';
 import styles from './index.less';
+import { goHome } from '@/utils/tool'
 
 const NoFoundPage: React.FC = () => {
   // const { menus, getAppDefaultPathname } = useModel('app');
@@ -14,7 +15,7 @@ const NoFoundPage: React.FC = () => {
       subTitle="Sorry, the page you visited does not exist."
       className={styles.errorPage}
       extra={
-        <Button type="primary" onClick={() => history.push('/workBench')}>
+        <Button type="primary" onClick={() => goHome()}>
           Back Home
         </Button>
       }

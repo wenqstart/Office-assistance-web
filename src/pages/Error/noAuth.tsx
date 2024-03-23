@@ -1,7 +1,8 @@
 import { Button, Result } from 'antd';
 import React from 'react';
-import { history } from '@umijs/max';
 import styles from './index.less';
+import { goHome } from '@/utils/tool'
+
 
 const NoAuthPage: React.FC = () => {
   // const { menus, getAppDefaultPathname } = useModel('app');
@@ -13,7 +14,7 @@ const NoAuthPage: React.FC = () => {
       subTitle="当前用户暂无访问该链接的权限，请联系组织管理员分配应用权限"
       className={styles.errorPage}
       extra={
-        <Button type="primary" onClick={() => history.push('/workBench')}>
+        <Button type="primary" onClick={() => goHome()}>
           Back Home
         </Button>
       }

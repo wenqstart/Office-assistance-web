@@ -50,7 +50,7 @@ const routes: RouteProps[] = [
     routes: [
       {
         path: '/',
-        redirect: '/workBench',
+        redirect: '/message',
       },
       {
         name: '消息',
@@ -58,13 +58,6 @@ const routes: RouteProps[] = [
         icon: 'message',
         exact: true,
         component: '@/pages/Message',
-      },
-      {
-        name: '邮件',
-        path: 'email',
-        icon: 'ProjectOutlined',
-        exact: true,
-        component: '@/pages/Email',
       },
       {
         name: '工作台',
@@ -108,6 +101,13 @@ const routes: RouteProps[] = [
         path: '/data-structure',
         icon: 'DatabaseOutlined',
         component: '@/pages/DataStructure',
+      },
+      {
+        name: '我的邮件',
+        path: 'email',
+        icon: 'ProjectOutlined',
+        exact: true,
+        component: '@/pages/Email',
       },
       {
         path: '/person-center',
