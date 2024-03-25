@@ -27,7 +27,7 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
   }
   const {
     toolbarConfig = defaultToolBarConfig,
-    content,
+    content = '',
     style,
     handleKeydown = defaultKeydown,
   } = props

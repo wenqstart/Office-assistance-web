@@ -153,11 +153,11 @@ export default function useWebsocket() {
     },
     [socketOnClose, socketOnError, socketOnMessage, socketOnOpen, chatId],
   )
-  // 获取 chatId
+  // 获取 chatId（会话列表不需要，后续放在联系人界面使用）
   async function getCurrentChatId(contactInfo: any = {}) {
     try {
       const { number: contactNumber, group, labelId } = contactInfo
-      let params = { numberA: userNumber,}
+      let params = { numberA: userNumber }
       let url = ''
       let newChatId = ''
       if (group) {
@@ -190,8 +190,16 @@ export default function useWebsocket() {
   }, [reset, socketInit])
   // 左侧选择消息
   function chooseMessage(msgInfo: any) {
+    console.log('msgInfo', msgInfo)
+    setMessageList([])
     setCurrentMsg(msgInfo)
-    getCurrentChatId(msgInfo)
+    sessionStorage.setItem('office_system_chatId', msgInfo.chatId)
+    let url = `chat/${msgInfo.group ? 'group' : 'single'}/${userId}/${
+      msgInfo.chatId
+    }`
+    socketInit(url)
+    getChatMessage(msgInfo.chatId)
+    setChatId(msgInfo.chatId)
   }
   function cleanChatId() {
     console.log('cleanChatId')

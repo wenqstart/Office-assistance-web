@@ -81,7 +81,7 @@ const routes: RouteProps[] = [
         icon: 'HddOutlined',
         microApp: 'data-center',
         microAppProps: {
-          autoSetLoading: true,
+          // autoSetLoading: true,
         },
       },
       {

@@ -3,21 +3,21 @@ const getToken = () => {
   return localStorage.getItem('office_system_token');
 };
 const getUsername = () => {
-  return localStorage.getItem('office_system_username');
+  return sessionStorage.getItem('office_system_username');
 };
 const getChatId = () => {
   return sessionStorage.getItem('office_system_chatId');
 };
 const getUserinfo = () => {
-  return JSON.parse(localStorage.getItem('office_system_userinfo') || '{}');
+  return JSON.parse(sessionStorage.getItem('office_system_userinfo') || '{}');
 };
 const goHome = () => {
   history.push('/');
 };
 const clearUserInfo = () => {
   localStorage.removeItem('office_system_token');
-  localStorage.removeItem('office_system_username');
-  localStorage.removeItem('office_system_userinfo');
+  sessionStorage.removeItem('office_system_username');
+  sessionStorage.removeItem('office_system_userinfo');
   sessionStorage.removeItem('office_system_chatId');
 };
 const isLogin = () => {

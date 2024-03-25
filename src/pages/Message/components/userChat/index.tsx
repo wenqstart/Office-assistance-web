@@ -55,13 +55,8 @@ const UserChat = () => {
   ]
   // const [messageList, setMessageList] = useState([])
   const { userInfo } = useModel('user')
-  const {
-    chatId,
-    setChatId,
-    sendMessage,
-    currentMsg,
-    messageList,
-  } = useModel('websocket')
+  const { chatId, setChatId, sendMessage, currentMsg, messageList } =
+    useModel('websocket')
   const [loading, setLoading] = useState(false)
 
   const inputRef = useRef()
@@ -89,7 +84,9 @@ const UserChat = () => {
     titleEnd,
     titleStart,
     createTimeStart,
-    createTimeEnd
+    createTimeEnd,
+    contentWrapEnd,
+    contentWrapStart
   } = styles
   // 使用 ctrl+enter 或 cmd+enter 换行。
   function handleKeydown(event: any) {
@@ -133,33 +130,21 @@ const UserChat = () => {
   return (
     <>
       <div className={topHeader}>
-        <div className={topLeft}>
-          <Avatar size={32} icon={<UserOutlined />} />
-          <div className={title}>{currentMsg.name?.last}</div>
-        </div>
+        {currentMsg.chatId && (
+          <div className={topLeft}>
+            <Avatar
+              shape="square"
+              size={32}
+              style={{ backgroundColor: '#377DF7' }}
+            >
+              {currentMsg.sayName?.slice(0, 1)}
+            </Avatar>
+            <div className={title}>{currentMsg.sayName}</div>
+          </div>
+        )}
       </div>
       <div className={mainContent}>
-        {messageList?.length === 0 ? (
-          <Empty description={false} imageStyle={{ height: 100 }} />
-        ) : (
-          // <div className={messageWrap}>
-          //   {messageList.map((item, index) => (
-          //     <div className={renderItem} key={index}>
-          //       {
-          //         item.receiverId === userId ? (
-          //           <div className={renderRight}>
-          //             <span>{ item.message }</span>
-          //             <Avatar size={32} >{ item.senderName?.slice(0, 1) }</Avatar>
-          //           </div>
-          //         ) : (<div className={renderLeft}>
-          //             <Avatar size={32} >{ item.senderName?.slice(0, 1) }</Avatar>
-          //             <span>{ item.message }</span>
-
-          //         </div>)
-          //       }
-          //     </div>
-          //   ))}
-          // </div>
+        {messageList?.length !== 0 && (
           <div
             id="userChat"
             style={{
@@ -194,13 +179,18 @@ const UserChat = () => {
                     {item.number === userNumber ? (
                       <List.Item className={listItemEnd} key={index}>
                         <div className={messageEnd}>
-                          <span className={titleEnd}><span className={createTimeEnd}>{item.createTime}</span> {userName}</span>
+                          <span className={titleEnd}>
+                            <span className={createTimeEnd}>
+                              {item.createTime}
+                            </span>{' '}
+                            {userName}
+                          </span>
                           <div
+                            className={contentWrapEnd}
                             dangerouslySetInnerHTML={{
                               __html: item.content,
                             }}
-                          >
-                          </div>
+                          ></div>
                         </div>
                         <Avatar
                           shape="square"
@@ -220,13 +210,18 @@ const UserChat = () => {
                           {currentMsg?.fullnName?.slice(0, 1)}
                         </Avatar>
                         <div className={messageStart}>
-                          <span className={titleStart}>{currentMsg?.fullnName} <span className={createTimeStart}>{item.createTime}</span></span>
+                          <span className={titleStart}>
+                            {currentMsg?.fullnName}{' '}
+                            <span className={createTimeStart}>
+                              {item.createTime}
+                            </span>
+                          </span>
                           <div
+                            className={contentWrapStart}
                             dangerouslySetInnerHTML={{
                               __html: item.content,
                             }}
-                          >
-                          </div>
+                          ></div>
                         </div>
                       </List.Item>
                     )}
@@ -238,10 +233,9 @@ const UserChat = () => {
         )}
       </div>
       <div className={footerContent}>
-        {currentMsg?.name && (
+        {currentMsg?.chatId && (
           <WangEditor
             ref={editorRef}
-            content={'www'}
             toolbarConfig={toolbarConfig}
             handleKeydown={handleKeydown}
           />

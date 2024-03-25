@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Avatar, Divider, List, Skeleton } from 'antd'
 import { useModel } from '@umijs/max'
+import { getUserChatList_API } from '@/services/user'
 
 interface DataType {
   gender: string
@@ -23,65 +24,10 @@ const ViewList: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const { chooseMessage } = useModel('websocket')
 
-  const [data, setData] = useState<DataType[]>([
-    {
-      gender: 'male',
-      fullnName: '群 1',
-      name: {
-        title: '群',
-        first: '群',
-        last: '群',
-      },
-      number: '200030111',
-      labelId: '1767776501935714306',
-      email: 'wq.may@example.com',
-      picture: {
-        large: 'https://randomuser.me/api/portraits/men/79.jpg',
-        medium: 'https://randomuser.me/api/portraits/med/men/79.jpg',
-        thumbnail: 'https://randomuser.me/api/portraits/thumb/men/79.jpg',
-      },
-      nat: 'US',
-      group: true,
-    },
-    {
-      gender: 'male',
-      fullnName: '温泉',
-      name: {
-        title: 'Mr',
-        first: '温',
-        last: '泉',
-      },
-      number: '200030111',
-      email: 'wq.may@example.com',
-      picture: {
-        large: 'https://randomuser.me/api/portraits/men/79.jpg',
-        medium: 'https://randomuser.me/api/portraits/med/men/79.jpg',
-        thumbnail: 'https://randomuser.me/api/portraits/thumb/men/79.jpg',
-      },
-      nat: 'US',
-      group: false,
-    },
-    {
-      gender: 'male',
-      fullnName: '张三',
-      name: {
-        title: 'Mr',
-        first: '张',
-        last: '三',
-      },
-      number: '2000301209',
-      email: 'zs.may@example.com',
-      picture: {
-        large: 'https://randomuser.me/api/portraits/men/79.jpg',
-        medium: 'https://randomuser.me/api/portraits/med/men/79.jpg',
-        thumbnail: 'https://randomuser.me/api/portraits/thumb/men/79.jpg',
-      },
-      nat: 'US',
-      group: false,
-    },
-  ])
+  const [data, setData] = useState<DataType[]>([])
   const { userInfo } = useModel('user')
 
+  const userId = userInfo?.id
   const userNumber = userInfo?.number
 
   const loadMoreData = () => {
@@ -89,12 +35,11 @@ const ViewList: React.FC = () => {
       return
     }
     setLoading(true)
-    fetch(
-      'https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo',
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setData([...data, ...body.results])
+    getUserChatList_API({ userId })
+      .then((res) => {
+        console.log('res.data', res.data);
+        
+        setData([...data, ...res.data])
         setLoading(false)
       })
       .catch(() => {
@@ -127,16 +72,44 @@ const ViewList: React.FC = () => {
           dataSource={data}
           renderItem={(item) => (
             <>
-              {(item.group || item?.number !== userNumber) && (
-                <List.Item key={item.email} onClick={() => chooseMessage(item)}>
+              {
+                <List.Item
+                  key={item.chatId}
+                  onClick={() => chooseMessage(item)}
+                  style={{
+                    alignItems: 'start'
+                  }}
+                >
                   <List.Item.Meta
-                    avatar={<Avatar src={item.picture?.large} />}
-                    title={<a href="https://ant.design">{item.name.last}</a>}
-                    description={item.email}
+                    avatar={
+                      <Avatar
+                        shape="square"
+                        size={32}
+                        style={{ backgroundColor: '#377DF7' }}
+                      >
+                        {item.sayName?.slice(0, 1)}
+                      </Avatar>
+                    }
+                    title={<span>{item.sayName}</span>}
+                    description={
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: item.content,
+                        }}
+                      ></span>
+                    }
                   />
-                  <div>Content</div>
+                  <span
+                    style={{
+                      color: '#8f959e',
+                      fontSize: '12px',
+                      transition: 'opacity .2s ease-in',
+                    }}
+                  >
+                    {item.createTime}
+                  </span>
                 </List.Item>
-              )}
+              }
             </>
           )}
         />

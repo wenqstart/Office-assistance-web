@@ -40,7 +40,7 @@ const LoginPage: React.FC = () => {
             <ul>
               <li>办公辅助系统-Office auxiliary system</li>
               <li>支持任务发布、学生任务反馈等</li>
-              <li>效率高、低成本、时效性、多人协同合作</li>
+              <li>高效率、低成本、时效性、多人协同合作</li>
             </ul>
           </div>
         </div>

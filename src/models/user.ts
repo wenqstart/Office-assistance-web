@@ -59,7 +59,7 @@ export default function useUser() {
       .then(async (res) => {
         console.log('res', res)
         setUserInfo(res.data)
-        localStorage.setItem('office_system_userinfo', JSON.stringify(res.data))
+        sessionStorage.setItem('office_system_userinfo', JSON.stringify(res.data))
         return res
       })
       .catch((e) => {
@@ -119,7 +119,7 @@ export default function useUser() {
         setIsLogin(true)
         // cookie.save('token', data.token, { path: '/' })
         localStorage.setItem('office_system_token', data.token)
-        localStorage.setItem('office_system_username', loginData.username)
+        sessionStorage.setItem('office_system_username', loginData.username)
         goHome()
       })
       .catch((e: any) => {

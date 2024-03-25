@@ -41,3 +41,11 @@ export const accountSignOut = () => {
     method: 'post',
   })
 }
+
+// 获取用户的聊天列表
+export const getUserChatList_API = (params: any) => {
+  return request(`${user_api}/getMessage`, {
+    method: 'get',
+    params
+  })
+}
