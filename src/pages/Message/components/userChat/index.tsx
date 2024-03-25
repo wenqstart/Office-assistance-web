@@ -6,6 +6,8 @@ import { useRef, useState, useEffect, useMemo } from 'react'
 import { useModel } from '@umijs/max'
 import styles from './index.less'
 import { toolbarConfig } from './data'
+import { getChatId } from '@/utils/tool'
+
 const UserChat = () => {
   const defaultMessageList = [
     {
@@ -91,8 +93,6 @@ const UserChat = () => {
   } = styles
   // 使用 ctrl+enter 或 cmd+enter 换行。
   function handleKeydown(event: any) {
-    console.log('handleKeydown', chatId)
-
     const { keyCode, ctrlKey, metaKey } = event
 
     // console.log(sessionStorage.getItem('chatId'))
@@ -102,12 +102,11 @@ const UserChat = () => {
     if (keyCode === 13 && !ctrlKey && !metaKey) {
       sendMessage({
         userId: userId,
-        chatId: chatId,
+        chatId: getChatId(),
         number: userNumber,
         content: editorRef.current?.html,
       })
     }
-    console.log(event)
   }
   function loadMoreData(params: any) {
     console.log('loadMoreData')

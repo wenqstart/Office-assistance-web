@@ -4,7 +4,7 @@ import { clearUserInfo, getToken, goToLogin } from '@/utils/tool'
 import { RunTimeLayoutConfig, RuntimeAntdConfig } from '@umijs/max'
 import { message, notification, theme } from 'antd'
 import type { RequestConfig } from '@umijs/max'
-import { history } from '@umijs/max'
+import { history, useModel } from '@umijs/max'
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
 // useModel("@@initialState");
@@ -166,4 +166,28 @@ export const request: typeof RequestConfig = {
       return response
     },
   ],
+}
+
+// src/app.ts
+export function useQiankunStateForSlave() {
+  const { userInfo } = useModel('user')
+  console.log('userInfo', userInfo)
+
+  return {
+    userInfo,
+  }
+}
+// src/app.ts
+export const qiankun = {
+  lifeCycles: {
+    // 所有子应用在挂载完成时，打印 props 信息
+    async afterMount(props) {
+      console.log('qiankun props', props)
+      if (props.props?.setLoading) {
+        console.log('props props', props.props);
+        
+        props.props.setLoading(false)
+      }
+    },
+  },
 }

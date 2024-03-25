@@ -1,9 +1,13 @@
 import { message } from 'antd'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useModel } from '@umijs/max'
 import { getChatContent, getUsersChatId } from '@/services/chat'
 import { getChatId } from '@/utils/tool'
 
+const ws_ip =
+  process.env.NODE_ENV === 'development'
+    ? process.env.dev_ip
+    : process.env.prod_ip
 // 获取告警数量
 const UNREAD_WARN_COUNT = 'UNREAD_WARN_COUNT'
 // 获取消息数量
@@ -27,7 +31,7 @@ export default function useWebsocket() {
   const [chatId, setChatId] = useState<string>(getChatId())
   const [currentMsg, setCurrentMsg] = useState({})
   const [messageList, setMessageList] = useState([])
-
+  const [socketUrl, setSocketUrl] = useState()
   const { userInfo } = useModel('user')
   const userId = userInfo?.id
   const userNumber = userInfo?.number
@@ -65,9 +69,9 @@ export default function useWebsocket() {
 
     setReset(true)
   }, [])
-  async function getChatMessage(message: any) {
+  async function getChatMessage(currChatId: string = getChatId()) {
     try {
-      const res = await getChatContent({ chatId: getChatId() })
+      const res = await getChatContent({ chatId: currChatId })
       setMessageList(res.data?.reverse())
     } catch (error) {
       console.log('error', error)
@@ -127,49 +131,55 @@ export default function useWebsocket() {
   )
 
   // 初始化连接 socket
-  const socketInit = useCallback(() => {
-    try {
-      console.log('socketInit userId', userId)
-      console.log('socketInit chatId', chatId)
-
-      if (userId && chatId) {
-        const ip = '62137560yh.vicp.fun'
-        const scoketUrl = `ws://${ip}/chat/single/${userId}/${chatId}`
-        console.log('scoketUrl', scoketUrl)
-
-        const socketObj = new WebSocket(scoketUrl)
+  const socketInit = useCallback(
+    (url: string = socketUrl) => {
+      try {
+        console.log('socketInit userId', userId)
+        console.log('socketInit chatId', chatId)
+        // const scoketUrl = `ws://${dev_ip}/chat/single/${userId}/${chatId}`
+        // console.log('scoketUrl', scoketUrl)
+        let wsUrl = `ws://${ws_ip}/${url}`
+        console.log('wsUrl', wsUrl)
+        const socketObj = new WebSocket(wsUrl)
         socketObj.addEventListener('close', socketOnClose)
         socketObj.addEventListener('error', socketOnError)
         socketObj.addEventListener('message', socketOnMessage)
         socketObj.addEventListener('open', socketOnOpen)
         socket.current = socketObj
         sendCount.current = 1
+      } catch (err) {
+        console.log('err: ', err)
       }
-    } catch (err) {
-      console.log('err: ', err)
-    }
-  }, [socketOnClose, socketOnError, socketOnMessage, socketOnOpen, chatId])
+    },
+    [socketOnClose, socketOnError, socketOnMessage, socketOnOpen, chatId],
+  )
   // 获取 chatId
-  async function getCurrentChatId() {
+  async function getCurrentChatId(contactInfo: any = {}) {
     try {
-      const res = await getUsersChatId({
-        numberA: userNumber,
-        numberB: currentMsg.number,
-      })
-      console.log(res.data)
-      sessionStorage.setItem('office_system_chatId', res.data)
-      setChatId(res.data)
+      const { number: contactNumber, group, labelId } = contactInfo
+      let params = { numberA: userNumber,}
+      let url = ''
+      let newChatId = ''
+      if (group) {
+        params.numberB = labelId
+        const res = await getUsersChatId(params)
+        newChatId = res.data
+        sessionStorage.setItem('office_system_chatId', res.data)
+        url = `chat/group/${userId}/${res.data}`
+      } else {
+        params.numberB = contactNumber
+        const res = await getUsersChatId(params)
+        newChatId = res.data
+        sessionStorage.setItem('office_system_chatId', res.data)
+        url = `chat/single/${userId}/${res.data}`
+      }
+      socketInit(url)
+      getChatMessage(newChatId)
+      setChatId(newChatId)
     } catch (error) {
       console.log(error)
     }
   }
-  // 初始化连接socket
-  useEffect(() => {
-    socketInit()
-    if (chatId) {
-      getChatMessage()
-    }
-  }, [chatId])
   // 断线重连
   useEffect(() => {
     if (!reset) return
@@ -178,14 +188,10 @@ export default function useWebsocket() {
       setReset(false)
     }, 30000)
   }, [reset, socketInit])
-  useEffect(() => {
-    if (currentMsg.number) {
-      getCurrentChatId()
-    }
-  }, [currentMsg])
   // 左侧选择消息
   function chooseMessage(msgInfo: any) {
     setCurrentMsg(msgInfo)
+    getCurrentChatId(msgInfo)
   }
   function cleanChatId() {
     console.log('cleanChatId')
@@ -203,7 +209,6 @@ export default function useWebsocket() {
     currentMsg,
     getChatMessage,
     messageList,
-    getCurrentChatId,
     chooseMessage,
     cleanChatId,
   }

@@ -1,7 +1,7 @@
 import { MicroApp } from '@umijs/max';
 
-const Layout = () => {
-  return <MicroApp name="data-structure" />;
+const DataStructure = () => {
+  return <MicroApp name="data-structure" autoSetLoading/>;
 };
 
-export default Layout;
+export default DataStructure;

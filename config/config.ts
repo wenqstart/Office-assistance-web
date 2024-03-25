@@ -1,10 +1,9 @@
 import { defineConfig } from '@umijs/max'
 import path from 'path'
 import routes from './routes'
-import proxy from '../config/proxy'
 import theme from './theme.hc'
 import { SYSTEM_NAME } from '../src/constants'
-const proxyData = proxy
+const api = '/api';
 
 export default defineConfig({
   // favicon: '/favicon_hc.ico', // 浏览器icon
@@ -13,20 +12,7 @@ export default defineConfig({
     // 此时将指向 `/favicon.png` ，确保你的项目含有 `public/favicon.png`
     '/favicon.svg',
   ],
-  qiankun: {
-    master: {
-      apps: [
-        // {
-        //   name: 'doc-edit',
-        //   entry: '//localhost:3000',
-        // },
-        {
-          name: 'data-structure',
-          entry: '//localhost:8100',
-        },
-      ],
-    },
-  },
+  // 一定要配置
   mfsu: {
     strategy: 'normal',
   },
@@ -74,10 +60,50 @@ export default defineConfig({
     'process.env.SHOW_PROJECT_NAME': false, // 是否显示登录界面右下角应用名称
     'process.env.PROJECT_NAME': SYSTEM_NAME, // 登录页展示名称
     'process.env.PROJECT_LOGO': '@/assets/logo.svg', // 项目logo，目前UI风格设计成不展示，但是需要配置
-    'process.env.BASE_API': '/api', // 用户管理转发接口
+    'process.env.BASE_API': '/api', // 转发接口
+    'process.env.dev_ip': '62137560yh.vicp.fun', // 开发环境地址
+    'process.env.prod_ip': '62137560yh.vicp.fun', // 生产环境地址
   },
-  forkTSChecker: {}, // ts编译时类型检查
+  // forkTSChecker: {}, // ts编译时类型检查
   routes,
   ignoreMomentLocale: true, // 忽略 moment 的 locale 文件
-  proxy: proxyData,
+  qiankun: {
+    master: {
+      apps: [
+        {
+          name: 'data-center',
+          entry: '//localhost:3000',
+        },
+        {
+          name: 'data-structure',
+          entry: '//localhost:8100',
+        },
+      ],
+    },
+  },
+  proxy: {
+      // 多人文档编辑
+      // '/doc-base': {
+      //   target: 'http://localhost:5000',
+      //   // secure: false,
+      //   changeOrigin: true,
+      //   // rewrite: (path) => path.replace('/doc-base', ''),
+      //   rewrite: {
+      //     '/doc-base': '/doc-base'
+      //   },
+      //   // xfwd: false,
+      // },
+      '/api/doc-base': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: { '^/api/doc-base': '' },
+      },
+      [api]: {
+        target: 'http://62137560yh.vicp.fun',
+        changeOrigin: true,
+        pathRewrite: {
+          [`^${api}`]: '',
+        },
+    },
+  },
 })

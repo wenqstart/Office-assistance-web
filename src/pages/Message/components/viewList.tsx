@@ -26,6 +26,25 @@ const ViewList: React.FC = () => {
   const [data, setData] = useState<DataType[]>([
     {
       gender: 'male',
+      fullnName: '群 1',
+      name: {
+        title: '群',
+        first: '群',
+        last: '群',
+      },
+      number: '200030111',
+      labelId: '1767776501935714306',
+      email: 'wq.may@example.com',
+      picture: {
+        large: 'https://randomuser.me/api/portraits/men/79.jpg',
+        medium: 'https://randomuser.me/api/portraits/med/men/79.jpg',
+        thumbnail: 'https://randomuser.me/api/portraits/thumb/men/79.jpg',
+      },
+      nat: 'US',
+      group: true,
+    },
+    {
+      gender: 'male',
       fullnName: '温泉',
       name: {
         title: 'Mr',
@@ -40,6 +59,7 @@ const ViewList: React.FC = () => {
         thumbnail: 'https://randomuser.me/api/portraits/thumb/men/79.jpg',
       },
       nat: 'US',
+      group: false,
     },
     {
       gender: 'male',
@@ -57,6 +77,7 @@ const ViewList: React.FC = () => {
         thumbnail: 'https://randomuser.me/api/portraits/thumb/men/79.jpg',
       },
       nat: 'US',
+      group: false,
     },
   ])
   const { userInfo } = useModel('user')
@@ -106,7 +127,7 @@ const ViewList: React.FC = () => {
           dataSource={data}
           renderItem={(item) => (
             <>
-              {item?.number !== userNumber && (
+              {(item.group || item?.number !== userNumber) && (
                 <List.Item key={item.email} onClick={() => chooseMessage(item)}>
                   <List.Item.Meta
                     avatar={<Avatar src={item.picture?.large} />}

@@ -1,3 +1,5 @@
+import LoadingPage from '@/pages/LoadingPage';
+
 interface RouteProps {
   name?: string
   path?: string
@@ -75,10 +77,12 @@ const routes: RouteProps[] = [
       },
       {
         name: '文档中心',
-        path: 'dataCenter',
+        path: 'data-center/*',
         icon: 'HddOutlined',
-        exact: true,
-        component: '@/pages/DataCenter',
+        microApp: 'data-center',
+        microAppProps: {
+          autoSetLoading: true,
+        },
       },
       {
         name: '账号管理',
@@ -96,12 +100,6 @@ const routes: RouteProps[] = [
       },
       { path: '/404', component: '@/pages/Error/404' },
       { path: '/noAuth', component: '@/pages/Error/noAuth' },
-      // 为了实现菜单高亮
-      {
-        path: '/data-structure',
-        icon: 'DatabaseOutlined',
-        component: '@/pages/DataStructure',
-      },
       {
         name: '我的邮件',
         path: 'email',
@@ -117,9 +115,13 @@ const routes: RouteProps[] = [
       },
       {
         path: '/data-structure/*',
-        component: '@/pages/DataStructure',
+        microApp: 'data-structure',
+        microAppProps: {
+          autoSetLoading: true,
+        },
+        // component: '@/pages/DataStructure',
       },
-      { path: '/*', component: '@/pages/Error/404' },
+      { path: '/404', component: '@/pages/Error/404' },
     ],
   },
 ]
