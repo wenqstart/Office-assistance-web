@@ -2,26 +2,26 @@ import { getOrganizationData } from '@/services/user'
 import React, { useEffect, useState } from 'react'
 import './index.less'
 
-type TGroupInfo = {
-  name: string
-}
-
 type TBreadcrumb = {
   id: string
   label: string
 }
 
 const Organization: React.FC = () => {
-  const [breadcrumbList, setBreadcrumbList] = useState<string[]>([
-    '计算机与信息安全学院',
+  const [breadcrumbList, setBreadcrumbList] = useState<TBreadcrumb[]>([
+    {
+      id: '0',
+      label: '计算机与信息安全学院',
+    },
   ])
   const [organizationData, setOrganizationData] = useState<any>([])
 
   const clickItem = (item: any) => {
-    setBreadcrumbList([...breadcrumbList, item.name])
+    if (breadcrumbList.find((data) => data.id === item.id)) return
+    setBreadcrumbList([...breadcrumbList, { id: item.id, label: item.name }])
   }
 
-  const clickLabel = (i: number) => {
+  const clickLabel = (item: TBreadcrumb, i: number) => {
     if (breadcrumbList.length > 1 && i < breadcrumbList.length - 1) {
       setBreadcrumbList([...breadcrumbList.slice(0, i + 1)])
     }
@@ -43,16 +43,16 @@ const Organization: React.FC = () => {
           return (
             <div key={i} className="breadcrumbItem">
               {i > 0 && <span className="separator"></span>}
-              <span
+              <div
                 className={`label ${
                   breadcrumbList.length > 1 && i < breadcrumbList.length - 1
                     ? 'ableClick'
                     : ''
                 }`}
-                onClick={() => clickLabel(i)}
+                onClick={() => clickLabel(item, i)}
               >
-                {item}
-              </span>
+                {item.label}
+              </div>
             </div>
           )
         })}
@@ -65,8 +65,11 @@ const Organization: React.FC = () => {
               key={item.id}
               onClick={() => clickItem(item)}
             >
-              <div className="icon"></div>
-              <div>{item.name}</div>
+              <div className="listItemLeft">
+                <div className="icon"></div>
+                <div>{item.name}</div>
+              </div>
+              <div className="listItemRight">下级</div>
             </div>
           )
         })}
