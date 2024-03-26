@@ -17,9 +17,9 @@ export const getChatContent = (params: any) => {
     params,
   })
 }
-//  获取会话列表
+//  获取用户的聊天列表
 export const getChatList = (params: any) => {
-  return request(`${chat_api}/getChat`, {
+  return request(`${chat_api}/getMessage`, {
     method: 'get',
     params,
   })

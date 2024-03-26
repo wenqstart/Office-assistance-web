@@ -27,7 +27,7 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
   }
   const {
     toolbarConfig = defaultToolBarConfig,
-    content = '',
+    content = '<p></p>',
     style,
     handleKeydown = defaultKeydown,
   } = props
@@ -54,6 +54,8 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
   }
 
   useEffect(() => {
+    console.log('content', content)
+
     setHtml(content)
   }, [content])
 
@@ -202,7 +204,11 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
           defaultConfig={editorConfig}
           value={html}
           onCreated={setEditor}
-          onChange={(editor) => setHtml(editor.getHtml())}
+          onChange={(editor) => {
+            console.log(editor.getHtml())
+
+            setHtml(editor.getHtml())
+          }}
           mode="default"
           style={{ height: '100px', overflowY: 'hidden', ...style }}
         />

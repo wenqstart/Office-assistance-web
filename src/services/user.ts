@@ -42,14 +42,6 @@ export const accountSignOut = () => {
   })
 }
 
-// 获取用户的聊天列表
-export const getUserChatList_API = (params: any) => {
-  return request(`${user_api}/getMessage`, {
-    method: 'get',
-    params,
-  })
-}
-
 // 获取组织架构信息
 export const getOrganizationData = () => {
   return request(`${BASE_API}/group/getDefaultGroup`, {

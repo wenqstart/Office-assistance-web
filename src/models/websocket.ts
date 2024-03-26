@@ -63,8 +63,8 @@ export default function useWebsocket() {
   }, [sendCount])
 
   // 关闭事件重新连接
-  const socketOnClose = useCallback(() => {
-    console.log('onclose')
+  const socketOnClose = useCallback((e: any) => {
+    console.log('onclose', e)
 
     setReset(true)
   }, [])
@@ -123,8 +123,11 @@ export default function useWebsocket() {
   const sendMessage = useCallback(
     (message: any) => {
       console.log('message', JSON.stringify(message))
-      socket?.current?.send(JSON.stringify(message))
-      getChatMessage()
+      console.log('socket?.current', socket?.current)
+      if (socket?.current?.readyState === webSocketStatus.OPEN) {
+        socket?.current?.send(JSON.stringify(message))
+        getChatMessage()
+      }
     },
     [chatId],
   )

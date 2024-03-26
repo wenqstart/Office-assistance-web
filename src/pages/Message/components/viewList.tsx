@@ -1,8 +1,9 @@
+import { getChatList } from '@/services/chat'
+import { getUserinfo } from '@/utils/tool'
+import { useModel } from '@umijs/max'
+import { Avatar, List, Skeleton } from 'antd'
 import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Avatar, Divider, List, Skeleton } from 'antd'
-import { useModel } from '@umijs/max'
-import { getUserChatList_API } from '@/services/user'
 
 interface DataType {
   gender: string
@@ -24,49 +25,10 @@ const ViewList: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const { chooseMessage } = useModel('websocket')
 
-  const [data, setData] = useState<DataType[]>([
-    {
-      gender: 'male',
-      chatName: '单人',
-      name: {
-        title: 'Mr',
-        first: '张',
-        last: '三',
-      },
-      group: false,
-      chatId: '1770820205788975105',
-      number: '2000301209',
-      email: 'jackson.may@example.com',
-      picture: {
-        large: 'https://randomuser.me/api/portraits/men/79.jpg',
-        medium: 'https://randomuser.me/api/portraits/med/men/79.jpg',
-        thumbnail: 'https://randomuser.me/api/portraits/thumb/men/79.jpg',
-      },
-      nat: 'US',
-    },
-    {
-      gender: 'male',
-      chatName: '群聊',
-      name: {
-        title: 'Mr',
-        first: '张',
-        last: '三',
-      },
-      group: true,
-      chatId: '1767776501935714306',
-      number: '2000301209',
-      email: 'jackson.may@example.com',
-      picture: {
-        large: 'https://randomuser.me/api/portraits/men/79.jpg',
-        medium: 'https://randomuser.me/api/portraits/med/men/79.jpg',
-        thumbnail: 'https://randomuser.me/api/portraits/thumb/men/79.jpg',
-      },
-      nat: 'US',
-    },
-  ])
+  const [data, setData] = useState<DataType[]>([])
   const { userInfo } = useModel('user')
 
-  const userId = userInfo?.id
+  const userId = userInfo?.id || getUserinfo()?.id
   const userNumber = userInfo?.number
 
   const loadMoreData = () => {
@@ -74,7 +36,7 @@ const ViewList: React.FC = () => {
       return
     }
     setLoading(true)
-    getUserChatList_API({ userId })
+    getChatList({ userId })
       .then((res) => {
         console.log('res.data', res.data)
 
@@ -102,9 +64,9 @@ const ViewList: React.FC = () => {
       <InfiniteScroll
         dataLength={data.length}
         next={loadMoreData}
-        hasMore={data.length < 50}
+        hasMore={false}
         loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-        endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+        // endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
         scrollableTarget="viewList"
       >
         <List

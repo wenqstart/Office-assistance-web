@@ -1,59 +1,13 @@
 import WangEditor from '@/components/WangEditor'
-import { UserOutlined } from '@ant-design/icons'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import { Avatar, Divider, List, Skeleton, Empty } from 'antd'
-import { useRef, useState, useEffect, useMemo } from 'react'
-import { useModel } from '@umijs/max'
-import styles from './index.less'
-import { toolbarConfig } from './data'
 import { getChatId } from '@/utils/tool'
+import { useModel } from '@umijs/max'
+import { Avatar, List, Skeleton } from 'antd'
+import { useRef, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { toolbarConfig } from './data'
+import styles from './index.less'
 
 const UserChat = () => {
-  const defaultMessageList = [
-    {
-      senderId: '1',
-      senderName: '张三',
-      receiverId: '1764134456541143041',
-      recevierName: '温泉',
-      message: '消息 1',
-    },
-    {
-      senderId: '1',
-      senderName: '张三',
-      receiverId: '1764134456541143041',
-      recevierName: '温泉',
-      message: '消息 2',
-    },
-    {
-      senderId: '1764134456541143041',
-      senderName: '温泉',
-      receiverId: '1',
-      recevierName: '张三',
-      message: '消息 3',
-    },
-    {
-      senderId: '1764134456541143041',
-      senderName: '温泉',
-      receiverId: '1',
-      recevierName: '张三',
-      message: '消息 4',
-    },
-    {
-      senderId: '1764134456541143041',
-      senderName: '温泉',
-      receiverId: '1',
-      recevierName: '张三',
-      message: '消息 5',
-    },
-    {
-      senderId: '1764134456541143041',
-      senderName: '温泉',
-      receiverId: '1',
-      recevierName: '张三',
-      message: '消息 6',
-    },
-  ]
-  // const [messageList, setMessageList] = useState([])
   const { userInfo } = useModel('user')
   const { chatId, setChatId, sendMessage, currentMsg, messageList } =
     useModel('websocket')
@@ -86,7 +40,7 @@ const UserChat = () => {
     createTimeStart,
     createTimeEnd,
     contentWrapEnd,
-    contentWrapStart
+    contentWrapStart,
   } = styles
   // 使用 ctrl+enter 或 cmd+enter 换行。
   function handleKeydown(event: any) {
@@ -103,6 +57,9 @@ const UserChat = () => {
         number: userNumber,
         content: editorRef.current?.html,
       })
+      if (editorRef.current) {
+        // editorRef.current.setHtml('<p><br></p>')
+      }
     }
   }
   function loadMoreData(params: any) {
@@ -137,9 +94,9 @@ const UserChat = () => {
               size={32}
               style={{ backgroundColor: '#377DF7' }}
             >
-              {currentMsg.sayName?.slice(0, 1)}
+              {currentMsg.chatName?.slice(0, 1)}
             </Avatar>
-            <div className={title}>{currentMsg.sayName}</div>
+            <div className={title}>{currentMsg.chatName}</div>
           </div>
         )}
       </div>
@@ -164,10 +121,10 @@ const UserChat = () => {
                 display: 'flex',
                 flexDirection: 'column-reverse',
               }}
-              hasMore={messageList.length < 50}
+              hasMore={false}
               inverse={true}
               loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-              endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+              // endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
               scrollableTarget="userChat"
             >
               <List
@@ -182,8 +139,8 @@ const UserChat = () => {
                           <span className={titleEnd}>
                             <span className={createTimeEnd}>
                               {item.createTime}
-                            </span>{' '}
-                            {userName}
+                            </span>
+                            {item.name}
                           </span>
                           <div
                             className={contentWrapEnd}
@@ -197,7 +154,7 @@ const UserChat = () => {
                           size={32}
                           style={{ backgroundColor: '#377DF7' }}
                         >
-                          {userName?.slice(0, 1)}
+                          {item.name?.slice(0, 1)}
                         </Avatar>
                       </List.Item>
                     ) : (
@@ -207,11 +164,11 @@ const UserChat = () => {
                           size={32}
                           style={{ backgroundColor: '#377DF7' }}
                         >
-                          {currentMsg?.fullnName?.slice(0, 1)}
+                          {item.name?.slice(0, 1)}
                         </Avatar>
                         <div className={messageStart}>
                           <span className={titleStart}>
-                            {currentMsg?.fullnName}{' '}
+                            {item.name}
                             <span className={createTimeStart}>
                               {item.createTime}
                             </span>
