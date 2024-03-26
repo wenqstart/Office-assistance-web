@@ -1,5 +1,3 @@
-import LoadingPage from '@/pages/LoadingPage';
-
 interface RouteProps {
   name?: string
   path?: string
@@ -69,7 +67,7 @@ const routes: RouteProps[] = [
         component: '@/pages/WorkBench',
       },
       {
-        name: '联系人',
+        name: '通讯录',
         path: 'contact',
         icon: 'TeamOutlined',
         exact: true,

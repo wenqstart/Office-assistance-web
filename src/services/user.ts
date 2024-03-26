@@ -1,5 +1,5 @@
+import { request } from '@umijs/max'
 const BASE_API = process.env.BASE_API
-import { request } from '@@/plugin-request'
 const user_api = BASE_API + '/user'
 // 获取用户信息
 export const fetchUserInfo = (number: string) => {
@@ -46,6 +46,20 @@ export const accountSignOut = () => {
 export const getUserChatList_API = (params: any) => {
   return request(`${user_api}/getMessage`, {
     method: 'get',
-    params
+    params,
+  })
+}
+
+// 获取组织架构信息
+export const getOrganizationData = () => {
+  return request(`${BASE_API}/group/getDefaultGroup`, {
+    method: 'get',
+  })
+}
+
+export const getOrganizationMembers = (groupId: string) => {
+  return request(`${BASE_API}/group/getGroupMembers`, {
+    method: 'get',
+    params: { groupId },
   })
 }

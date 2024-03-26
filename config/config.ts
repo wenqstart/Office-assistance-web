@@ -1,9 +1,9 @@
 import { defineConfig } from '@umijs/max'
 import path from 'path'
+import { SYSTEM_NAME } from '../src/constants'
 import routes from './routes'
 import theme from './theme.hc'
-import { SYSTEM_NAME } from '../src/constants'
-const api = '/api';
+const api = '/api'
 
 export default defineConfig({
   // favicon: '/favicon_hc.ico', // 浏览器icon
@@ -61,7 +61,7 @@ export default defineConfig({
     'process.env.PROJECT_NAME': SYSTEM_NAME, // 登录页展示名称
     'process.env.PROJECT_LOGO': '@/assets/logo.svg', // 项目logo，目前UI风格设计成不展示，但是需要配置
     'process.env.BASE_API': '/api', // 转发接口
-    'process.env.dev_ip': '62137560yh.vicp.fun', // 开发环境地址
+    'process.env.dev_ip': '10.33.117.75:8081', // 开发环境地址
     'process.env.prod_ip': '62137560yh.vicp.fun', // 生产环境地址
   },
   // forkTSChecker: {}, // ts编译时类型检查
@@ -82,28 +82,28 @@ export default defineConfig({
     },
   },
   proxy: {
-      // 多人文档编辑
-      // '/doc-base': {
-      //   target: 'http://localhost:5000',
-      //   // secure: false,
-      //   changeOrigin: true,
-      //   // rewrite: (path) => path.replace('/doc-base', ''),
-      //   rewrite: {
-      //     '/doc-base': '/doc-base'
-      //   },
-      //   // xfwd: false,
-      // },
-      '/api/doc-base': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        rewrite: { '^/api/doc-base': '' },
+    // 多人文档编辑
+    // '/doc-base': {
+    //   target: 'http://localhost:5000',
+    //   // secure: false,
+    //   changeOrigin: true,
+    //   // rewrite: (path) => path.replace('/doc-base', ''),
+    //   rewrite: {
+    //     '/doc-base': '/doc-base'
+    //   },
+    //   // xfwd: false,
+    // },
+    '/api/doc-base': {
+      target: 'http://localhost:3000',
+      changeOrigin: true,
+      rewrite: { '^/api/doc-base': '' },
+    },
+    [api]: {
+      target: 'http://10.33.117.75:8081',
+      changeOrigin: true,
+      pathRewrite: {
+        [`^${api}`]: '',
       },
-      [api]: {
-        target: 'http://62137560yh.vicp.fun',
-        changeOrigin: true,
-        pathRewrite: {
-          [`^${api}`]: '',
-        },
     },
   },
 })

@@ -1,3 +1,84 @@
-.contact {
- 
+.contactWrapper {
+  display: flex;
+
+  .left {
+    .title {
+      height: 80px;
+      font-size: 24px;
+    }
+
+    .leftList {
+      .listItem {
+        display: flex;
+        width: 400px;
+        height: 60px;
+        align-items: center;
+        padding-left: 20px;
+        margin-bottom: 5px;
+        border-radius: 6px;
+        font-size: 18px;
+
+        &:hover {
+          background-color: rgb(230, 230, 228);
+          //   animation: opacityAnimationIn 0.3s linear;
+          //   animation-fill-mode: forwards;
+        }
+
+        &:not(:hover) {
+          //   animation: opacityAnimationOut 0.3s linear;
+          //   animation-fill-mode: forwards;
+        }
+      }
+
+      .activeItem {
+        background-color: rgb(215, 228, 246) !important;
+        color: rgb(34, 119, 255);
+        // animation: activeOpacityAnimation 0.3s linear !important;
+        // animation-fill-mode: forwards;
+      }
+
+      // @keyframes activeOpacityAnimation {
+      //   0% {
+      //     background-color: rgba(215, 228, 246, 0);
+      //   }
+      //   100% {
+      //     background-color: rgba(215, 228, 246, 1);
+      //   }
+      // }
+      // @keyframes opacityAnimationIn {
+      //   0% {
+      //     background-color: rgba(230, 230, 228, 0);
+      //   }
+      //   100% {
+      //     background-color: rgba(230, 230, 228, 1);
+      //   }
+      // }
+      // @keyframes opacityAnimationOut {
+      //   0% {
+      //     background-color: rgba(230, 230, 228, 1);
+      //   }
+      //   100% {
+      //     background-color: rgba(230, 230, 228, 0);
+      //   }
+      // }
+    }
+  }
+
+  .right {
+    width: 100%;
+    height: 800px;
+    border-radius: 6px;
+    margin-left: 10px;
+    background-color: white;
+    box-shadow: 15px 10px 10px 5px rgba(222, 222, 223, 30%);
+    border: 2px solid rgba(222, 222, 223, 50%);
+
+    .rightHeader {
+      height: 80px;
+      line-height: 80px;
+      font-size: 20px;
+      padding-left: 20px;
+      border-bottom: 2px solid rgb(222, 222, 223);
+    }
+  }
 }

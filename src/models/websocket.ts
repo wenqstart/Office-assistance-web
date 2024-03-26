@@ -1,8 +1,7 @@
-import { message } from 'antd'
-import { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import { useModel } from '@umijs/max'
 import { getChatContent, getUsersChatId } from '@/services/chat'
 import { getChatId } from '@/utils/tool'
+import { useModel } from '@umijs/max'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 const ws_ip =
   process.env.NODE_ENV === 'development'
@@ -28,7 +27,7 @@ export default function useWebsocket() {
   const sendCount = useRef<number>(1)
   const [alarmCount, setAlarmCount] = useState<number>(0)
   const [messageCount, setMessageCount] = useState<number>(0)
-  const [chatId, setChatId] = useState<string>(getChatId())
+  const [chatId, setChatId] = useState<string>(getChatId() || '')
   const [currentMsg, setCurrentMsg] = useState({})
   const [messageList, setMessageList] = useState([])
   const [socketUrl, setSocketUrl] = useState()
@@ -69,7 +68,7 @@ export default function useWebsocket() {
 
     setReset(true)
   }, [])
-  async function getChatMessage(currChatId: string = getChatId()) {
+  async function getChatMessage(currChatId: string = getChatId() || '') {
     try {
       const res = await getChatContent({ chatId: currChatId })
       setMessageList(res.data?.reverse())
@@ -132,7 +131,7 @@ export default function useWebsocket() {
 
   // 初始化连接 socket
   const socketInit = useCallback(
-    (url: string = socketUrl) => {
+    (url: string = socketUrl || '') => {
       try {
         console.log('socketInit userId', userId)
         console.log('socketInit chatId', chatId)
@@ -157,7 +156,7 @@ export default function useWebsocket() {
   async function getCurrentChatId(contactInfo: any = {}) {
     try {
       const { number: contactNumber, group, labelId } = contactInfo
-      let params = { numberA: userNumber }
+      let params = { numberA: userNumber, numberB: '' }
       let url = ''
       let newChatId = ''
       if (group) {
