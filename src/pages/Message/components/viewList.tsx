@@ -27,7 +27,7 @@ const ViewList: React.FC = () => {
   const [data, setData] = useState<DataType[]>([
     {
       gender: 'male',
-      sayName: '单人',
+      chatName: '单人',
       name: {
         title: 'Mr',
         first: '张',
@@ -46,7 +46,7 @@ const ViewList: React.FC = () => {
     },
     {
       gender: 'male',
-      sayName: '群聊',
+      chatName: '群聊',
       name: {
         title: 'Mr',
         first: '张',
@@ -126,10 +126,10 @@ const ViewList: React.FC = () => {
                         size={32}
                         style={{ backgroundColor: '#377DF7' }}
                       >
-                        {item.sayName?.slice(0, 1)}
+                        {item.chatName?.slice(0, 1)}
                       </Avatar>
                     }
-                    title={<span>{item.sayName}</span>}
+                    title={<span>{item.chatName}</span>}
                     description={
                       <span
                         dangerouslySetInnerHTML={{
