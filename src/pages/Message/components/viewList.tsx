@@ -24,7 +24,46 @@ const ViewList: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const { chooseMessage } = useModel('websocket')
 
-  const [data, setData] = useState<DataType[]>([])
+  const [data, setData] = useState<DataType[]>([
+    {
+      gender: 'male',
+      sayName: '单人',
+      name: {
+        title: 'Mr',
+        first: '张',
+        last: '三',
+      },
+      group: false,
+      chatId: '1770820205788975105',
+      number: '2000301209',
+      email: 'jackson.may@example.com',
+      picture: {
+        large: 'https://randomuser.me/api/portraits/men/79.jpg',
+        medium: 'https://randomuser.me/api/portraits/med/men/79.jpg',
+        thumbnail: 'https://randomuser.me/api/portraits/thumb/men/79.jpg',
+      },
+      nat: 'US',
+    },
+    {
+      gender: 'male',
+      sayName: '群聊',
+      name: {
+        title: 'Mr',
+        first: '张',
+        last: '三',
+      },
+      group: true,
+      chatId: '1767776501935714306',
+      number: '2000301209',
+      email: 'jackson.may@example.com',
+      picture: {
+        large: 'https://randomuser.me/api/portraits/men/79.jpg',
+        medium: 'https://randomuser.me/api/portraits/med/men/79.jpg',
+        thumbnail: 'https://randomuser.me/api/portraits/thumb/men/79.jpg',
+      },
+      nat: 'US',
+    },
+  ])
   const { userInfo } = useModel('user')
 
   const userId = userInfo?.id
@@ -37,8 +76,8 @@ const ViewList: React.FC = () => {
     setLoading(true)
     getUserChatList_API({ userId })
       .then((res) => {
-        console.log('res.data', res.data);
-        
+        console.log('res.data', res.data)
+
         setData([...data, ...res.data])
         setLoading(false)
       })
@@ -77,7 +116,7 @@ const ViewList: React.FC = () => {
                   key={item.chatId}
                   onClick={() => chooseMessage(item)}
                   style={{
-                    alignItems: 'start'
+                    alignItems: 'start',
                   }}
                 >
                   <List.Item.Meta

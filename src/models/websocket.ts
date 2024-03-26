@@ -137,6 +137,7 @@ export default function useWebsocket() {
         console.log('socketInit chatId', chatId)
         // const scoketUrl = `ws://${dev_ip}/chat/single/${userId}/${chatId}`
         // console.log('scoketUrl', scoketUrl)
+        setSocketUrl(url)
         let wsUrl = `ws://${ws_ip}/${url}`
         console.log('wsUrl', wsUrl)
         const socketObj = new WebSocket(wsUrl)
