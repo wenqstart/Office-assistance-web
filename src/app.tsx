@@ -182,7 +182,7 @@ export const request: typeof RequestConfig = {
       // 拦截响应数据，进行个性化处理
       const { data } = response
       if (data.code !== 200) {
-        message.error('请求失败！')
+        message.error(data.message || '请求失败！')
       }
       return response
     },

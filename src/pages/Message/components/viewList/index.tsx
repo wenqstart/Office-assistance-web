@@ -24,7 +24,7 @@ interface DataType {
 const ViewList: React.FC = () => {
   const { viewItem } = styles
   const [loading, setLoading] = useState(false)
-  const { chooseMessage, currentMsg } = useModel('websocket')
+  const { chooseMessage, currentMsg } = useModel('message')
 
   const [data, setData] = useState<DataType[]>([])
   const { userInfo } = useModel('user')

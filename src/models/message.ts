@@ -21,7 +21,7 @@ const webSocketStatus = {
   CLOSED: 3,
 }
 
-export default function useWebsocket() {
+export default function useMessage() {
   const [reset, setReset] = useState<boolean>(false)
   const socket = useRef<WebSocket>()
   const sendCount = useRef<number>(1)

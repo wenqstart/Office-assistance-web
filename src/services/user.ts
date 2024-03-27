@@ -19,11 +19,9 @@ export const changeUserInfoData = (data: any) => {
 }
 // 修改用户密码
 export const changeUserPassword = (data: any) => {
-  const { number, password } = data
   return request(`${user_api}/updatePassword`, {
     method: 'put',
-    params: { number },
-    data: { password },
+    data,
   })
 }
 

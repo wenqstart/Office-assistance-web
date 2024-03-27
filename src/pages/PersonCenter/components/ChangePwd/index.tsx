@@ -13,6 +13,8 @@ const ChangePwd = () => {
     history.goBack();
   };
   const onFinish = (values: any) => {
+    console.log('values', values);
+    
     changePassword({number: username, password: values.newPassword});
   };
   // const pwdPattern = /^[A-Za-z0-9]{8,16}$/;
@@ -26,7 +28,7 @@ const ChangePwd = () => {
       initialValues={{ remember: true }}
       onFinish={onFinish}
     >
-      <Form.Item
+      {/* <Form.Item
         label="原密码"
         name="password"
         rules={[
@@ -38,7 +40,7 @@ const ChangePwd = () => {
         ]}
       >
         <Input.Password />
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item
         label="新密码"

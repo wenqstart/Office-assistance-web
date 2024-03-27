@@ -74,17 +74,18 @@ export default function useUser() {
   }, [])
   // 修改密码
   const changePassword = useCallback(async (data: any) => {
-    let encrypt = new JSEncrypt()
-    encrypt.setPublicKey(pubKey || '')
-    console.log('data', data.password, encrypt)
-    console.log('data', encrypt.encrypt(data.password))
-    console.log('data', encrypt.encrypt('333'))
+    // let encrypt = new JSEncrypt()
+    // encrypt.setPublicKey(pubKey || '')
+    // console.log('data', data.password, encrypt)
+    // console.log('data', encrypt.encrypt(data.password))
+    // console.log('data', encrypt.encrypt('333'))
     try {
       await changeUserPassword({
         number: data.number,
-        password: encrypt.encrypt(data.password),
+        // password: encrypt.encrypt(data.password),
+        password: data.password,
       })
-      message.success('修改成功！')
+      message.success('修改成功！请重新登录')
       clearUserInfo()
       goToLogin()
     } catch (err: any) {

@@ -12,7 +12,7 @@ import styles from './index.less'
 const UserChat = () => {
   const { userInfo } = useModel('user')
   const { chatId, setChatId, sendMessage, currentMsg, messageList } =
-    useModel('websocket')
+    useModel('message')
   const [loading, setLoading] = useState(false)
 
   const inputRef = useRef()

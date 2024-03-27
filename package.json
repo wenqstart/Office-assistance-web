@@ -19,6 +19,7 @@
     "@wangeditor/editor-for-react": "^1.0.6",
     "@wangeditor/plugin-ctrl-enter": "^1.1.2",
     "antd": "^5.4.0",
+    "antd-img-crop": "^4.21.0",
     "jsencrypt": "^3.3.2",
     "qs": "^6.11.2",
     "react-cookies": "^0.1.1",
