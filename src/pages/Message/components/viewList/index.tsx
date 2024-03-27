@@ -29,7 +29,6 @@ const ViewList: React.FC = () => {
   const [data, setData] = useState<DataType[]>([])
   const { userInfo } = useModel('user')
 
-  const userId = userInfo?.id || getUserinfo()?.id
   const userNumber = userInfo?.number
   const activeStyle = {
     borderLeft: '2px solid #436FF6',
@@ -39,21 +38,26 @@ const ViewList: React.FC = () => {
     if (loading) {
       return
     }
-    setLoading(true)
-    getChatList({ userId })
-      .then((res) => {
-        console.log('res.data', res.data)
+    console.log('userInfo', userInfo);
+    
+    const userId = userInfo?.id
+    if (userId) {
+      setLoading(true)
+      getChatList({ userId })
+        .then((res) => {
+          console.log('res.data', res.data)
 
-        setData([...data, ...res.data])
-        setLoading(false)
-      })
-      .catch(() => {
-        setLoading(false)
-      })
+          setData([...data, ...res.data])
+          setLoading(false)
+        })
+        .catch(() => {
+          setLoading(false)
+        })
+    }
   }
   useEffect(() => {
     loadMoreData()
-  }, [])
+  }, [userInfo])
 
   return (
     <div
@@ -85,10 +89,10 @@ const ViewList: React.FC = () => {
                   style={currentMsg.chatId === item.chatId ? activeStyle : {}}
                 >
                   <List.Item.Meta
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
                     avatar={
                       <Avatar
                         shape="square"

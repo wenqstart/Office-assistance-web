@@ -118,7 +118,8 @@ export default function useUser() {
         }
         setToken(data.token)
         setRole(data.role)
-        // fetchUser(loginData.username)
+        setUserInfo(null)
+        fetchUser(loginData.username)
         // cookie.save('token', data.token, { path: '/' })
         localStorage.setItem('office_system_token', data.token)
         sessionStorage.setItem('office_system_username', loginData.username)
@@ -140,7 +141,6 @@ export default function useUser() {
     // 清除登录信息
     clearUserInfo()
     setToken('')
-    cookie.remove('token')
     setUserInfo(null)
   }
   const signOut = useCallback(() => {
@@ -178,7 +178,6 @@ export default function useUser() {
     token,
     setToken,
     userInfo,
-    setUserInfo,
     fetchUser,
     changePassword,
     changeUserInfo,
