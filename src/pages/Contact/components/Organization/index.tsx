@@ -1,4 +1,5 @@
 import { getOrganizationData } from '@/services/user'
+import { Button } from 'antd'
 import React, { useEffect, useState } from 'react'
 import './index.less'
 
@@ -38,6 +39,12 @@ const Organization: React.FC = () => {
 
   return (
     <div className="organizationContent">
+      <div className="organizationHeader">
+        <div>组织架构</div>
+        <Button type="default" size="large">
+          添加成员
+        </Button>
+      </div>
       <div className="breadcrumbList">
         {breadcrumbList.map((item, i) => {
           return (

@@ -45,11 +45,6 @@ const Contact: React.FC = () => {
         </div>
       </div>
       <div className="right">
-        <div className="rightHeader">
-          <div className="headerTitle">
-            {list.find((item) => item.key === activeKey)?.text || ''}
-          </div>
-        </div>
         <div className="content">
           {list.find((item) => item.key === activeKey)?.component || ''}
         </div>

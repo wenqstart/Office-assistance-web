@@ -1,7 +1,8 @@
 import { Button, Flex, Input, Modal, Upload } from 'antd'
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import './index.less'
 
+const WangEditor = lazy(() => import('@/components/WangEditor'))
 const EmailEditorDialog = (props: {
   isShowModal: boolean
   onClose: (val: boolean) => void
@@ -56,6 +57,9 @@ const EmailEditorDialog = (props: {
             <div>主题:</div>
             <Input></Input>
           </div>
+          <Suspense fallback={<div>loading...</div>}>
+            <WangEditor></WangEditor>
+          </Suspense>
         </div>
       </Modal>
     </>

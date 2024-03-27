@@ -1,12 +1,33 @@
+import { getJoiningGroup, getUserCreateGroup } from '@/services/contact'
+import { useModel } from '@umijs/max'
 import type { TabsProps } from 'antd'
-import { Tabs } from 'antd'
-import React from 'react'
+import { Button, Tabs } from 'antd'
+import React, { useEffect, useState } from 'react'
+import CreateGroupModal from '../CreateGroupModal'
+import GroupList from '../GroupList/index'
 import './index.less'
 
 const Group: React.FC = () => {
+  const [groupList, setGroupList] = useState<any>([])
+  const [joinGroupList, setJoinGroupList] = useState<any>([])
+  const [currentKey, setCurrentKey] = useState<string>('1')
+  const [open, setOpen] = useState(false)
+
+  const { userInfo } = useModel('user', (model: any) => ({
+    userInfo: model.userInfo,
+  }))
+
   const onChange = (key: string) => {
-    console.log(key)
+    setCurrentKey(key)
   }
+
+  const openModel = () => {
+    setOpen(true)
+  }
+  const closeModal = (val: boolean) => {
+    setOpen(val)
+  }
+
   const tabItems: TabsProps['items'] = [
     {
       key: '1',
@@ -18,37 +39,54 @@ const Group: React.FC = () => {
     },
   ]
 
-  const test = [
-    {
-      id: '1',
-      name: '小程序组',
-      icon: '',
-    },
-    {
-      id: '2',
-      name: 'web组',
-      icon: '',
-    },
-    {
-      id: '3',
-      name: '后端组',
-      icon: '',
-    },
-  ]
+  const _getUserCreateGroup = async () => {
+    const { code, data } = await getUserCreateGroup(userInfo.id)
+    if (code === 200 && data && data.length > 0) {
+      setGroupList([...data])
+    }
+  }
+  const _getJoiningGroup = async () => {
+    const { code, data } = await getJoiningGroup(userInfo.id)
+    if (code === 200 && data && data.length > 0) {
+      setJoinGroupList([...data])
+    }
+  }
+
+  useEffect(() => {
+    _getUserCreateGroup()
+    _getJoiningGroup()
+  }, [])
 
   return (
     <div className="groupContent">
-      <Tabs defaultActiveKey="1" items={tabItems} onChange={onChange}></Tabs>
-      <div className="groupList">
-        {test.map((item) => {
-          return (
-            <div key={item.id} className="groupListItem">
-              <div className="icon"></div>
-              <div className="itemName">{item.name}</div>
-            </div>
-          )
-        })}
+      <div className="groupHeader">
+        <div>我的群组</div>
+        <Button type="default" size="large" onClick={openModel}>
+          创建群组
+        </Button>
       </div>
+      <Tabs
+        defaultActiveKey="1"
+        items={tabItems.map((item) => ({
+          key: item.key,
+          label: `${item.label}(${
+            item.key === '1' ? groupList.length : joinGroupList.length
+          })`,
+        }))}
+        onChange={onChange}
+      ></Tabs>
+      <GroupList
+        style={{ display: currentKey === '1' ? 'block' : 'none' }}
+        groupList={groupList}
+      ></GroupList>
+      <GroupList
+        style={{ display: currentKey === '2' ? 'block' : 'none' }}
+        groupList={joinGroupList}
+      ></GroupList>
+      <CreateGroupModal
+        open={open}
+        closeModal={(val: boolean) => closeModal(val)}
+      />
     </div>
   )
 }

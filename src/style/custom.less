@@ -3,13 +3,20 @@
 
 // @projectGreen: @project-color-green;
 
+.ant-modal {
+  display: flex;
+  justify-content: center;
+  width: 100vw !important;
+}
+
 .@{prefix}-menu {
   &-vertical-left {
     border-right: none;
   }
+
   &-item {
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
   }
   &.@{prefix}-menu-inline,
   &.@{prefix}-menu-vertical,
@@ -24,6 +31,7 @@
   }
   .@{prefix}-menu-item-selected {
     position: relative;
+
     &::after {
       content: none !important;
     }
@@ -52,6 +60,7 @@
       // max-height: calc(100vh - 140px - 40px);
       overflow-y: auto;
       .scrollbar();
+
       overflow-x: hidden;
       // 子菜单效果鼠标经过背景色，antd没有提供可配置主题
       // &.@{prefix}-menu-dark {
