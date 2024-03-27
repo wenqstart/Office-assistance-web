@@ -115,11 +115,6 @@ export default function useWebsocket() {
     //   sendCount.current = 0
     // }
   }
-  // function sendMessage(message: any) {
-  //   console.log('message', JSON.stringify(message))
-  //   socket?.current?.send(JSON.stringify(message))
-  //   getChatMessage()
-  // }
   const sendMessage = useCallback(
     (message: any) => {
       console.log('message', JSON.stringify(message))
@@ -136,13 +131,10 @@ export default function useWebsocket() {
   const socketInit = useCallback(
     (url: string = socketUrl || '') => {
       try {
-        console.log('socketInit userId', userId)
-        console.log('socketInit chatId', chatId)
-        // const scoketUrl = `ws://${dev_ip}/chat/single/${userId}/${chatId}`
-        // console.log('scoketUrl', scoketUrl)
+        console.log('socketInit ws_ip', ws_ip)
+        console.log('socketInit url', url)
         setSocketUrl(url)
         let wsUrl = `ws://${ws_ip}/${url}`
-        console.log('wsUrl', wsUrl)
         const socketObj = new WebSocket(wsUrl)
         socketObj.addEventListener('close', socketOnClose)
         socketObj.addEventListener('error', socketOnError)
@@ -204,12 +196,6 @@ export default function useWebsocket() {
     getChatMessage(msgInfo.chatId)
     setChatId(msgInfo.chatId)
   }
-  function cleanChatId() {
-    console.log('cleanChatId')
-
-    sessionStorage.removeItem('office_system_chatId')
-    setChatId('')
-  }
 
   return {
     alarmCount,
@@ -221,6 +207,5 @@ export default function useWebsocket() {
     getChatMessage,
     messageList,
     chooseMessage,
-    cleanChatId,
   }
 }

@@ -10,10 +10,6 @@ const { Search } = Input
 
 const Contact: React.FC = () => {
   const [searchLoading, setSearchLoading] = useState(false)
-  const { cleanChatId } = useModel('websocket')
-  useEffect(() => {
-    cleanChatId()
-  }, [])
 
   return (
     <div className={styles.contact}>

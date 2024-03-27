@@ -4,6 +4,8 @@ import { useModel } from '@umijs/max'
 import { Avatar, List, Skeleton } from 'antd'
 import { useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { SlateTransforms } from '@wangeditor/editor'
+
 import { toolbarConfig } from './data'
 import styles from './index.less'
 
@@ -14,7 +16,7 @@ const UserChat = () => {
   const [loading, setLoading] = useState(false)
 
   const inputRef = useRef()
-  const editorRef = useRef()
+  const editorRef = useRef(null)
   const scrollViewRef = useRef()
   const userId = userInfo?.id
   const userName = userInfo?.name
@@ -57,9 +59,7 @@ const UserChat = () => {
         number: userNumber,
         content: editorRef.current?.html,
       })
-      if (editorRef.current) {
-        // editorRef.current.setHtml('<p><br></p>')
-      }
+      editorRef?.current?.resetContent()
     }
   }
   function loadMoreData(params: any) {

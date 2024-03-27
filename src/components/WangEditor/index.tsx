@@ -38,12 +38,14 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
   const [visible, setVisible] = useState(false)
 
   // toolbarConfig.excludeKeys = ['group-video']
-
+  function resetContent() {
+    editor?.clear()
+  }
   useImperativeHandle(ref, () => {
     // return返回的值就可以被父组件获取到
     return {
       html,
-      setHtml,
+      resetContent,
     }
   })
 

@@ -10,14 +10,14 @@ export const getUsersChatId = (params: any) => {
     params,
   })
 }
-//  获取消息列表
+//  获取右侧消息列表
 export const getChatContent = (params: any) => {
   return request(`${chat_api}/getChat`, {
     method: 'get',
     params,
   })
 }
-//  获取用户的聊天列表
+//  获取左侧聊天列表
 export const getChatList = (params: any) => {
   return request(`${chat_api}/getMessage`, {
     method: 'get',

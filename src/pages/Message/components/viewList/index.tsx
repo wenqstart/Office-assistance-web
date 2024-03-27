@@ -4,7 +4,7 @@ import { useModel } from '@umijs/max'
 import { Avatar, List, Skeleton } from 'antd'
 import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-
+import styles from './index.less'
 interface DataType {
   gender: string
   name: {
@@ -22,15 +22,19 @@ interface DataType {
 }
 
 const ViewList: React.FC = () => {
+  const { viewItem } = styles
   const [loading, setLoading] = useState(false)
-  const { chooseMessage } = useModel('websocket')
+  const { chooseMessage, currentMsg } = useModel('websocket')
 
   const [data, setData] = useState<DataType[]>([])
   const { userInfo } = useModel('user')
 
   const userId = userInfo?.id || getUserinfo()?.id
   const userNumber = userInfo?.number
-
+  const activeStyle = {
+    borderLeft: '2px solid #436FF6',
+    backgroundColor: '#EFF0F1',
+  }
   const loadMoreData = () => {
     if (loading) {
       return
@@ -77,15 +81,18 @@ const ViewList: React.FC = () => {
                 <List.Item
                   key={item.chatId}
                   onClick={() => chooseMessage(item)}
-                  style={{
-                    alignItems: 'start',
-                  }}
+                  className={viewItem}
+                  style={currentMsg.chatId === item.chatId ? activeStyle : {}}
                 >
                   <List.Item.Meta
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
                     avatar={
                       <Avatar
                         shape="square"
-                        size={32}
+                        size={40}
                         style={{ backgroundColor: '#377DF7' }}
                       >
                         {item.chatName?.slice(0, 1)}
