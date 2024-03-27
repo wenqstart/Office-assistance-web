@@ -135,12 +135,12 @@ const LoginForm: React.FC = () => {
             />
             &nbsp; 记住账号
           </span>
-          <span>
+          {/* <span>
             还没有账号？请
             <Button type="link" onClick={toRegister}>
               前往注册
             </Button>
-          </span>
+          </span> */}
         </div>
       </Form.Item>
     </Form>

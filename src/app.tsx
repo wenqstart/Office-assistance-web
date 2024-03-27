@@ -5,10 +5,31 @@ import { RunTimeLayoutConfig, RuntimeAntdConfig } from '@umijs/max'
 import { message, notification, theme } from 'antd'
 import type { RequestConfig } from '@umijs/max'
 import { history, useModel } from '@umijs/max'
+import { getUsername } from '@/utils/tool'
+import { fetchUserInfo } from '@/services/user'
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
 // useModel("@@initialState");
 export async function getInitialState(): Promise<{ name: string }> {
+  let userinfo = {},
+    username = getUsername()
+  if (username) {
+    try {
+      const res = await fetchUserInfo(username)
+      console.log('fetchUserInfo', res.data)
+      userinfo = res.data
+      sessionStorage.setItem('office_system_userinfo', JSON.stringify(res.data))
+      return {
+        name: LOGOUT_NAME,
+        userinfo,
+      }
+    } catch (error) {
+      message.error(error && error.msg)
+      return {
+        name: LOGOUT_NAME,
+      }
+    }
+  }
   return {
     name: LOGOUT_NAME,
   }
@@ -171,8 +192,6 @@ export const request: typeof RequestConfig = {
 // src/app.ts
 export function useQiankunStateForSlave() {
   const { userInfo } = useModel('user')
-  console.log('userInfo', userInfo)
-
   return {
     userInfo,
   }
@@ -184,8 +203,8 @@ export const qiankun = {
     async afterMount(props) {
       console.log('qiankun props', props)
       if (props.props?.setLoading) {
-        console.log('props props', props.props);
-        
+        console.log('props props', props.props)
+
         props.props.setLoading(false)
       }
     },

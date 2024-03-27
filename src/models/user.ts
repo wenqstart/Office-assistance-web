@@ -9,7 +9,7 @@ import { decrypt, encrypt } from '@/utils/jsencrypt'
 import { clearUserInfo, getToken, goToLogin } from '@/utils/tool'
 import { message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
-// import { useModel, history } from '@umijs/max';
+import { useModel } from '@umijs/max'
 import { goHome, getUserinfo } from '@/utils/tool'
 
 import JSEncrypt from 'jsencrypt'
@@ -45,6 +45,7 @@ export default function useUser() {
   const [prefixCls, setPrefixCls] = useState<string>(
     localStorage.getItem('theme') || 'micro',
   )
+  const { refresh } = useModel('@@initialState')
   // 进入项目，初始化用户信息
   useEffect(() => {
     const cacheToken = getToken()
@@ -59,7 +60,10 @@ export default function useUser() {
       .then(async (res) => {
         console.log('res', res)
         setUserInfo(res.data)
-        sessionStorage.setItem('office_system_userinfo', JSON.stringify(res.data))
+        sessionStorage.setItem(
+          'office_system_userinfo',
+          JSON.stringify(res.data),
+        )
         return res
       })
       .catch((e) => {
@@ -114,12 +118,14 @@ export default function useUser() {
         }
         setToken(data.token)
         setRole(data.role)
-        fetchUser(loginData.username)
-        // 后续用于第三方登录
-        setIsLogin(true)
+        // fetchUser(loginData.username)
         // cookie.save('token', data.token, { path: '/' })
         localStorage.setItem('office_system_token', data.token)
         sessionStorage.setItem('office_system_username', loginData.username)
+        // 刷新全局状态
+        refresh()
+        // 后续用于第三方登录
+        setIsLogin(true)
         goHome()
       })
       .catch((e: any) => {

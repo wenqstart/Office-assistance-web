@@ -60,18 +60,18 @@ const routes: RouteProps[] = [
         component: '@/pages/Message',
       },
       {
-        name: '工作台',
-        path: 'workBench',
-        icon: 'FundProjectionScreenOutlined',
-        exact: true,
-        component: '@/pages/WorkBench',
-      },
-      {
         name: '通讯录',
         path: 'contact',
         icon: 'TeamOutlined',
         exact: true,
         component: '@/pages/Contact',
+      },
+      {
+        name: '工作台',
+        path: 'workBench',
+        icon: 'FundProjectionScreenOutlined',
+        exact: true,
+        component: '@/pages/WorkBench',
       },
       {
         name: '文档中心',
@@ -88,6 +88,7 @@ const routes: RouteProps[] = [
         icon: 'SnippetsOutlined',
         exact: true,
         component: '@/pages/AccountManage',
+        access: 'isAdmin'
       },
       {
         name: '任务管理',

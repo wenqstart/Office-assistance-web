@@ -5,7 +5,11 @@ export default (initialState: any) => {
   const canSeeAdmin = !!(
     initialState && initialState.name !== 'dontHaveAccess'
   );
+  const isAdmin = !!(
+    initialState?.userinfo?.role === 0
+  );
   return {
     canSeeAdmin,
+    isAdmin
   };
 };
