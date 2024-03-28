@@ -46,8 +46,8 @@ export const layout: typeof RunTimeLayoutConfig = () => {
       clearUserInfo()
       goToLogin()
     },
-    pure: history.location.pathname === '/login' ? true : false, //如果为登录页面就隐藏系统布局
-    siderWidth: 180,
+    pure: history.location.pathname === '/login' || history.location.pathname.includes('/data-center'), 
+    siderWidth: 250,
     // rightRender: (initialState: any) => <div>rightRender</div>,
     // footerRender: (initialState: any) => <div>footerRender</div>,
     // rightContentRender: () => <div>rightContentRender</div>,
