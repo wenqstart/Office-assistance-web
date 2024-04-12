@@ -47,7 +47,7 @@ export const layout: typeof RunTimeLayoutConfig = () => {
       goToLogin()
     },
     pure: history.location.pathname === '/login' || history.location.pathname.includes('/data-center'), 
-    siderWidth: 250,
+    siderWidth: 200,
     // rightRender: (initialState: any) => <div>rightRender</div>,
     // footerRender: (initialState: any) => <div>footerRender</div>,
     // rightContentRender: () => <div>rightContentRender</div>,
@@ -194,6 +194,7 @@ export function useQiankunStateForSlave() {
   const { userInfo } = useModel('user')
   return {
     userInfo,
+    parent_router: history
   }
 }
 // src/app.ts

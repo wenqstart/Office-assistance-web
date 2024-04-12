@@ -38,8 +38,8 @@ const ViewList: React.FC = () => {
     if (loading) {
       return
     }
-    console.log('userInfo', userInfo);
-    
+    console.log('userInfo', userInfo)
+
     const userId = userInfo?.id
     if (userId) {
       setLoading(true)
@@ -47,7 +47,8 @@ const ViewList: React.FC = () => {
         .then((res) => {
           console.log('res.data', res.data)
 
-          setData([...data, ...res.data])
+          // setData([...data, ...res.data])
+          setData(res.data)
           setLoading(false)
         })
         .catch(() => {
@@ -104,14 +105,20 @@ const ViewList: React.FC = () => {
                     }
                     title={<span>{item.chatName}</span>}
                     description={
-                      <span
+                      <div
+                        style={{
+                          overflow: 'hidden',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                          width: '200px'
+                        }}
                         dangerouslySetInnerHTML={{
                           __html: item.content,
                         }}
-                      ></span>
+                      ></div>
                     }
                   />
-                  <span
+                  <div
                     style={{
                       color: '#8f959e',
                       fontSize: '12px',
@@ -119,7 +126,7 @@ const ViewList: React.FC = () => {
                     }}
                   >
                     {item.createTime}
-                  </span>
+                  </div>
                 </List.Item>
               }
             </>

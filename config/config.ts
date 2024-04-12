@@ -62,7 +62,7 @@ export default defineConfig({
     'process.env.PROJECT_LOGO': '@/assets/logo.svg', // 项目logo，目前UI风格设计成不展示，但是需要配置
     'process.env.BASE_API': '/api', // 转发接口
     // 'process.env.dev_ip': '10.33.117.75:8081', // 开发环境地址
-    'process.env.dev_ip': '62137560yh.vicp.fun', // 开发环境地址
+    'process.env.dev_ip': '10.33.121.9:8081', // 开发环境地址
     'process.env.prod_ip': '62137560yh.vicp.fun', // 生产环境地址
   },
   // forkTSChecker: {}, // ts编译时类型检查
@@ -100,8 +100,8 @@ export default defineConfig({
       rewrite: { '^/api/doc-base': '' },
     },
     [api]: {
-      // target: 'http://10.33.117.75:8081',
-      target: 'http://62137560yh.vicp.fun',
+      target: 'http://10.33.121.9:8081',
+      // target: 'http://62137560yh.vicp.fun',
       changeOrigin: true,
       pathRewrite: {
         [`^${api}`]: '',
