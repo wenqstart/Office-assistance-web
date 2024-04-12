@@ -1,4 +1,4 @@
-import './index.less'
+import styles from './index.less'
 
 type TEmaliData = {
   type: number // 0-作业,1-公告
@@ -21,10 +21,12 @@ const EmailListItem = (props: TProps) => {
   return (
     <div
       onClick={clickItem}
-      className={`box ${props.selected ? 'active' : ''}`}
+      className={`${styles.box} ${props.selected ? 'active' : ''}`}
     >
-      <div className="emailLabel">{props.emailData.type ? '公告' : '作业'}</div>
-      <div className="emailTextList">
+      <div className={styles.emailLabel}>
+        {props.emailData.type ? '公告' : '作业'}
+      </div>
+      <div className={styles.emailTextList}>
         <span>{props.emailData.title}</span>
         <span>{props.emailData.subtitle}</span>
         <span>{props.emailData.desc}</span>

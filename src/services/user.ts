@@ -53,3 +53,13 @@ export const getOrganizationMembers = (groupId: string) => {
     params: { groupId },
   })
 }
+
+// 用于创建分组时查询联系人列表
+export const searchContactList = (search: string) => {
+  return request(`${user_api}/getNumberList`, {
+    method: 'get',
+    params: {
+      search,
+    },
+  })
+}

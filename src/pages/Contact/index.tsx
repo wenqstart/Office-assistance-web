@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Group from './components/Group'
 import Organization from './components/Organization'
-import './index.less'
+import styles from './index.less'
 
 const Contact: React.FC = () => {
   const list = [
@@ -25,14 +25,14 @@ const Contact: React.FC = () => {
   }
 
   return (
-    <div className="contactWrapper">
-      <div className="left">
-        <div className="title">通讯录</div>
-        <div className="leftList">
+    <div className={styles.contactWrapper}>
+      <div className={styles.left}>
+        <div className={styles.title}>通讯录</div>
+        <div className={styles.leftList}>
           {list.map((item) => {
             return (
               <div
-                className={`listItem ${
+                className={`${styles.listItem} ${
                   item.key === activeKey ? 'activeItem' : ''
                 }`}
                 key={item.key}
@@ -44,10 +44,8 @@ const Contact: React.FC = () => {
           })}
         </div>
       </div>
-      <div className="right">
-        <div className="content">
-          {list.find((item) => item.key === activeKey)?.component || ''}
-        </div>
+      <div className={styles.right}>
+        {list.find((item) => item.key === activeKey)?.component || ''}
       </div>
     </div>
   )

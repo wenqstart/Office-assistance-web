@@ -1,16 +1,16 @@
 import React from 'react'
-import './index.less'
+import styles from './index.less'
 
 const GroupList: React.FC<any> = (props: any) => {
   const { groupList, style } = props
   return (
-    <div className="groupList" style={style}>
+    <div className={styles.groupList} style={style}>
       {(groupList.length &&
         groupList.map((item: any) => {
           return (
-            <div key={item.id} className="groupListItem">
-              <div className="icon"></div>
-              <div className="itemName">{item.name}</div>
+            <div key={item.id} className={styles.groupListItem}>
+              <div className={styles.icon}></div>
+              <div className={styles.itemName}>{item.name}</div>
             </div>
           )
         })) || <div>暂无加入的群组</div>}

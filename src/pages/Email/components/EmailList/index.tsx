@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import EmailDetail from '../EmailDetail'
 import EmailListItem from '../EmailListItem'
-import './index.less'
+import styles from './index.less'
 
 const EmailList: React.FC<{ activeTab: number }> = (props) => {
   const [activeEmail, setActiveEmail] = useState(0)
@@ -25,8 +25,8 @@ const EmailList: React.FC<{ activeTab: number }> = (props) => {
   }
 
   return (
-    <div className="container">
-      <div className="emailList">
+    <div className={styles.container}>
+      <div className={styles.emailList}>
         {test.map((item, i) => {
           return (
             <EmailListItem
