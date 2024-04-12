@@ -22,8 +22,7 @@ const AuthorizedEntry = () => {
       }
       // 页面手动刷新需要重新获取 userinfo
       if (!isLogin && username) {
-        // 这里不用调用了，在 app.tsx 中调用了
-        // fetchUser(username)
+        fetchUser(username)
         setIsLogin(true)
       }
     } else {

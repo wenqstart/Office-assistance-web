@@ -56,6 +56,8 @@ export default function useUser() {
 
   // 获取用户信息
   const fetchUser = useCallback(async (number: string) => {
+    console.log('fetchUser', number);
+    
     return await fetchUserInfo(number)
       .then(async (res) => {
         console.log('res', res)
@@ -120,7 +122,9 @@ export default function useUser() {
         setToken(data.token)
         setRole(data.role)
         setUserInfo(null)
-        // fetchUser(loginData.username)
+        setTimeout(() => {
+          fetchUser(loginData.username)
+        }, 1000);
         // cookie.save('token', data.token, { path: '/' })
         localStorage.setItem('office_system_token', data.token)
         sessionStorage.setItem('office_system_username', loginData.username)

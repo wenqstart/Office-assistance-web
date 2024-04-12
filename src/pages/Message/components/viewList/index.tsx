@@ -40,7 +40,7 @@ const ViewList: React.FC = () => {
     }
     console.log('userInfo', userInfo)
 
-    const userId = userInfo?.id
+    const userId = userInfo?.id || getUserinfo()?.id
     if (userId) {
       setLoading(true)
       getChatList({ userId })
