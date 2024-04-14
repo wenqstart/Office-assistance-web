@@ -96,6 +96,7 @@ const routes: RouteProps[] = [
         icon: 'UnorderedListOutlined',
         exact: true,
         component: '@/pages/TaskManage',
+        access: 'isAdmin'
       },
       { path: '/404', component: '@/pages/Error/404' },
       { path: '/noAuth', component: '@/pages/Error/noAuth' },

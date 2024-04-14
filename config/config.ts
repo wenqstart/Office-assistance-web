@@ -100,8 +100,8 @@ export default defineConfig({
       rewrite: { '^/api/doc-base': '' },
     },
     [api]: {
-      target: 'http://10.33.121.9:8081',
-      // target: 'http://62137560yh.vicp.fun',
+      // target: 'http://10.33.121.9:8081',
+      target: 'http://62137560yh.vicp.fun',
       changeOrigin: true,
       pathRewrite: {
         [`^${api}`]: '',
