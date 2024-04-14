@@ -1,13 +1,13 @@
 import userLogo from '@/assets/avatar.svg'
 import { SvgImg } from '@/components'
-import { Button, Form, Input, InputNumber, Radio, Upload } from 'antd'
-import type { GetProp, UploadProps } from 'antd'
-import ImgCrop from 'antd-img-crop'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { useEffect, useState } from 'react'
-import { useModel } from '@umijs/max'
-import styles from './index.less'
 import { getUsername } from '@/utils/tool'
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { useModel } from '@umijs/max'
+import type { GetProp, UploadProps } from 'antd'
+import { Button, Form, Input, InputNumber, Radio, Upload } from 'antd'
+import ImgCrop from 'antd-img-crop'
+import { useEffect, useState } from 'react'
+import styles from './index.less'
 const BASE_API = process.env.BASE_API
 const file_api = BASE_API + '/file'
 
@@ -40,8 +40,8 @@ const UserInfo = () => {
       // Get this url from response in real world.
       getBase64(info.file.originFileObj as FileType, (url) => {
         setLoading(false)
-        console.log('url', url);
-        
+        console.log('url', url)
+
         setImageUrl(url)
       })
       // if (info.file?.response?.code === 200) {
@@ -92,7 +92,7 @@ const UserInfo = () => {
         onFinish={onFinish}
         form={form}
       >
-        <Form.Item label="头像">
+        <Form.Item label="头像" name="icon">
           <ImgCrop rotationSlider>
             <Upload
               name="file"

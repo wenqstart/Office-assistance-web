@@ -11,7 +11,7 @@ export const fetchUserInfo = (number: string) => {
 // 修改用户信息
 export const changeUserInfoData = (data: any) => {
   const { number, userDto } = data
-  return request(`${user_api}/getUserInfo`, {
+  return request(`${user_api}/setUserInfo`, {
     method: 'post',
     params: { number },
     data: userDto,
