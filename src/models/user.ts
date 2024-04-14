@@ -9,7 +9,7 @@ import { decrypt, encrypt } from '@/utils/jsencrypt'
 import { clearUserInfo, getToken, goToLogin } from '@/utils/tool'
 import { message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
-import { useModel } from '@umijs/max'
+import { useModel, history } from '@umijs/max'
 import { goHome, getUserinfo } from '@/utils/tool'
 
 import JSEncrypt from 'jsencrypt'
@@ -110,7 +110,7 @@ export default function useUser() {
     [userInfo],
   )
 
-  const signIn = async (loginData: any) => {
+  const signIn = async (loginData: any, backUrl: string) => {
     setLoginLoading(true)
     return accountSignIn(loginData)
       .then((res: any) => {
@@ -132,7 +132,13 @@ export default function useUser() {
         refresh()
         // 后续用于第三方登录
         setIsLogin(true)
-        goHome()
+        console.log('backUrl', backUrl);
+        
+        if (backUrl) {
+          history.push(backUrl)
+        } else {
+          goHome()
+        }
       })
       .catch((e: any) => {
         return Promise.reject(e)

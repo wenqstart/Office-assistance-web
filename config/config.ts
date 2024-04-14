@@ -73,11 +73,11 @@ export default defineConfig({
       apps: [
         {
           name: 'data-center',
-          entry: '//localhost:3000',
+          entry: '//10.33.10.171:3000',
         },
         {
           name: 'data-structure',
-          entry: '//localhost:8100',
+          entry: '//10.33.10.171:8100',
         },
       ],
     },
@@ -95,7 +95,7 @@ export default defineConfig({
     //   // xfwd: false,
     // },
     '/api/doc-base': {
-      target: 'http://localhost:3000',
+      target: 'http://10.33.10.171:3000',
       changeOrigin: true,
       rewrite: { '^/api/doc-base': '' },
     },

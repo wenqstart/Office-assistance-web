@@ -46,7 +46,7 @@ export const layout: typeof RunTimeLayoutConfig = () => {
       clearUserInfo()
       goToLogin()
     },
-    pure: history.location.pathname === '/login' || history.location.pathname.includes('/data-center'), 
+    pure: history.location.pathname === '/login', 
     siderWidth: 200,
     // rightRender: (initialState: any) => <div>rightRender</div>,
     // footerRender: (initialState: any) => <div>footerRender</div>,

@@ -7,15 +7,18 @@ import { Outlet, history, useModel } from '@umijs/max'
 const AuthorizedEntry = () => {
   const { token, fetchUser, isLogin, setIsLogin } = useModel('user') || {}
   // console.log('token', token);
-  // console.log('isLogin', isLogin);
+  console.log('isLogin', isLogin);
 
   // const [noticeApi, contextHolder] = notification.useNotification();
   const Context = React.createContext({ name: 'Default' })
   // const [noticeSocket, setNoticeSocket] = useState();
+  const username = getUsername()
 
   useEffect(() => {
-    if (token) {
-      const username = getUsername()
+    console.log('token', token);
+    console.log('username', username);
+    
+    if (token || localStorage.getItem('office_system_token')) {
       if (!username) {
         clearUserInfo()
         goToLogin()

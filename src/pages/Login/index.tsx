@@ -1,7 +1,7 @@
 import { Image, Tabs } from 'antd';
 import * as React from 'react';
 import { useMemo } from 'react';
-import { useModel } from '@umijs/max';
+import { useModel, useLocation } from '@umijs/max';
 import circulation from '../../assets/login/circulation.svg';
 import LoginForm from './components/login-form';
 import RegisterForm from './components/register-form';
@@ -10,19 +10,21 @@ import styles from './index.less';
 const LoginPage: React.FC = () => {
   const { isLogin } = useModel('Login.login');
   console.log('isLogin', isLogin);
-  
+  const { search } = useLocation();
+  let searchParams = new URLSearchParams(search);
+  console.log('searchParams', searchParams.get('backUrl'));
   const loginItems = [
     {
       key: '1',
       label: '登录',
-      children: <LoginForm />,
+      children: <LoginForm backUrl={searchParams.get('backUrl')}/>,
     },
   ];
   const registerItems = [
     {
       key: '2',
       label: '注册',
-      children: <RegisterForm />,
+      children: <RegisterForm/>,
     },
   ];
   const renderItems = useMemo(() => {

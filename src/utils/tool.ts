@@ -28,9 +28,11 @@ const goToLogin = (goBackUrl?: string) => {
     return;
   }
   if (goBackUrl && goBackUrl !== '/' && goBackUrl !== '/login') {
-    const query: { [key: string]: any } = {};
-    query.back = goBackUrl;
-    history.replace({ pathname: '/login' });
+    // const query: { [key: string]: any } = {};
+    console.log('goBackUrl', goBackUrl);
+    
+    // query.back = goBackUrl;
+    history.replace({ pathname: '/login', search: `?backUrl=${goBackUrl}` });
     // window.location.reload();
   } else {
     history.replace('/login');
