@@ -1,0 +1,63 @@
+import { request } from '@umijs/max'
+
+const BASE_API = process.env.BASE_API
+const admin_api = `${BASE_API}/admin`
+
+// 获取分组列表
+export const getGroupList = (params) => {
+  return request(`${admin_api}/getGroupPage`, {
+    method: 'get',
+    params,
+  })
+}
+
+export const addNewGroup = (params) => {
+  return request(`${admin_api}/addNewGroup`, {
+    method: 'put',
+    params,
+  })
+}
+
+export const deleteGroup = (params) => {
+  return request(`${admin_api}/deleteGroup`, {
+    method: 'delete',
+    params,
+  })
+}
+export const updateGroup = (params) => {
+  return request(`${admin_api}/updateGroup`, {
+    method: 'post',
+    params,
+  })
+}
+
+// 获取用户列表
+export const getUserPage = (params) => {
+  return request(`${admin_api}/getUserPage`, {
+    method: 'get',
+    params,
+  })
+}
+
+export const addUser = (adminId, fields) => {
+  return request(`${admin_api}/addUser`, {
+    method: 'post',
+    params: { adminId },
+    data: fields,
+  })
+}
+
+export const deleteUser = (adminId, userIds) => {
+  return request(`${admin_api}/deleteUser`, {
+    method: 'delete',
+    params: { adminId },
+    data: userIds
+  })
+}
+export const updateUserGroup = (adminId, groupId, userIds) => {
+  return request(`${admin_api}/updateUserGroup`, {
+    method: 'post',
+    params: { adminId, groupId },
+    data: userIds
+  })
+}

@@ -83,11 +83,19 @@ const routes: RouteProps[] = [
         },
       },
       {
-        name: '账号管理',
+        name: '分组管理',
         path: 'account',
         icon: 'SnippetsOutlined',
         exact: true,
         component: '@/pages/AccountManage',
+        access: 'isAdmin'
+      },
+      {
+        name: '用户管理',
+        path: 'user',
+        icon: 'UserSwitchOutlined',
+        exact: true,
+        component: '@/pages/UserManage',
         access: 'isAdmin'
       },
       {

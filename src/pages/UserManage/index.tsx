@@ -1,4 +1,3 @@
-import services from '@/services/demo'
 import {
   ActionType,
   FooterToolbar,
@@ -8,13 +7,21 @@ import {
   ProColumns,
   ProTable,
 } from '@ant-design/pro-components'
-import { Button, Divider, Drawer, message } from 'antd'
-import React, { useRef, useState } from 'react'
+import { Button, Divider, Drawer, message, Popconfirm, Select } from 'antd'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import CreateForm from './components/CreateForm'
 import UpdateForm, { FormValueType } from './components/UpdateForm'
-
-const { addUser, queryUserList, deleteUser, modifyUser } =
-  services.UserController
+import moment from 'moment'
+import {
+  getUserPage,
+  addUser,
+  deleteUser,
+  updateUserGroup,
+  getGroupList,
+} from '@/services/admin'
+import { getUserinfo } from '@/utils/tool'
+// const { addUser, queryUserList, deleteUser, modifyUser } =
+//   services.UserController
 
 /**
  * 添加节点
@@ -23,7 +30,10 @@ const { addUser, queryUserList, deleteUser, modifyUser } =
 const handleAdd = async (fields: any) => {
   const hide = message.loading('正在添加')
   try {
-    await addUser({ ...fields })
+    const { id: adminId } = getUserinfo()
+    console.log('adminId', adminId)
+
+    await addUser(adminId, fields)
     hide()
     message.success('添加成功')
     return true
@@ -70,15 +80,31 @@ const handleRemove = async (selectedRows: any[]) => {
   const hide = message.loading('正在删除')
   if (!selectedRows) return true
   try {
-    await deleteUser({
-      userId: selectedRows.find((row) => row.id)?.id || '',
-    })
+    const { id: adminId } = getUserinfo()
+
+    await deleteUser(adminId, selectedRows.map((row) => row.number) || [])
     hide()
     message.success('删除成功，即将刷新')
     return true
   } catch (error) {
     hide()
     message.error('删除失败，请重试')
+    return false
+  }
+}
+const handleAddToGroup = async (selectedRows: any[]) => {
+  const hide = message.loading('正在设置')
+  if (!selectedRows) return true
+  try {
+    const { id: adminId } = getUserinfo()
+    let groupId = ''
+    await updateUserGroup(adminId, groupId, selectedRows.map((row) => row.number) || [])
+    hide()
+    message.success('设置成功，即将刷新')
+    return true
+  } catch (error) {
+    hide()
+    message.error('设置失败，请重试')
     return false
   }
 }
@@ -91,32 +117,114 @@ const TableList: React.FC<unknown> = () => {
   const actionRef = useRef<ActionType>()
   const [row, setRow] = useState<any>()
   const [selectedRowsState, setSelectedRows] = useState<any[]>([])
+  const [groupList, setGroupList] = useState([])
+  const [userList, setUserList] = useState([])
+  const [pagination, setPagination] = useState({})
+  const handledeleteUser = async (record) => {
+    const { id: adminId } = getUserinfo()
+    await deleteUser(adminId, [record.number])
+    if (actionRef.current) {
+      actionRef.current.reload()
+    }
+  }
+  const getAllGroup = useCallback(async () => {
+    const { data } = await getGroupList({
+      current: 1,
+      size: 9999,
+      // @ts-ignore
+      // sorter,
+      // filter,
+    })
+    console.log('data', data)
+
+    setGroupList(data.records)
+  }, [])
+
+  useEffect(() => {
+    getAllGroup()
+  }, [])
+
   const columns: any = [
     {
-      title: '名称',
+      title: '姓名',
       dataIndex: 'name',
-      tip: '名称是唯一的 key',
+      // tip: '名称不可重复',
+      // hideInSearch: true,
       formItemProps: {
         rules: [
           {
             required: true,
-            message: '名称为必填项',
+            message: '姓名为必填项',
           },
         ],
       },
     },
     {
-      title: '昵称',
-      dataIndex: 'nickName',
-      valueType: 'text',
+      title: '学号',
+      dataIndex: 'number',
+      // tip: '名称不可重复',
+      // hideInSearch: true,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '学号为必填项',
+          },
+        ],
+      },
+    },
+    {
+      title: '密码',
+      dataIndex: 'password',
+      // tip: '名称不可重复',
+      hideInTable: true,
+      hideInSearch: true,
+      initialValue: '123456',
+      disable: true,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '密码为必填项',
+          },
+        ],
+      },
+    },
+    {
+      title: '手机号码',
+      dataIndex: 'phone',
+      // tip: '名称不可重复',
+      // hideInSearch: true,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '手机号码为必填项',
+          },
+        ],
+      },
+    },
+    {
+      title: '选择分组',
+      dataIndex: 'adminGroupsId',
+      tip: '选择分组',
+      hideInTable: true,
+      renderFormItem: () => (
+        <Select
+          options={groupList.map((item) => ({
+            value: item.id,
+            label: item.name,
+          }))}
+        />
+      ),
     },
     {
       title: '性别',
-      dataIndex: 'gender',
-      hideInForm: true,
+      dataIndex: 'sex',
+      // hideInTable: true,
       valueEnum: {
-        0: { text: '男', status: 'MALE' },
-        1: { text: '女', status: 'FEMALE' },
+        1: { text: '男', status: 'MALE' },
+        2: { text: '女', status: 'FEMALE' },
       },
     },
     {
@@ -134,7 +242,15 @@ const TableList: React.FC<unknown> = () => {
             配置
           </a>
           <Divider type="vertical" />
-          <a href="">订阅警报</a>
+          <Popconfirm
+            title="删除分组"
+            description="确定删除该分组吗?"
+            onConfirm={() => handledeleteUser(record)}
+            okText="确定"
+            cancelText="取消"
+          >
+            <a>删除</a>
+          </Popconfirm>
         </>
       ),
     },
@@ -143,13 +259,13 @@ const TableList: React.FC<unknown> = () => {
   return (
     <PageContainer
       header={{
-        title: 'CRUD 示例',
+        title: '用户管理',
       }}
     >
       <ProTable
-        headerTitle="查询表格"
+        headerTitle="用户列表"
         actionRef={actionRef}
-        rowKey="id"
+        rowKey="number"
         search={{
           labelWidth: 120,
         }}
@@ -163,19 +279,36 @@ const TableList: React.FC<unknown> = () => {
           </Button>,
         ]}
         request={async (params, sorter, filter) => {
-          const { data, success } = await queryUserList({
+          console.log('params', params)
+          const { current: searchCurrent, fatherId, pageSize, name } = params
+          const searchParams = {
             ...params,
+            current: searchCurrent,
+            size: pageSize,
+          }
+          const { data } = await getUserPage({
+            ...searchParams,
+
             // FIXME: remove @ts-ignore
             // @ts-ignore
-            sorter,
-            filter,
+            // sorter,
+            // filter,
           })
+          const { pages, size, total, current } = data
+          setPagination({ pageSize: size, total, current })
+          setUserList(data.records)
           return {
-            data: data?.list || [],
-            success,
+            data: data.records || [],
           }
         }}
         columns={columns}
+        pagination={{
+          ...pagination,
+          // hideOnSinglePage: true,
+          defaultPageSize: 10,
+          pageSizeOptions: [10, 20, 50, 100],
+          showSizeChanger: true,
+        }}
         rowSelection={{
           onChange: (_, selectedRows) => setSelectedRows(selectedRows),
         }}
@@ -199,7 +332,16 @@ const TableList: React.FC<unknown> = () => {
           >
             批量删除
           </Button>
-          <Button type="primary">批量审批</Button>
+          <Button
+            type="primary"
+            onClick={async () => {
+              await handleAddToGroup(selectedRowsState)
+              setSelectedRows([])
+              actionRef.current?.reloadAndRest?.()
+            }}
+          >
+            设置分组
+          </Button>
         </FooterToolbar>
       )}
       <CreateForm
@@ -239,6 +381,7 @@ const TableList: React.FC<unknown> = () => {
           }}
           updateModalVisible={updateModalVisible}
           values={stepFormValues}
+          groupList={groupList.filter((item) => item.id !== stepFormValues.id)}
         />
       ) : null}
 
