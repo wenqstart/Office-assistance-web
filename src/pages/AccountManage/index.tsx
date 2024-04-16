@@ -1,19 +1,22 @@
 import {
+  addNewGroup,
+  deleteGroup,
+  getGroupList,
+  updateGroup,
+} from '@/services/admin'
+import { getUserinfo } from '@/utils/tool'
+import {
   ActionType,
   FooterToolbar,
   PageContainer,
   ProDescriptions,
-  ProDescriptionsItemProps,
-  ProColumns,
   ProTable,
 } from '@ant-design/pro-components'
-import { Button, Divider, Drawer, message, Popconfirm, Select } from 'antd'
+import { Button, Divider, Drawer, Popconfirm, Select, message } from 'antd'
+import moment from 'moment'
 import React, { useRef, useState } from 'react'
 import CreateForm from './components/CreateForm'
 import UpdateForm, { FormValueType } from './components/UpdateForm'
-import moment from 'moment'
-import { getGroupList, addNewGroup, deleteGroup, updateGroup } from '@/services/admin'
-import { getUserinfo } from '@/utils/tool'
 // const { addUser, queryUserList, deleteUser, modifyUser } =
 //   services.UserController
 
@@ -38,28 +41,6 @@ const handleAdd = async (fields: any) => {
   }
 }
 
-
-/**
- *  删除节点
- * @param selectedRows
- */
-const handleRemove = async (selectedRows: any[]) => {
-  const hide = message.loading('正在删除')
-  if (!selectedRows) return true
-  try {
-    await deleteUser({
-      userId: selectedRows.find((row) => row.id)?.id || '',
-    })
-    hide()
-    message.success('删除成功，即将刷新')
-    return true
-  } catch (error) {
-    hide()
-    message.error('删除失败，请重试')
-    return false
-  }
-}
-
 const TableList: React.FC<unknown> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false)
   const [updateModalVisible, handleUpdateModalVisible] =
@@ -72,39 +53,61 @@ const TableList: React.FC<unknown> = () => {
   const [groupList, setGroupList] = useState([])
   const [pagination, setPagination] = useState({})
   /**
- * 更新节点
- * @param fields
- */
-const handleUpdate = async (fields: FormValueType) => {
-  console.log('value', fields);
-  const { id: adminId } = getUserinfo()
-  
-  const hide = message.loading('正在配置')
-  try {
-    const submitData = {
-      adminId: adminId,
-      groupId: stepFormValues.id,
-      name: fields.name,
-      fatherId: fields.parentGroup
-    }
-    console.log('submitData', submitData);
-    
-    await updateGroup(submitData)
-    hide()
+   * 更新节点
+   * @param fields
+   */
+  const handleUpdate = async (fields: FormValueType) => {
+    console.log('value', fields)
+    const { id: adminId } = getUserinfo()
 
-    message.success('配置成功')
-    return true
-  } catch (error) {
-    hide()
-    message.error('配置失败请重试！')
-    return false
+    const hide = message.loading('正在配置')
+    try {
+      const submitData = {
+        adminId: adminId,
+        groupId: stepFormValues.id,
+        name: fields.name,
+        fatherId: fields.parentGroup,
+      }
+      console.log('submitData', submitData)
+
+      await updateGroup(submitData)
+      hide()
+
+      message.success('配置成功')
+      return true
+    } catch (error) {
+      hide()
+      message.error('配置失败请重试！')
+      return false
+    }
   }
-}
   const handleDeleteGroup = async (record) => {
     const { id: adminId } = getUserinfo()
-    await deleteGroup({ adminId, groupId: record.id })
+    await deleteGroup(adminId, [record.id])
     if (actionRef.current) {
       actionRef.current.reload()
+    }
+  }
+  /**
+   *  删除节点
+   * @param selectedRows
+   */
+  const handleRemove = async (selectedRows: any[]) => {
+    const hide = message.loading('正在删除')
+    if (!selectedRows) return true
+    try {
+      const { id: adminId } = getUserinfo()
+      await deleteGroup(
+        adminId,
+        selectedRows.map((row) => row.id),
+      )
+      hide()
+      message.success('删除成功，即将刷新')
+      return true
+    } catch (error) {
+      hide()
+      message.error('删除失败，请重试')
+      return false
     }
   }
   const createColumns = [
@@ -271,7 +274,7 @@ const handleUpdate = async (fields: FormValueType) => {
           // hideOnSinglePage: true,
           defaultPageSize: 10,
           pageSizeOptions: [10, 20, 50, 100],
-          showSizeChanger: true
+          showSizeChanger: true,
         }}
         rowSelection={{
           onChange: (_, selectedRows) => setSelectedRows(selectedRows),

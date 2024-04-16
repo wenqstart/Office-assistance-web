@@ -18,10 +18,11 @@ export const addNewGroup = (params) => {
   })
 }
 
-export const deleteGroup = (params) => {
+export const deleteGroup = (adminId, strings = []) => {
   return request(`${admin_api}/deleteGroup`, {
     method: 'delete',
-    params,
+    params: { adminId },
+    data: strings,
   })
 }
 export const updateGroup = (params) => {
@@ -51,13 +52,13 @@ export const deleteUser = (adminId, userIds) => {
   return request(`${admin_api}/deleteUser`, {
     method: 'delete',
     params: { adminId },
-    data: userIds
+    data: userIds,
   })
 }
 export const updateUserGroup = (adminId, groupId, userIds) => {
   return request(`${admin_api}/updateUserGroup`, {
     method: 'post',
     params: { adminId, groupId },
-    data: userIds
+    data: userIds,
   })
 }
