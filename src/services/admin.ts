@@ -74,3 +74,11 @@ export const getUserTemplate = () => {
     method: 'get',
   })
 }
+export const batchAddUser = (params, formData) => {
+  return request(`${admin_api}/batchAddUser`, {
+    method: 'post',
+    params,
+    data: formData,
+    contentType: 'multipart/form-data'
+  })
+}

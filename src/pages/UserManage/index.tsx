@@ -7,7 +7,9 @@ import {
   ProColumns,
   ProTable,
 } from '@ant-design/pro-components'
-import { Button, Divider, Drawer, message, Popconfirm, Select } from 'antd'
+import { Button, Divider, Drawer, message, Popconfirm, Select, Upload } from 'antd'
+import type { UploadProps } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 import React, { useRef, useState, useEffect, useCallback } from 'react'
 import CreateForm from './components/CreateForm'
 import SetGroup from './components/SetGroup'
@@ -21,12 +23,13 @@ import {
   updateUserGroup,
   getGroupList,
   updateUserInfo,
-  getUserTemplate
+  getUserTemplate,
+  batchAddUser
 } from '@/services/admin'
 import { getUserinfo } from '@/utils/tool'
 // const { addUser, queryUserList, deleteUser, modifyUser } =
 //   services.UserController
-
+const { Dragger } = Upload;
 /**
  * 添加节点
  * @param fields
@@ -115,6 +118,20 @@ const handleAddToGroup = async (groupId, selectedRows: any[]) => {
     return false
   }
 }
+const handleGetUserTemplate = async () => {
+  const { data } = await getUserTemplate()
+
+  const downloadLink = document.createElement('a')
+  // 设置a标签的download属性为文件名
+  downloadLink.download = '用户模板.xlsx'
+  // 设置a标签的href属性为下载链接
+  downloadLink.href = data.url
+  // 将a标签添加到HTML文档中的某个元素中
+  document.body.appendChild(downloadLink)
+  // 触发a标签的点击事件，即模拟用户点击下载链接
+  downloadLink.click()
+  document.body.removeChild(downloadLink)
+}
 
 const TableList: React.FC<unknown> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false)
@@ -129,6 +146,7 @@ const TableList: React.FC<unknown> = () => {
   const [groupList, setGroupList] = useState([])
   const [userList, setUserList] = useState([])
   const [pagination, setPagination] = useState({})
+  const [currentFile, setCurrentFile] = useState({})
   const handledeleteUser = async (record) => {
     const { id: adminId } = getUserinfo()
     await deleteUser(adminId, [record.number])
@@ -291,25 +309,70 @@ const TableList: React.FC<unknown> = () => {
       ),
     },
   ]
+  const batchProps: UploadProps = {
+    name: 'file',
+    multiple: false,
+    maxCount: 1,
+    // action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} 文件上传成功.`);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} 文件上传失败.`);
+      }
+    },
+    beforeUpload: (file) => {
+      setCurrentFile(file);
+      return false;
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+  };
+  
   const batchColumns: any = [
     {
-      title: '选择分组',
+      title: '导入用户',
       dataIndex: 'file',
-      tip: '选择分组',
-      valueType: 'file',
-      // renderFormItem: () => (
-      //   <Select
-      //     options={groupList.map((item) => ({
-      //       value: item.id,
-      //       label: item.name,
-      //     }))}
-      //   />
-      // ),
+      tip: '导入用户',
+      // formItemProps: {
+      //   rules: [
+      //     {
+      //       required: true,
+      //       message: '请选择用户模板',
+      //     },
+      //   ],
+      // },
+      renderFormItem: () => (
+        <Dragger {...batchProps}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+          单击或拖动文件到此区域进行上传
+          </p>
+          <p className="ant-upload-hint">
+            支持单文件上传
+          </p>
+        </Dragger>
+      ),
     },
     {
       title: '选择分组',
       dataIndex: 'groupId',
       tip: '选择分组',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择分组',
+          },
+        ],
+      },
       renderFormItem: () => (
         <Select
           options={groupList.map((item) => ({
@@ -337,9 +400,9 @@ const TableList: React.FC<unknown> = () => {
           <Button
             key="1"
             type="primary"
-            onClick={() => getUserTemplate()}
+            onClick={() => handleGetUserTemplate()}
           >
-            下载模版
+            下载模板
           </Button>,
           <Button
             key="1"
@@ -425,9 +488,17 @@ const TableList: React.FC<unknown> = () => {
       >
         <ProTable
           onSubmit={async (value) => {
-            const success = await handleAdd(value)
+            console.log('value', value);
+            console.log('currentFile', currentFile);
+            const { id: adminId } = getUserinfo()
+            
+            const formData = new FormData();
+            formData.append('file', currentFile);
+            console.log('formData', formData);
+            
+            const success = await batchAddUser({ adminId, groupId: value.groupId}, formData)
             if (success) {
-              handleModalVisible(false)
+              setBatchModalVisible(false)
               if (actionRef.current) {
                 actionRef.current.reload()
               }
