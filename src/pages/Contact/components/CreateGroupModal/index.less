@@ -60,7 +60,7 @@
           padding: 0 10px 0 6px;
 
           &:hover {
-            background-color: rgb(230, 230, 228);
+            background-color: #edeeee;
           }
 
           .arrow {
@@ -72,11 +72,68 @@
             transform: rotate(45deg);
           }
         }
+
+        .checkList {
+          width: 100%;
+          font-size: 18px;
+
+          .checkBox {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 60px;
+            border-radius: 6px;
+            padding-left: 10px;
+            padding-right: 10px;
+
+            &:hover {
+              background-color: #edeeee;
+            }
+
+            .checkBoxLeft {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            }
+
+            .nextBtn {
+              padding: 5px;
+              color: rgb(34, 119, 255);
+              border-radius: 6px;
+
+              &:hover {
+                background-color: rgb(189, 205, 231);
+              }
+            }
+          }
+        }
       }
 
       .selectListRight {
         width: 50%;
         height: 100%;
+        padding: 20px 20px 0;
+        font-size: 18px;
+
+        .selectList {
+          margin-top: 10px;
+        }
+
+        .selectedItemBox {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          height: 60px;
+          border-radius: 6px;
+          padding-left: 10px;
+          padding-right: 10px;
+
+          &:hover {
+            background-color: #edeeee;
+          }
+        }
       }
     }
   }

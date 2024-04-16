@@ -47,6 +47,15 @@ export const getOrganizationData = () => {
   })
 }
 
+export const getOrganizationList = (fatherId?: string) => {
+  return request(`${BASE_API}/admin/getGroupList`, {
+    method: 'get',
+    params: {
+      fatherId,
+    },
+  })
+}
+
 export const getOrganizationMembers = (groupId: string) => {
   return request(`${BASE_API}/group/getGroupMembers`, {
     method: 'get',

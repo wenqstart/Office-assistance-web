@@ -1,3 +1,4 @@
+import LazyComponent from '@/components/LazyComponent/index'
 import { getJoiningGroup, getUserCreateGroup } from '@/services/contact'
 import { useModel } from '@umijs/max'
 import type { TabsProps } from 'antd'
@@ -83,10 +84,14 @@ const Group: React.FC = () => {
         style={{ display: currentKey === '2' ? 'block' : 'none' }}
         groupList={joinGroupList}
       ></GroupList>
-      <CreateGroupModal
-        open={open}
-        closeModal={(val: boolean) => closeModal(val)}
-      />
+      <LazyComponent>
+        {open && (
+          <CreateGroupModal
+            open={open}
+            closeModal={(val: boolean) => closeModal(val)}
+          />
+        )}
+      </LazyComponent>
     </div>
   )
 }

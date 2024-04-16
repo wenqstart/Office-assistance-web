@@ -1,14 +1,14 @@
-import { Spin } from 'antd';
-import styles from './index.less';
+import { Spin } from 'antd'
+import styles from './index.less'
 
 const LoadingPage = (props: any) => {
-  const { loading = true, text, ...rest } = props;
+  const { loading = true, size = 'small', text, ...rest } = props
   return loading ? (
     <div className={styles.loadingPage} {...rest}>
-      <Spin spinning={loading} />
+      <Spin spinning={loading} size={size} />
       {text && <div className={styles.text}>{text}</div>}
     </div>
-  ) : null;
-};
+  ) : null
+}
 
-export default LoadingPage;
+export default LoadingPage

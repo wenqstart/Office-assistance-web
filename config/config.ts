@@ -22,7 +22,7 @@ export default defineConfig({
     // '/luckysheet/plugins/js/plugin.js',
     // '/luckysheet/luckysheet.umd.js',
     'https://cdn.jsdelivr.net/npm/luckysheet/dist/plugins/js/plugin.js',
-    'https://cdn.jsdelivr.net/npm/luckysheet/dist/luckysheet.umd.js'
+    'https://cdn.jsdelivr.net/npm/luckysheet/dist/luckysheet.umd.js',
   ],
   favicons: [
     // 此时将指向 `/favicon.png` ，确保你的项目含有 `public/favicon.png`
@@ -116,11 +116,7 @@ export default defineConfig({
       rewrite: { '^/api/doc-base': '' },
     },
     [api]: {
-      // 本地
-      target: 'http://10.60.80.148:8081',
-      // 云服务器
-      // target: 'http://121.40.170.103:8081',
-      // 花生壳
+      target: 'http://121.40.170.103:8081',
       // target: 'http://62137560yh.vicp.fun',
       changeOrigin: true,
       pathRewrite: {
