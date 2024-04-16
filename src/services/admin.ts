@@ -70,7 +70,7 @@ export const updateUserGroup = (adminId, groupId, userIds) => {
   })
 }
 export const getUserTemplate = () => {
-  return request(`${admin_api}/getUserTemplate`, {
+  return request(`${admin_api}/getUserTemplate2`, {
     method: 'get',
   })
 }

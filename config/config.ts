@@ -8,6 +8,22 @@ const api = '/api'
 export default defineConfig({
   // favicon: '/favicon_hc.ico', // 浏览器icon
   // plugins: ['@umijs/plugin-helmet'],
+
+  // <link rel='stylesheet' href='./plugins/css/pluginsCss.css' />
+  // <link rel='stylesheet' href='./plugins/plugins.css' />
+  // <link rel='stylesheet' href='./css/luckysheet.css' />
+  // <link rel='stylesheet' href='./assets/iconfont/iconfont.css' />
+  // styles: [
+  //   `/public/luckysheet/plugins/css/pluginsCss.css`,
+  //   '/public/luckysheet/plugins/plugins.css',
+  //   '/public/luckysheet/ss/luckysheet.css',
+  // ],
+  headScripts: [
+    // '/luckysheet/plugins/js/plugin.js',
+    // '/luckysheet/luckysheet.umd.js',
+    'https://cdn.jsdelivr.net/npm/luckysheet/dist/plugins/js/plugin.js',
+    'https://cdn.jsdelivr.net/npm/luckysheet/dist/luckysheet.umd.js'
+  ],
   favicons: [
     // 此时将指向 `/favicon.png` ，确保你的项目含有 `public/favicon.png`
     '/favicon.svg',

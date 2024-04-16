@@ -136,13 +136,13 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
       </StepsForm.StepForm>
       <StepsForm.StepForm
         initialValues={{
-          adminGroupId: props.values.adminGroupsId,
+          adminGroupsId: props.values.adminGroupsId,
         }}
         title="设置分组"
       >
         <ProFormSelect
           width="md"
-          name="adminGroupId"
+          name="adminGroupsId"
           label="选择分组"
           rules={[{ required: true, message: '请选择分组！' }]}
           valueEnum={Object.fromEntries(
