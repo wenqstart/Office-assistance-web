@@ -35,13 +35,13 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
     setHasParent(e.target?.value)
   }
   useEffect(() => {
-    console.log('props.values', props.values);
-    
+    console.log('props.values', props.values)
+
     if (props.values.fatherId) {
       setHasParent(1)
     }
   }, [])
-  
+
   return (
     <StepsForm
       formRef={stepRef}
@@ -54,7 +54,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
             width={640}
             styles={{ padding: '32px 40px 48px' }}
             destroyOnClose
-            title="分组配置"
+            title="用户配置"
             open={props.updateModalVisible}
             footer={submitter}
             onCancel={() => props.onCancel()}
@@ -68,14 +68,39 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
       <StepsForm.StepForm
         initialValues={{
           name: props.values.name,
+          number: props.values.number,
+          sex: props.values.sex,
         }}
         title="基本信息"
       >
         <ProFormText
           width="md"
+          name="number"
+          label="用户学号"
+          readonly
+          rules={[{ required: true, message: '请输入用户学号！' }]}
+        />
+        <ProFormText
+          width="md"
           name="name"
-          label="分组名称"
-          rules={[{ required: true, message: '请输入分组名称！' }]}
+          label="用户姓名"
+          rules={[{ required: true, message: '请输入用户姓名！' }]}
+        />
+        <ProFormRadio.Group
+          width="md"
+          name="sex"
+          label="用户性别"
+          rules={[{ required: true, message: '请选择用户性别！' }]}
+          options={[
+            {
+              value: 1,
+              label: '男',
+            },
+            {
+              value: 2,
+              label: ' 女',
+            },
+          ]}
         />
         {/* <ProFormTextArea
           name="desc"
@@ -89,41 +114,41 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
       </StepsForm.StepForm>
       <StepsForm.StepForm
         initialValues={{
-          // target: '0',
-          // template: '0',
-          type: props.values?.fatherId ? 1 : 0,
-          parentGroup: props.values.fatherId,
+          phone: props.values.phone,
+          email: props.values.email,
+          age: props.values.age,
         }}
-        title="配置上级分组"
+        title="其他信息"
       >
-        <ProFormRadio.Group
-          name="type"
+        <ProFormText width="md" name="phone" label="电话号码" />
+        <ProFormText width="md" name="email" label="用户邮箱" />
+        {/* <ProFormDateTimePicker name="datetime" label="日期时间" /> */}
+        <ProFormText width="md" name="age" label="用户年龄" />
+        {/* <ProFormTextArea
+          name="desc"
           width="md"
-          label="上级分组"
-          onChange={changeHasParent}
-          rules={[{ required: true, message: '请选择是否需要上级分组！' }]}
-          options={[
-            {
-              value: 0,
-              label: '无',
-            },
-            {
-              value: 1,
-              label: '有',
-            },
+          label="规则描述"
+          placeholder="请输入至少五个字符"
+          rules={[
+            { required: true, message: '请输入至少五个字符的规则描述！', min: 5 },
           ]}
+        /> */}
+      </StepsForm.StepForm>
+      <StepsForm.StepForm
+        initialValues={{
+          adminGroupId: props.values.adminGroupsId,
+        }}
+        title="设置分组"
+      >
+        <ProFormSelect
+          width="md"
+          name="adminGroupId"
+          label="选择分组"
+          rules={[{ required: true, message: '请选择分组！' }]}
+          valueEnum={Object.fromEntries(
+            props.groupList.map((item) => [item.id, item.name]),
+          )}
         />
-        {hasParent === 1 && (
-          <ProFormSelect
-            width="md"
-            name="parentGroup"
-            label="选择上级分组"
-            rules={[{ required: true, message: '请选择上级分组！' }]}
-            valueEnum={Object.fromEntries(
-              props.groupList.map((item) => [item.id, item.name]),
-            )}
-          />
-        )}
       </StepsForm.StepForm>
       {/* <StepsForm.StepForm
         initialValues={{

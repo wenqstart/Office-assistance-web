@@ -55,10 +55,22 @@ export const deleteUser = (adminId, userIds) => {
     data: userIds,
   })
 }
+export const updateUserInfo = (adminId, userInfo) => {
+  return request(`${admin_api}/updateUserInfo`, {
+    method: 'post',
+    params: { adminId },
+    data: userInfo,
+  })
+}
 export const updateUserGroup = (adminId, groupId, userIds) => {
   return request(`${admin_api}/updateUserGroup`, {
     method: 'post',
     params: { adminId, groupId },
     data: userIds,
+  })
+}
+export const getUserTemplate = () => {
+  return request(`${admin_api}/getUserTemplate`, {
+    method: 'get',
   })
 }

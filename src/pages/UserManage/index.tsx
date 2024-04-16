@@ -10,6 +10,8 @@ import {
 import { Button, Divider, Drawer, message, Popconfirm, Select } from 'antd'
 import React, { useRef, useState, useEffect, useCallback } from 'react'
 import CreateForm from './components/CreateForm'
+import SetGroup from './components/SetGroup'
+import BatchImport from './components/BatchImport'
 import UpdateForm, { FormValueType } from './components/UpdateForm'
 import moment from 'moment'
 import {
@@ -18,6 +20,8 @@ import {
   deleteUser,
   updateUserGroup,
   getGroupList,
+  updateUserInfo,
+  getUserTemplate
 } from '@/services/admin'
 import { getUserinfo } from '@/utils/tool'
 // const { addUser, queryUserList, deleteUser, modifyUser } =
@@ -92,13 +96,16 @@ const handleRemove = async (selectedRows: any[]) => {
     return false
   }
 }
-const handleAddToGroup = async (selectedRows: any[]) => {
+const handleAddToGroup = async (groupId, selectedRows: any[]) => {
   const hide = message.loading('正在设置')
   if (!selectedRows) return true
   try {
     const { id: adminId } = getUserinfo()
-    let groupId = ''
-    await updateUserGroup(adminId, groupId, selectedRows.map((row) => row.number) || [])
+    await updateUserGroup(
+      adminId,
+      groupId,
+      selectedRows.map((row) => row.number) || [],
+    )
     hide()
     message.success('设置成功，即将刷新')
     return true
@@ -111,6 +118,8 @@ const handleAddToGroup = async (selectedRows: any[]) => {
 
 const TableList: React.FC<unknown> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false)
+  const [groupModalVisible, setGroupModalVisible] = useState<boolean>(false)
+  const [batchModalVisible, setBatchModalVisible] = useState<boolean>(false)
   const [updateModalVisible, handleUpdateModalVisible] =
     useState<boolean>(false)
   const [stepFormValues, setStepFormValues] = useState({})
@@ -174,23 +183,6 @@ const TableList: React.FC<unknown> = () => {
       },
     },
     {
-      title: '密码',
-      dataIndex: 'password',
-      // tip: '名称不可重复',
-      hideInTable: true,
-      hideInSearch: true,
-      initialValue: '123456',
-      disable: true,
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '密码为必填项',
-          },
-        ],
-      },
-    },
-    {
       title: '手机号码',
       dataIndex: 'phone',
       // tip: '名称不可重复',
@@ -209,6 +201,14 @@ const TableList: React.FC<unknown> = () => {
       dataIndex: 'adminGroupsId',
       tip: '选择分组',
       hideInTable: true,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择分组',
+          },
+        ],
+      },
       renderFormItem: () => (
         <Select
           options={groupList.map((item) => ({
@@ -225,6 +225,25 @@ const TableList: React.FC<unknown> = () => {
       valueEnum: {
         1: { text: '男', status: 'MALE' },
         2: { text: '女', status: 'FEMALE' },
+      },
+    },
+    {
+      title: '初始密码',
+      dataIndex: 'password',
+      // tip: '名称不可重复',
+      hideInTable: true,
+      hideInSearch: true,
+      // hideInForm: true,
+      initialValue: '123456',
+      readonly: true,
+      // disable: true,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '密码为必填项',
+          },
+        ],
       },
     },
     {
@@ -256,6 +275,51 @@ const TableList: React.FC<unknown> = () => {
     },
   ]
 
+  const groupColumns: any = [
+    {
+      title: '选择分组',
+      dataIndex: 'groupId',
+      tip: '选择分组',
+      hideInTable: true,
+      renderFormItem: () => (
+        <Select
+          options={groupList.map((item) => ({
+            value: item.id,
+            label: item.name,
+          }))}
+        />
+      ),
+    },
+  ]
+  const batchColumns: any = [
+    {
+      title: '选择分组',
+      dataIndex: 'file',
+      tip: '选择分组',
+      valueType: 'file',
+      // renderFormItem: () => (
+      //   <Select
+      //     options={groupList.map((item) => ({
+      //       value: item.id,
+      //       label: item.name,
+      //     }))}
+      //   />
+      // ),
+    },
+    {
+      title: '选择分组',
+      dataIndex: 'groupId',
+      tip: '选择分组',
+      renderFormItem: () => (
+        <Select
+          options={groupList.map((item) => ({
+            value: item.id,
+            label: item.name,
+          }))}
+        />
+      ),
+    },
+  ]
   return (
     <PageContainer
       header={{
@@ -273,13 +337,26 @@ const TableList: React.FC<unknown> = () => {
           <Button
             key="1"
             type="primary"
+            onClick={() => getUserTemplate()}
+          >
+            下载模版
+          </Button>,
+          <Button
+            key="1"
+            type="primary"
+            onClick={() => setBatchModalVisible(true)}
+          >
+            批量创建
+          </Button>,
+          <Button
+            key="2"
+            type="primary"
             onClick={() => handleModalVisible(true)}
           >
             新建
           </Button>,
         ]}
         request={async (params, sorter, filter) => {
-          console.log('params', params)
           const { current: searchCurrent, fatherId, pageSize, name } = params
           const searchParams = {
             ...params,
@@ -335,15 +412,32 @@ const TableList: React.FC<unknown> = () => {
           <Button
             type="primary"
             onClick={async () => {
-              await handleAddToGroup(selectedRowsState)
-              setSelectedRows([])
-              actionRef.current?.reloadAndRest?.()
+              setGroupModalVisible(true)
             }}
           >
             设置分组
           </Button>
         </FooterToolbar>
       )}
+      <BatchImport
+        onCancel={() => setBatchModalVisible(false)}
+        modalVisible={batchModalVisible}
+      >
+        <ProTable
+          onSubmit={async (value) => {
+            const success = await handleAdd(value)
+            if (success) {
+              handleModalVisible(false)
+              if (actionRef.current) {
+                actionRef.current.reload()
+              }
+            }
+          }}
+          rowKey="groupId"
+          type="form"
+          columns={batchColumns}
+        />
+      </BatchImport>
       <CreateForm
         onCancel={() => handleModalVisible(false)}
         modalVisible={createModalVisible}
@@ -358,15 +452,32 @@ const TableList: React.FC<unknown> = () => {
               }
             }
           }}
-          rowKey="id"
+          rowKey="number"
           type="form"
           columns={columns}
         />
       </CreateForm>
+      <SetGroup
+        onCancel={() => setGroupModalVisible(false)}
+        modalVisible={groupModalVisible}
+      >
+        <ProTable
+          onSubmit={async (value) => {
+            await handleAddToGroup(value.groupId, selectedRowsState)
+            setGroupModalVisible(false)
+            setSelectedRows([])
+            actionRef.current?.reloadAndRest?.()
+          }}
+          rowKey="groupId"
+          type="form"
+          columns={groupColumns}
+        />
+      </SetGroup>
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
           onSubmit={async (value) => {
-            const success = await handleUpdate(value)
+            const { id: adminId } = getUserinfo()
+            const success = await updateUserInfo(adminId, value)
             if (success) {
               handleUpdateModalVisible(false)
               setStepFormValues({})

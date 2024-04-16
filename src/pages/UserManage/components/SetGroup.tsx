@@ -1,19 +1,18 @@
 import { Modal } from 'antd';
 import React, { PropsWithChildren } from 'react';
 
-interface CreateFormProps {
+interface SetGroupProps {
   modalVisible: boolean;
   onCancel: () => void;
 }
 
-const CreateForm: React.FC<PropsWithChildren<CreateFormProps>> = (props) => {
+const SetGroup: React.FC<PropsWithChildren<SetGroupProps>> = (props) => {
   const { modalVisible, onCancel } = props;
 
   return (
     <Modal
       destroyOnClose
-      title="新建"
-      width={420}
+      title="设置分组"
       open={modalVisible}
       onCancel={() => onCancel()}
       footer={null}
@@ -23,4 +22,4 @@ const CreateForm: React.FC<PropsWithChildren<CreateFormProps>> = (props) => {
   );
 };
 
-export default CreateForm;
+export default SetGroup;
