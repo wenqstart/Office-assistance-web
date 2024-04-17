@@ -46,7 +46,9 @@ const ViewList: React.FC = () => {
       getChatList({ userId })
         .then((res) => {
           console.log('res.data', res.data)
-
+          if (res.data && res.data.length > 0) {
+            chooseMessage(res.data[0])
+          }
           // setData([...data, ...res.data])
           setData(res.data)
           setLoading(false)
@@ -110,7 +112,7 @@ const ViewList: React.FC = () => {
                           overflow: 'hidden',
                           whiteSpace: 'nowrap',
                           textOverflow: 'ellipsis',
-                          width: '200px'
+                          width: '200px',
                         }}
                         dangerouslySetInnerHTML={{
                           __html: item.content,
