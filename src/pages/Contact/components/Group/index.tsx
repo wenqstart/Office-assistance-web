@@ -1,4 +1,5 @@
 import LazyComponent from '@/components/LazyComponent/index'
+import LoadingPage from '@/pages/LoadingPage/index.tsx'
 import { getJoiningGroup, getUserCreateGroup } from '@/services/contact'
 import { useModel } from '@umijs/max'
 import type { TabsProps } from 'antd'
@@ -17,6 +18,8 @@ const Group: React.FC = () => {
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
   }))
+
+  const [loading, setLoading] = useState(true)
 
   const onChange = (key: string) => {
     setCurrentKey(key)
@@ -41,7 +44,10 @@ const Group: React.FC = () => {
   ]
 
   const _getUserCreateGroup = async () => {
+    setLoading(true)
     const { code, data } = await getUserCreateGroup(userInfo.id)
+    setLoading(false)
+
     if (code === 200 && data && data.length > 0) {
       setGroupList([...data])
     }
@@ -76,10 +82,13 @@ const Group: React.FC = () => {
         }))}
         onChange={onChange}
       ></Tabs>
-      <GroupList
-        style={{ display: currentKey === '1' ? 'block' : 'none' }}
-        groupList={groupList}
-      ></GroupList>
+      {loading && <LoadingPage size="large"></LoadingPage>}
+      {!loading && (
+        <GroupList
+          style={{ display: currentKey === '1' ? 'block' : 'none' }}
+          groupList={groupList}
+        ></GroupList>
+      )}
       <GroupList
         style={{ display: currentKey === '2' ? 'block' : 'none' }}
         groupList={joinGroupList}

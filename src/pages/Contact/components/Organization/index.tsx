@@ -1,4 +1,5 @@
 import LoadingPage from '@/pages/LoadingPage/index.tsx'
+import { getMessageByPoint } from '@/services/chat'
 import { getOrganizationList } from '@/services/user'
 import { history, useModel } from '@umijs/max'
 import { Button } from 'antd'
@@ -12,6 +13,10 @@ type TBreadcrumb = {
 
 const Organization: React.FC = () => {
   const { getCurrentChatId } = useModel('message')
+  const { userInfo } = useModel('user', (model) => ({
+    userInfo: model.userInfo,
+  }))
+
   const [breadcrumbList, setBreadcrumbList] = useState<TBreadcrumb[]>([
     {
       id: '0',
@@ -39,9 +44,10 @@ const Organization: React.FC = () => {
     setOrganizationData(groupList.concat(userList) || [])
   }
 
-  const clickItem = (item: any) => {
+  const clickItem = async (item: any) => {
     if (!item.isDepartment) {
       getCurrentChatId({ number: item.number, group: false })
+      await getMessageByPoint(userInfo.id, item.number, true)
       history.push('/message')
       return
     }

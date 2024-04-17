@@ -1,11 +1,13 @@
+import ImgUploader from '@/components/ImgUploader/index.tsx'
 import { MyBreadcrumb, type TBreadcrumb } from '@/components/MyBreadcrumb'
 import CloseBtn from '@/components/MyButton/CloseBtn/index'
 import { getUserCreateGroup } from '@/services/contact'
+import { createGroup } from '@/services/group.ts'
 import { getOrganizationList, searchContactList } from '@/services/user'
 import { debounce } from '@/utils/utils'
-import { SearchOutlined, TeamOutlined } from '@ant-design/icons'
+import { SearchOutlined } from '@ant-design/icons'
 import { useModel } from '@umijs/max'
-import { Avatar, Button, Checkbox, Input, Modal } from 'antd'
+import { Button, Checkbox, Input, Modal } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.less'
 
@@ -15,6 +17,9 @@ type TSelectedGroupMember = {
   department: number
 }
 const CreateGroupModal: React.FC<any> = (props) => {
+  const { userInfo } = useModel('user', (model: any) => ({
+    userInfo: model.userInfo,
+  }))
   const { open, closeModal } = props
   const contactList = [
     {
@@ -26,16 +31,20 @@ const CreateGroupModal: React.FC<any> = (props) => {
       label: '我管理的群组',
     },
   ]
+
   const dataRef = useRef(new Map())
-  const { userInfo } = useModel('user', (model: any) => ({
-    userInfo: model.userInfo,
-  }))
+  const newGroupInfo = useRef({
+    userId: userInfo.id,
+    name: '',
+    picture: '',
+    members: [],
+  })
 
   const [breadcrumbList, setBreadcrumbList] = useState<TBreadcrumb[]>([
     { key: '1', label: '联系人' },
   ])
+  const [btnLoading, setBtnLoading] = useState(false)
   const [searchValue, setSearchValue] = useState<string>('')
-
   const [checkList, setCheckList] = useState<any>([])
   const [currentSelectedData, setCurrentSelectedData] = useState<any>({
     person: 0,
@@ -46,7 +55,17 @@ const CreateGroupModal: React.FC<any> = (props) => {
 
   useEffect(() => {}, [])
 
-  const handleOk = () => {
+  const handleOk = async () => {
+    newGroupInfo.current.members = Array.from(
+      new Set(
+        currentSelectedData.selectList
+          .reduce((a, b) => a.concat(b.numberList), [])
+          .concat(userInfo.number),
+      ),
+    )
+    setBtnLoading(true)
+    const { data } = await createGroup(newGroupInfo.current)
+    setBtnLoading(false)
     closeModal(false)
     dataRef.current = null
   }
@@ -54,6 +73,12 @@ const CreateGroupModal: React.FC<any> = (props) => {
     closeModal(false)
     dataRef.current = null
   }
+  const onGroupNameChange = debounce(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      newGroupInfo.current.name = e.target.value
+    },
+    1000,
+  )
 
   const onSearchValueChange = debounce(
     async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -86,13 +111,12 @@ const CreateGroupModal: React.FC<any> = (props) => {
         setCheckList([...value])
       } else if (item.key === contactList[0].key) {
         const { data } = await getOrganizationList()
-
-        const userList = (data.userList ?? []).map((item) => ({
-          ...item,
+        const userList = (data.userList ?? []).map((i) => ({
+          ...i,
           isDepartment: 0,
         }))
-        const groupList = (data.groupList ?? []).map((item) => ({
-          ...item,
+        const groupList = (data.groupList ?? []).map((i) => ({
+          ...i,
           isDepartment: 1,
         }))
 
@@ -106,6 +130,7 @@ const CreateGroupModal: React.FC<any> = (props) => {
           isGroup: 0,
           isDepartment: i.isDepartment,
           sum: i.sum ?? 0,
+          numberList: i.numberList ?? [],
         }))
         if (value.length > 0) {
           dataRef.current.set(item.key, value)
@@ -126,8 +151,6 @@ const CreateGroupModal: React.FC<any> = (props) => {
 
   // 选择联系人
   const onSelect = (item: any) => {
-    console.log(item)
-
     setCheckList(
       checkList.map((checkItem) => {
         return checkItem.id === item.id
@@ -176,6 +199,9 @@ const CreateGroupModal: React.FC<any> = (props) => {
     console.log(item)
   }
 
+  const uploadSuccess = (res) => {
+    newGroupInfo.current.picture = res.url
+  }
   return (
     <Modal
       open={open}
@@ -188,15 +214,15 @@ const CreateGroupModal: React.FC<any> = (props) => {
       <div className={styles.modalContent}>
         <div className={styles.groupInfoItem}>
           <span className={styles.label}>群名称</span>
-          <Input placeholder="请输入群名称" size="large"></Input>
+          <Input
+            placeholder="请输入群名称"
+            size="large"
+            onChange={onGroupNameChange}
+          ></Input>
         </div>
         <div className={styles.groupInfoItem}>
           <span className={styles.label}>群头像</span>
-          <Avatar
-            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 64, xxl: 64 }}
-            icon={<TeamOutlined />}
-            style={{ backgroundColor: '#2277ff' }}
-          />
+          <ImgUploader uploadSuccess={uploadSuccess} />
         </div>
         <div className={styles.groupInfoItem}>
           <span className={styles.label}>群成员</span>
@@ -285,7 +311,12 @@ const CreateGroupModal: React.FC<any> = (props) => {
           <Button onClick={handleCancel} size="large">
             取消
           </Button>
-          <Button type="primary" onClick={handleOk} size="large">
+          <Button
+            type="primary"
+            onClick={handleOk}
+            size="large"
+            loading={btnLoading}
+          >
             创建
           </Button>
         </div>
