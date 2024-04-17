@@ -1,7 +1,8 @@
 import LazyComponent from '@/components/LazyComponent/index'
 import LoadingPage from '@/pages/LoadingPage/index.tsx'
+import { getMessageByPoint } from '@/services/chat'
 import { getJoiningGroup, getUserCreateGroup } from '@/services/contact'
-import { useModel } from '@umijs/max'
+import { history, useModel } from '@umijs/max'
 import type { TabsProps } from 'antd'
 import { Button, Tabs } from 'antd'
 import React, { useEffect, useState } from 'react'
@@ -18,6 +19,7 @@ const Group: React.FC = () => {
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
   }))
+  const { getCurrentChatId } = useModel('message')
 
   const [loading, setLoading] = useState(true)
 
@@ -59,6 +61,12 @@ const Group: React.FC = () => {
     }
   }
 
+  const clickItem = async (item) => {
+    console.log(item)
+    getCurrentChatId({ labelId: item.id, group: true })
+    await getMessageByPoint(userInfo.id, item.id, false)
+    history.push('/message')
+  }
   useEffect(() => {
     _getUserCreateGroup()
     _getJoiningGroup()
@@ -87,6 +95,7 @@ const Group: React.FC = () => {
         <GroupList
           style={{ display: currentKey === '1' ? 'block' : 'none' }}
           groupList={groupList}
+          clickItem={clickItem}
         ></GroupList>
       )}
       <GroupList
