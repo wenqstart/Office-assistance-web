@@ -122,9 +122,7 @@ export default function useUser() {
         setToken(data.token)
         setRole(data.role)
         setUserInfo(null)
-        setTimeout(() => {
-          fetchUser(loginData.username)
-        }, 1000)
+        fetchUser(loginData.username)
         // cookie.save('token', data.token, { path: '/' })
         localStorage.setItem('office_system_token', data.token)
         sessionStorage.setItem('office_system_username', loginData.username)
