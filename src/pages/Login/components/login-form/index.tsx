@@ -3,7 +3,7 @@ import { getToken, goHome } from '@/utils/tool'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
-import { useModel } from '@umijs/max'
+import { useModel, history } from '@umijs/max'
 import styles from './index.less'
 
 // type FieldType = {
@@ -12,7 +12,9 @@ import styles from './index.less'
 //   remember?: string;
 // };
 
-const LoginForm: React.FC = () => {
+const LoginForm: React.FC = (props: any) => {
+  console.log('props', props);
+  
   const loginFormRef = useRef(null)
   const [form] = Form.useForm()
   const [clientReady, setClientReady] = useState<boolean>(false)
@@ -59,12 +61,16 @@ const LoginForm: React.FC = () => {
     // 登录未失效
     const cacheToken = getToken()
     if (cacheToken) {
-      goHome()
+      if (props?.backUrl) {
+        history.push(props?.backUrl)
+      } else {
+        goHome()
+      }
     }
   }, [])
   const onFinish = async (values: any) => {
     const { username, password } = values
-    signIn({ username, password }).then(() => {
+    signIn({ username, password }, props?.backUrl).then(() => {
       if (rememberMe) {
         setLoggedInInfo(username, password, String(rememberMe))
       } else {

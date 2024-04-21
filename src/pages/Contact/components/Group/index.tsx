@@ -1,5 +1,8 @@
+import LazyComponent from '@/components/LazyComponent/index'
+import LoadingPage from '@/pages/LoadingPage/index.tsx'
+import { getMessageByPoint } from '@/services/chat'
 import { getJoiningGroup, getUserCreateGroup } from '@/services/contact'
-import { useModel } from '@umijs/max'
+import { history, useModel } from '@umijs/max'
 import type { TabsProps } from 'antd'
 import { Button, Tabs } from 'antd'
 import React, { useEffect, useState } from 'react'
@@ -16,6 +19,9 @@ const Group: React.FC = () => {
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
   }))
+  const { getCurrentChatId } = useModel('message')
+
+  const [loading, setLoading] = useState(true)
 
   const onChange = (key: string) => {
     setCurrentKey(key)
@@ -40,7 +46,10 @@ const Group: React.FC = () => {
   ]
 
   const _getUserCreateGroup = async () => {
+    setLoading(true)
     const { code, data } = await getUserCreateGroup(userInfo.id)
+    setLoading(false)
+
     if (code === 200 && data && data.length > 0) {
       setGroupList([...data])
     }
@@ -52,6 +61,12 @@ const Group: React.FC = () => {
     }
   }
 
+  const clickItem = async (item) => {
+    console.log(item)
+    getCurrentChatId({ labelId: item.id, group: true })
+    await getMessageByPoint(userInfo.id, item.id, false)
+    history.push('/message')
+  }
   useEffect(() => {
     _getUserCreateGroup()
     _getJoiningGroup()
@@ -75,18 +90,26 @@ const Group: React.FC = () => {
         }))}
         onChange={onChange}
       ></Tabs>
-      <GroupList
-        style={{ display: currentKey === '1' ? 'block' : 'none' }}
-        groupList={groupList}
-      ></GroupList>
+      {loading && <LoadingPage size="large"></LoadingPage>}
+      {!loading && (
+        <GroupList
+          style={{ display: currentKey === '1' ? 'block' : 'none' }}
+          groupList={groupList}
+          clickItem={clickItem}
+        ></GroupList>
+      )}
       <GroupList
         style={{ display: currentKey === '2' ? 'block' : 'none' }}
         groupList={joinGroupList}
       ></GroupList>
-      <CreateGroupModal
-        open={open}
-        closeModal={(val: boolean) => closeModal(val)}
-      />
+      <LazyComponent>
+        {open && (
+          <CreateGroupModal
+            open={open}
+            closeModal={(val: boolean) => closeModal(val)}
+          />
+        )}
+      </LazyComponent>
     </div>
   )
 }

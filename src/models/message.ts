@@ -207,5 +207,6 @@ export default function useMessage() {
     getChatMessage,
     messageList,
     chooseMessage,
+    getCurrentChatId,
   }
 }

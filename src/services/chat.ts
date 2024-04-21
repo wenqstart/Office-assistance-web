@@ -24,3 +24,18 @@ export const getChatList = (params: any) => {
     params,
   })
 }
+
+// 点击用户或群组出现消息列表
+export const getMessageByPoint = (
+  userId: string,
+  toIdOrNumber: string,
+  isNumber: boolean,
+) => {
+  return request(`${chat_api}/getMessageByPoint`, {
+    params: {
+      userId,
+      toIdOrNumber,
+      isNumber,
+    },
+  })
+}

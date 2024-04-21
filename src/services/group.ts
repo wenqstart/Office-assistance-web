@@ -4,8 +4,14 @@ const BASE_API = process.env.BASE_API
 const group_api = `${BASE_API}/label`
 
 // 建群
-export default createGroup = () => {
+export const createGroup = ({ userId, name, picture, members }) => {
   return request(`${group_api}/addNewLabelAndUserToLabel`, {
-    method: 'post',
+    method: 'put',
+    params: {
+      userId,
+      name,
+      picture,
+    },
+    data: members,
   })
 }

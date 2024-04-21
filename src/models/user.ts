@@ -9,7 +9,7 @@ import { decrypt, encrypt } from '@/utils/jsencrypt'
 import { clearUserInfo, getToken, goToLogin } from '@/utils/tool'
 import { message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
-import { useModel } from '@umijs/max'
+import { useModel, history } from '@umijs/max'
 import { goHome, getUserinfo } from '@/utils/tool'
 
 import JSEncrypt from 'jsencrypt'
@@ -56,8 +56,8 @@ export default function useUser() {
 
   // 获取用户信息
   const fetchUser = useCallback(async (number: string) => {
-    console.log('fetchUser', number);
-    
+    console.log('fetchUser', number)
+
     return await fetchUserInfo(number)
       .then(async (res) => {
         console.log('res', res)
@@ -110,7 +110,7 @@ export default function useUser() {
     [userInfo],
   )
 
-  const signIn = async (loginData: any) => {
+  const signIn = async (loginData: any, backUrl: string) => {
     setLoginLoading(true)
     return accountSignIn(loginData)
       .then((res: any) => {
@@ -122,9 +122,7 @@ export default function useUser() {
         setToken(data.token)
         setRole(data.role)
         setUserInfo(null)
-        setTimeout(() => {
-          fetchUser(loginData.username)
-        }, 1000);
+        fetchUser(loginData.username)
         // cookie.save('token', data.token, { path: '/' })
         localStorage.setItem('office_system_token', data.token)
         sessionStorage.setItem('office_system_username', loginData.username)
@@ -132,7 +130,13 @@ export default function useUser() {
         refresh()
         // 后续用于第三方登录
         setIsLogin(true)
-        goHome()
+        console.log('backUrl', backUrl)
+
+        if (backUrl) {
+          history.push(backUrl)
+        } else {
+          goHome()
+        }
       })
       .catch((e: any) => {
         return Promise.reject(e)
@@ -163,7 +167,11 @@ export default function useUser() {
       password: await encrypt(password),
       rememberMe: await encrypt(rememberMe),
     }
-    cookie.save('LoggedInInfo', JSON.stringify(loggedInUser), { path: '/' })
+    let inFifteenMinutes = new Date(new Date().getTime() + 24 * 3600 * 1000 * 7) // 7天
+    cookie.save('LoggedInInfo', JSON.stringify(loggedInUser), {
+      path: '/',
+      expires: inFifteenMinutes,
+    })
   }
   const getLoggedInInfo = async () => {
     const loggedInInfo = cookie.load('LoggedInInfo') || {}

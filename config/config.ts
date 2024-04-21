@@ -8,6 +8,22 @@ const api = '/api'
 export default defineConfig({
   // favicon: '/favicon_hc.ico', // 浏览器icon
   // plugins: ['@umijs/plugin-helmet'],
+
+  // <link rel='stylesheet' href='./plugins/css/pluginsCss.css' />
+  // <link rel='stylesheet' href='./plugins/plugins.css' />
+  // <link rel='stylesheet' href='./css/luckysheet.css' />
+  // <link rel='stylesheet' href='./assets/iconfont/iconfont.css' />
+  // styles: [
+  //   `/public/luckysheet/plugins/css/pluginsCss.css`,
+  //   '/public/luckysheet/plugins/plugins.css',
+  //   '/public/luckysheet/ss/luckysheet.css',
+  // ],
+  headScripts: [
+    // '/luckysheet/plugins/js/plugin.js',
+    // '/luckysheet/luckysheet.umd.js',
+    'https://cdn.jsdelivr.net/npm/luckysheet/dist/plugins/js/plugin.js',
+    'https://cdn.jsdelivr.net/npm/luckysheet/dist/luckysheet.umd.js'
+  ],
   favicons: [
     // 此时将指向 `/favicon.png` ，确保你的项目含有 `public/favicon.png`
     '/favicon.svg',
@@ -62,7 +78,7 @@ export default defineConfig({
     'process.env.PROJECT_LOGO': '@/assets/logo.svg', // 项目logo，目前UI风格设计成不展示，但是需要配置
     'process.env.BASE_API': '/api', // 转发接口
     // 'process.env.dev_ip': '10.33.117.75:8081', // 开发环境地址
-    'process.env.dev_ip': '10.33.121.9:8081', // 开发环境地址
+    'process.env.dev_ip': '121.40.170.103:8081', // 开发环境地址
     'process.env.prod_ip': '62137560yh.vicp.fun', // 生产环境地址
   },
   // forkTSChecker: {}, // ts编译时类型检查
@@ -73,11 +89,11 @@ export default defineConfig({
       apps: [
         {
           name: 'data-center',
-          entry: '//localhost:3000',
+          entry: '//10.33.10.171:3000',
         },
         {
           name: 'data-structure',
-          entry: '//localhost:8100',
+          entry: '//10.33.10.171:8100',
         },
       ],
     },
@@ -95,12 +111,16 @@ export default defineConfig({
     //   // xfwd: false,
     // },
     '/api/doc-base': {
-      target: 'http://localhost:3000',
+      target: 'http://10.33.10.171:3000',
       changeOrigin: true,
       rewrite: { '^/api/doc-base': '' },
     },
     [api]: {
-      target: 'http://10.33.121.9:8081',
+      // 本地
+      // target: 'http://10.60.80.148:8081',
+      // 云服务器
+      target: 'http://121.40.170.103:8081',
+      // 花生壳
       // target: 'http://62137560yh.vicp.fun',
       changeOrigin: true,
       pathRewrite: {

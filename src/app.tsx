@@ -1,12 +1,15 @@
 // 运行时配置
 import { LOGOUT_NAME } from '@/constants'
-import { clearUserInfo, getToken, goToLogin } from '@/utils/tool'
-import { RunTimeLayoutConfig, RuntimeAntdConfig } from '@umijs/max'
-import { message, notification, theme } from 'antd'
-import type { RequestConfig } from '@umijs/max'
-import { history, useModel } from '@umijs/max'
-import { getUsername } from '@/utils/tool'
 import { fetchUserInfo } from '@/services/user'
+import { clearUserInfo, getToken, getUsername, goToLogin } from '@/utils/tool'
+import type { RequestConfig } from '@umijs/max'
+import {
+  RunTimeLayoutConfig,
+  RuntimeAntdConfig,
+  history,
+  useModel,
+} from '@umijs/max'
+import { message, notification, theme } from 'antd'
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
 // useModel("@@initialState");
@@ -46,7 +49,7 @@ export const layout: typeof RunTimeLayoutConfig = () => {
       clearUserInfo()
       goToLogin()
     },
-    pure: history.location.pathname === '/login' || history.location.pathname.includes('/data-center'), 
+    pure: history.location.pathname === '/login',
     siderWidth: 200,
     // rightRender: (initialState: any) => <div>rightRender</div>,
     // footerRender: (initialState: any) => <div>footerRender</div>,
@@ -96,7 +99,7 @@ interface ResponseStructure {
 // 运行时配置
 export const request: typeof RequestConfig = {
   // 统一的请求设定
-  timeout: 1000,
+  timeout: 5000,
   headers: { 'X-Requested-With': 'XMLHttpRequest' },
 
   // 错误处理： umi@3 的错误处理方案。
@@ -194,7 +197,7 @@ export function useQiankunStateForSlave() {
   const { userInfo } = useModel('user')
   return {
     userInfo,
-    parent_router: history
+    parent_router: history,
   }
 }
 // src/app.ts

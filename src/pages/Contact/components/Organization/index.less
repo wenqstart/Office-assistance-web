@@ -1,5 +1,8 @@
 .organizationContent {
-  padding: 10px 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px 10px 20px;
+  height: 100%;
 }
 
 .organizationHeader {
@@ -40,7 +43,9 @@
 
 .organizationList {
   width: 100%;
+  flex: 1;
   margin-top: 24px;
+  overflow: auto;
 
   .listItem {
     display: flex;
@@ -78,7 +83,7 @@
     }
 
     &:hover {
-      background-color: rgb(230, 230, 228);
+      background-color: #edeeee;
     }
   }
 }

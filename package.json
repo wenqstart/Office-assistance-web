@@ -21,6 +21,7 @@
     "antd": "^5.4.0",
     "antd-img-crop": "^4.21.0",
     "jsencrypt": "^3.3.2",
+    "moment": "^2.30.1",
     "react-cookies": "^0.1.1",
     "react-infinite-scroll-component": "^6.1.0",
     "react-svg": "^16.1.33",
