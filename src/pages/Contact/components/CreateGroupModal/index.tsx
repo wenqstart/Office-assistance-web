@@ -1,6 +1,7 @@
 import ImgUploader from '@/components/ImgUploader/index.tsx'
 import { MyBreadcrumb, type TBreadcrumb } from '@/components/MyBreadcrumb'
 import CloseBtn from '@/components/MyButton/CloseBtn/index'
+import MySkeleton from '@/components/MySkeleton'
 import { getUserCreateGroup } from '@/services/contact'
 import { createGroup } from '@/services/group.ts'
 import { getOrganizationList, searchContactList } from '@/services/user'
@@ -8,7 +9,7 @@ import { debounce } from '@/utils/utils'
 import { SearchOutlined } from '@ant-design/icons'
 import { useModel } from '@umijs/max'
 import { Button, Checkbox, Input, Modal } from 'antd'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styles from './index.less'
 
 type TSelectedGroupMember = {
@@ -44,6 +45,7 @@ const CreateGroupModal: React.FC<any> = (props) => {
     { key: '1', label: '联系人' },
   ])
   const [btnLoading, setBtnLoading] = useState(false)
+  const [checkListLoading, setCheckListLoading] = useState(false)
   const [searchValue, setSearchValue] = useState<string>('')
   const [checkList, setCheckList] = useState<any>([])
   const [currentSelectedData, setCurrentSelectedData] = useState<any>({
@@ -52,8 +54,6 @@ const CreateGroupModal: React.FC<any> = (props) => {
     department: 0,
     selectList: [],
   })
-
-  useEffect(() => {}, [])
 
   const handleOk = async () => {
     newGroupInfo.current.members = Array.from(
@@ -69,10 +69,12 @@ const CreateGroupModal: React.FC<any> = (props) => {
     closeModal(false)
     dataRef.current = null
   }
+
   const handleCancel = () => {
     closeModal(false)
     dataRef.current = null
   }
+
   const onGroupNameChange = debounce(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       newGroupInfo.current.name = e.target.value
@@ -94,7 +96,9 @@ const CreateGroupModal: React.FC<any> = (props) => {
     setBreadcrumbList([...breadcrumbList, { key: item.key, label: item.label }])
     if (!dataRef.current.get(item.key)) {
       if (item.key === contactList[1].key) {
+        setCheckListLoading(true)
         const { data } = await getUserCreateGroup(userInfo.id)
+        setCheckListLoading(false)
         const value = data.map((i) => ({
           id: i.id,
           parent: item.key,
@@ -105,12 +109,16 @@ const CreateGroupModal: React.FC<any> = (props) => {
           isGroup: 1,
           isDepartment: 0,
           sum: i.sum ?? 0,
+          numberList: i.numberList ?? [],
         }))
 
         dataRef.current.set(item.key, value)
         setCheckList([...value])
       } else if (item.key === contactList[0].key) {
+        setCheckListLoading(true)
         const { data } = await getOrganizationList()
+        setCheckListLoading(false)
+
         const userList = (data.userList ?? []).map((i) => ({
           ...i,
           isDepartment: 0,
@@ -138,7 +146,13 @@ const CreateGroupModal: React.FC<any> = (props) => {
         }
       }
     } else {
-      setCheckList([...dataRef.current.get(item.key)])
+      const idList = currentSelectedData.selectList.map((item) => item.id)
+      setCheckList(
+        dataRef.current.get(item.key).map((item) => ({
+          ...item,
+          checked: idList.includes(item.id),
+        })),
+      )
     }
   }
 
@@ -146,7 +160,33 @@ const CreateGroupModal: React.FC<any> = (props) => {
   const clickBreadcrumbLabel = (item: TBreadcrumb, i: number) => {
     if (breadcrumbList.length > 1 && i < breadcrumbList.length - 1) {
       setBreadcrumbList([...breadcrumbList.slice(0, i + 1)])
+
+      if (i) {
+        const idList = currentSelectedData.selectList.map((item) => item.id)
+        setCheckList(
+          dataRef.current.get(item.key).map((item) => ({
+            ...item,
+            checked: idList.includes(item.id),
+          })),
+        )
+      }
     }
+  }
+
+  const handleCancelSelect = (item: any) => {
+    setCurrentSelectedData({
+      person:
+        !item.isDepartment && !item.isGroup
+          ? currentSelectedData.person - 1
+          : 0,
+      department: (currentSelectedData.department += item.isDepartment
+        ? -1
+        : 0),
+      group: (currentSelectedData.group += item.isGroup ? -1 : 0),
+      selectList: [
+        ...currentSelectedData.selectList.filter((i) => i.id !== item.id),
+      ],
+    })
   }
 
   // 选择联系人
@@ -173,30 +213,67 @@ const CreateGroupModal: React.FC<any> = (props) => {
         selectList: [...currentSelectedData.selectList, { ...item }],
       })
     } else {
-      setCurrentSelectedData({
-        person:
-          !item.isDepartment && !item.isGroup
-            ? currentSelectedData.person - 1
-            : 0,
-        department: (currentSelectedData.department += item.isDepartment
-          ? -1
-          : 0),
-        group: (currentSelectedData.group += item.isGroup ? -1 : 0),
-        selectList: [
-          ...currentSelectedData.selectList.filter((i) => i.id !== item.id),
-        ],
-      })
+      handleCancelSelect(item)
     }
   }
 
   // 点击下级按钮
-  const clickNext = (e: any, item: any) => {
+  const clickNext = async (e: any, item: any) => {
     e.stopPropagation()
+    if (item.checked) return
+    if (breadcrumbList.find((data) => data.key === item.id)) return
+    setBreadcrumbList([...breadcrumbList, { key: item.id, label: item.label }])
+    setCheckListLoading(true)
+    const { data } = await getOrganizationList(item.id)
+    setCheckListLoading(false)
+
+    if (!dataRef.current.get(item.id)) {
+      const userList = (data.userList ?? []).map((i) => ({
+        ...i,
+        isDepartment: 0,
+      }))
+      const groupList = (data.groupList ?? []).map((i) => ({
+        ...i,
+        isDepartment: 1,
+      }))
+
+      const value = groupList.concat(userList).map((i) => ({
+        id: i.number,
+        parent: item.id,
+        number: 0,
+        label: i.name,
+        checked: false,
+        disabled: false,
+        isGroup: 0,
+        isDepartment: i.isDepartment,
+        sum: i.sum ?? 0,
+        numberList: i.numberList ?? [],
+      }))
+      if (value.length > 0) {
+        dataRef.current.set(item.key, value)
+        setCheckList([...value])
+      }
+    } else {
+      const idList = currentSelectedData.selectList.map((item) => item.id)
+      setCheckList(
+        dataRef.current.get(item.key).map((item) => ({
+          ...item,
+          checked: idList.includes(item.id),
+        })),
+      )
+    }
   }
 
   // 取消选择
   const cancelSelect = (item: any) => {
-    console.log(item)
+    setCheckList(
+      checkList.map((checkItem) => {
+        return checkItem.id === item.id
+          ? { ...checkItem, checked: !checkItem.checked }
+          : checkItem
+      }),
+    )
+    handleCancelSelect(item)
   }
 
   const uploadSuccess = (res) => {
@@ -209,6 +286,7 @@ const CreateGroupModal: React.FC<any> = (props) => {
       onOk={handleOk}
       onCancel={handleCancel}
       mask={false}
+      maskClosable={false}
       footer={null}
     >
       <div className={styles.modalContent}>
@@ -241,33 +319,43 @@ const CreateGroupModal: React.FC<any> = (props) => {
                     items={breadcrumbList}
                     clickLabel={clickBreadcrumbLabel}
                   ></MyBreadcrumb>
-                  <div className={styles.checkList}>
-                    {checkList.map((item) => (
-                      <div
-                        key={item.id}
-                        onClick={() => onSelect(item)}
-                        className={styles.checkBox}
-                      >
-                        <div className={styles.checkBoxLeft}>
-                          <Checkbox
-                            disabled={item.disabled}
-                            checked={item.checked}
-                          />
-                          <span className={styles.icon}></span>
-                          <div>{item.label}</div>
-                        </div>
-
-                        {item.isDepartment > 0 && (
-                          <div
-                            className={styles.nextBtn}
-                            onClick={(e) => clickNext(e, item)}
-                          >
-                            下级
+                  {!checkListLoading && (
+                    <div className={styles.checkList}>
+                      {checkList.map((item) => (
+                        <div
+                          key={item.id}
+                          onClick={() => onSelect(item)}
+                          className={styles.checkBox}
+                        >
+                          <div className={styles.checkBoxLeft}>
+                            <Checkbox
+                              disabled={item.disabled}
+                              checked={item.checked}
+                            />
+                            <span className={styles.icon}></span>
+                            <div>{item.label}</div>
+                            {item.numberList && item.numberList.length > 0 && (
+                              <span
+                                className={styles.afterLabel}
+                              >{`(${item.numberList.length})`}</span>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+
+                          {item.isDepartment > 0 && (
+                            <div
+                              className={`${styles.nextBtn} ${
+                                item.checked ? styles.btnDisabled : ''
+                              }`}
+                              onClick={(e) => clickNext(e, item)}
+                            >
+                              下级
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <MySkeleton loading={checkListLoading} count={4}></MySkeleton>
                 </>
               )}
               {breadcrumbList.length === 1 &&
@@ -298,7 +386,11 @@ const CreateGroupModal: React.FC<any> = (props) => {
                     <div key={item.id} className={styles.selectedItemBox}>
                       <div>
                         <span>{item.label}</span>
-                        {item.sum > 0 && <span>{`(${item.sum})`}</span>}
+                        {item.numberList.length > 0 && (
+                          <span
+                            className={styles.afterLabel}
+                          >{`(${item.numberList.length})`}</span>
+                        )}
                       </div>
                       <CloseBtn onClick={() => cancelSelect(item)}></CloseBtn>
                     </div>

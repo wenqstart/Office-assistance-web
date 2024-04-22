@@ -15,6 +15,11 @@ const GroupList: React.FC<any> = (props: any) => {
             >
               <div className={styles.icon}></div>
               <div className={styles.itemName}>{item.name}</div>
+              {item.numberList.length > 0 && (
+                <span
+                  className={styles.afterLabel}
+                >{`(${item.numberList.length})`}</span>
+              )}
             </div>
           )
         })) || <div>暂无加入的群组</div>}

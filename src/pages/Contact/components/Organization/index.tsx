@@ -1,15 +1,10 @@
+import { MyBreadcrumb, type TBreadcrumb } from '@/components/MyBreadcrumb'
 import LoadingPage from '@/pages/LoadingPage/index.tsx'
 import { getMessageByPoint } from '@/services/chat'
 import { getOrganizationList } from '@/services/user'
 import { history, useModel } from '@umijs/max'
-import { Button } from 'antd'
 import React, { useEffect, useState } from 'react'
-import './index.less'
-
-type TBreadcrumb = {
-  id: string
-  label: string
-}
+import styles from './index.less'
 
 const Organization: React.FC = () => {
   const { getCurrentChatId } = useModel('message')
@@ -69,49 +64,31 @@ const Organization: React.FC = () => {
   }, [])
 
   return (
-    <div className="organizationContent">
-      <div className="organizationHeader">
+    <div className={styles.organizationContent}>
+      <div className={styles.organizationHeader}>
         <div>组织架构</div>
-        <Button type="default" size="large">
-          添加成员
-        </Button>
       </div>
-      <div className="breadcrumbList">
-        {breadcrumbList.map((item, i) => {
-          return (
-            <div key={i} className="breadcrumbItem">
-              {i > 0 && <span className="separator"></span>}
-              <div
-                className={`label ${
-                  breadcrumbList.length > 1 && i < breadcrumbList.length - 1
-                    ? 'ableClick'
-                    : ''
-                }`}
-                onClick={() => clickLabel(item, i)}
-              >
-                {item.label}
-              </div>
-            </div>
-          )
-        })}
-      </div>
-      <div className="organizationList">
+      <MyBreadcrumb
+        items={breadcrumbList}
+        clickLabel={clickLabel}
+      ></MyBreadcrumb>
+      <div className={styles.organizationList}>
         {loading && <LoadingPage size="large"></LoadingPage>}
         {!loading &&
           ((organizationData.length > 0 &&
             organizationData.map((item: any) => {
               return (
                 <div
-                  className="listItem"
+                  className={styles.listItem}
                   key={item.id}
                   onClick={() => clickItem(item)}
                 >
-                  <div className="listItemLeft">
-                    <div className="icon"></div>
+                  <div className={styles.listItemLeft}>
+                    <div className={styles.icon}></div>
                     <div>{item.name}</div>
                   </div>
                   {item.isDepartment > 0 && (
-                    <div className="listItemRight">下级</div>
+                    <div className={styles.listItemRight}>下级</div>
                   )}
                 </div>
               )
