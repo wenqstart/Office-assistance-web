@@ -1,3 +1,5 @@
+import { postTask } from '@/services/task'
+import { useModel } from '@umijs/max'
 import { Button, Flex, Input, Modal, Upload } from 'antd'
 import { Suspense, lazy, useState } from 'react'
 import styles from './index.less'
@@ -8,6 +10,9 @@ const EmailEditorDialog = (props: {
   onClose: (val: boolean) => void
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { userInfo } = useModel('user', (model: any) => ({
+    userInfo: model.userInfo,
+  }))
 
   const showModal = () => {
     setIsModalOpen(true)
@@ -22,6 +27,19 @@ const EmailEditorDialog = (props: {
     props.onClose(false)
   }
 
+  const sendTask = () => {
+    console.log('send')
+    postTask(userInfo.id, {
+      title: 'test',
+      content: 'test content',
+      type: 0,
+      numbers: [''],
+      endTime: '000',
+    })
+  }
+  const saveEditTask = () => {
+    console.log('save')
+  }
   return (
     <>
       <Modal
@@ -29,13 +47,14 @@ const EmailEditorDialog = (props: {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[]}
+        maskClosable={false}
         mask={false}
       >
         <Flex gap="small" wrap="wrap">
-          <Button type="primary" disabled={true}>
+          <Button type="primary" disabled={false} onClick={sendTask}>
             发送
           </Button>
-          <Button>保存</Button>
+          <Button onClick={saveEditTask}>保存</Button>
           <Upload>
             <Button>附件</Button>
           </Upload>
@@ -54,7 +73,7 @@ const EmailEditorDialog = (props: {
             <Input></Input>
           </div>
           <div className={styles.inputBox}>
-            <div>时间 :</div>
+            <div>期限 :</div>
             <Input></Input>
           </div>
 

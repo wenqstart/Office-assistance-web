@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './index.less'
+import styles from './index.less'
 
 const TabList: React.FC<any> = (props) => {
   const listData = [
@@ -26,16 +26,17 @@ const TabList: React.FC<any> = (props) => {
   const clickItem = (i: number) => {
     setActiveId(i)
     props.tabClick(i)
-    console.log(activeId)
   }
 
   return (
-    <div className="list">
+    <div className={styles.list}>
       {listData.map((item, i) => {
         return (
           <div
             key={i}
-            className={`item ${activeId === i ? 'activeItem' : ''}`}
+            className={`${styles.item} ${
+              activeId === i ? styles.activeItem : ''
+            }`}
             onClick={() => clickItem(i)}
           >
             {item.text}

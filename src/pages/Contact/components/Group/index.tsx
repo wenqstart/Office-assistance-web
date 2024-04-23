@@ -62,7 +62,6 @@ const Group: React.FC = () => {
   }
 
   const clickItem = async (item) => {
-    console.log(item)
     getCurrentChatId({ labelId: item.id, group: true })
     await getMessageByPoint(userInfo.id, item.id, false)
     history.push('/message')

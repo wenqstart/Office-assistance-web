@@ -22,7 +22,7 @@ export default defineConfig({
     // '/luckysheet/plugins/js/plugin.js',
     // '/luckysheet/luckysheet.umd.js',
     'https://cdn.jsdelivr.net/npm/luckysheet/dist/plugins/js/plugin.js',
-    'https://cdn.jsdelivr.net/npm/luckysheet/dist/luckysheet.umd.js'
+    'https://cdn.jsdelivr.net/npm/luckysheet/dist/luckysheet.umd.js',
   ],
   favicons: [
     // 此时将指向 `/favicon.png` ，确保你的项目含有 `public/favicon.png`

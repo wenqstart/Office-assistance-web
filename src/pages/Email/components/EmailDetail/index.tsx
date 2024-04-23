@@ -1,8 +1,8 @@
 import React from 'react'
-import './index.less'
+import styles from './index.less'
 
 const EmailDetail: React.FC = () => {
-  return <div className="emailDetail"></div>
+  return <div className={styles.emailDetail}></div>
 }
 
 export default EmailDetail

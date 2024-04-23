@@ -1,6 +1,6 @@
-import ImgUploader from '@/components/ImgUploader/index.tsx'
+import ImgUploader from '@/components/ImgUploader'
 import { MyBreadcrumb, type TBreadcrumb } from '@/components/MyBreadcrumb'
-import CloseBtn from '@/components/MyButton/CloseBtn/index'
+import CloseBtn from '@/components/MyButton/CloseBtn'
 import MySkeleton from '@/components/MySkeleton'
 import { getUserCreateGroup } from '@/services/contact'
 import { createGroup } from '@/services/group.ts'
@@ -66,6 +66,10 @@ const CreateGroupModal: React.FC<any> = (props) => {
     setBtnLoading(true)
     const { data } = await createGroup(newGroupInfo.current)
     setBtnLoading(false)
+
+    // getCurrentChatId({ labelId: item.id, group: true })
+    // await getMessageByPoint(userInfo.id, item.id, false)
+    // history.push('/message')
     closeModal(false)
     dataRef.current = null
   }
@@ -160,7 +164,6 @@ const CreateGroupModal: React.FC<any> = (props) => {
   const clickBreadcrumbLabel = (item: TBreadcrumb, i: number) => {
     if (breadcrumbList.length > 1 && i < breadcrumbList.length - 1) {
       setBreadcrumbList([...breadcrumbList.slice(0, i + 1)])
-
       if (i) {
         const idList = currentSelectedData.selectList.map((item) => item.id)
         setCheckList(

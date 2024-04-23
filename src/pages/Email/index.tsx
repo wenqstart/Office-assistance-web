@@ -1,9 +1,10 @@
+import LazyComponent from '@/components/LazyComponent/index'
 import { Button, Flex } from 'antd'
 import React, { useState } from 'react'
 import EmailEditorDialog from './components/EmailEditorDialog'
 import EmailList from './components/EmailList'
 import TabList from './components/TabList'
-import './index.less'
+import styles from './index.less'
 
 const Email: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0)
@@ -21,7 +22,7 @@ const Email: React.FC = () => {
   }
 
   return (
-    <div className="emailContainer">
+    <div className={styles.emailContainer}>
       <div>
         <Flex gap="small" wrap="wrap">
           <Button onClick={showEmailEditor}>写邮件</Button>
@@ -29,11 +30,16 @@ const Email: React.FC = () => {
           <Button>删除</Button>
         </Flex>
       </div>
-      <div className="content">
+      <div className={styles.content}>
         <TabList tabClick={tabClick}></TabList>
         <EmailList activeTab={activeTab}></EmailList>
       </div>
-      <EmailEditorDialog isShowModal={isShowEmailModal} onClose={closeModal} />
+      <LazyComponent>
+        <EmailEditorDialog
+          isShowModal={isShowEmailModal}
+          onClose={closeModal}
+        />
+      </LazyComponent>
     </div>
   )
 }
