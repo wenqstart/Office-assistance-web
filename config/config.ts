@@ -90,7 +90,9 @@ export default defineConfig({
         {
           name: 'data-center',
           // entry: '//10.33.10.171:3000',
-          entry: '//139.224.1.234:3000',
+          // entry: '//139.224.1.234:3000',
+          // entry: '//localhost:3000',
+          entry: '//10.33.51.220:3000',
         },
         {
           name: 'data-structure',
@@ -114,7 +116,9 @@ export default defineConfig({
     // },
     '/api/doc-base': {
       // target: 'http://10.33.10.171:3000',
-      target: 'http://139.224.1.234:3000',
+      // target: 'http://139.224.1.234:3000',
+      // target: 'http://localhost:3000',
+      target: 'http://10.33.51.220:3000',
       changeOrigin: true,
       rewrite: { '^/api/doc-base': '' },
     },
