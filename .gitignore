@@ -10,5 +10,6 @@
 /.umi-test
 /dist
 /.mfsu
+/.idea
 .swc
 package-lock.json
