@@ -88,7 +88,7 @@ const routes: RouteProps[] = [
         icon: 'SnippetsOutlined',
         exact: true,
         component: '@/pages/AccountManage',
-        access: 'isAdmin'
+        access: 'isAdmin',
       },
       {
         name: '用户管理',
@@ -96,7 +96,7 @@ const routes: RouteProps[] = [
         icon: 'UserSwitchOutlined',
         exact: true,
         component: '@/pages/UserManage',
-        access: 'isAdmin'
+        access: 'isAdmin',
       },
       {
         name: '任务管理',
@@ -104,12 +104,12 @@ const routes: RouteProps[] = [
         icon: 'UnorderedListOutlined',
         exact: true,
         component: '@/pages/TaskManage',
-        access: 'isAdmin'
+        access: 'isAdmin',
       },
       { path: '/404', component: '@/pages/Error/404' },
       { path: '/noAuth', component: '@/pages/Error/noAuth' },
       {
-        name: '我的邮件',
+        name: '我的任务',
         path: 'email',
         icon: 'ProjectOutlined',
         exact: true,

@@ -1,7 +1,9 @@
-import { getUserReceivedTask } from '@/services/task'
+import MySkeleton from '@/components/MySkeleton/index'
+import { getUserReceivedTask, getUserSendedTask } from '@/services/task'
+import { useModel } from '@umijs/max'
 import React, { useEffect, useState } from 'react'
 import EmailDetail from '../EmailDetail'
-import EmailListItem from '../EmailListItem'
+import { EmailListItem, type TEmaliData } from '../EmailListItem'
 import styles from './index.less'
 
 type TEmailListProp = {
@@ -9,44 +11,60 @@ type TEmailListProp = {
 }
 
 enum TaskListType {
-  RECEIVED_TASK = 0,
-  DRAFTS_TASK = 1,
-  SENDED_TASK = 2,
-  DELETED_TASK = 3,
+  RECEIVED_TASK = 0, // 收件箱
+  DRAFTS_TASK = 1, // 草稿箱
+  SENDED_TASK = 2, // 已发送
+  DELETED_TASK = 3, // 已删除
 }
 
 const EmailList: React.FC = (props: TEmailListProp) => {
   const { activeTab } = props
   const [activeEmail, setActiveEmail] = useState(0)
+  const [emailId, setEmailId] = useState('')
+  const { userInfo } = useModel('user', (model: any) => ({
+    userInfo: model.userInfo,
+  }))
+  const [loading, setLoading] = useState(false)
+  const [currentEmailList, setCurrentEmailList] = useState<TEmaliData[]>([])
 
-  const test = [
-    {
-      type: 0,
-      title: 'xx老师',
-      subtitle: 'xx作业',
-      desc: 'xx任务',
-    },
-    {
-      type: 1,
-      title: 'xx老师',
-      subtitle: 'xx公告',
-      desc: 'xx内容',
-    },
-  ]
+  const emailStateHandler = (listData: any[]) => {
+    setEmailId(listData[0]?.id ?? '')
+    setCurrentEmailList(
+      listData.map((item) => ({
+        id: item.id,
+        type: item.type,
+        title: item.title,
+        subtitle: item.title,
+        desc: item.content ?? '',
+      })),
+    )
+  }
 
   const _getUserReceivedTask = async () => {
-    const { data } = await getUserReceivedTask()
+    setLoading(true)
+    const { data } = await getUserReceivedTask(userInfo.id, 10, 1)
+    setLoading(false)
+
+    emailStateHandler(data.records ?? [])
   }
+
+  const _getUserSendedTask = async () => {
+    setLoading(true)
+    const { data } = await getUserSendedTask(userInfo.id, 10, 1)
+    setLoading(false)
+    emailStateHandler(data.records ?? [])
+  }
+
   useEffect(() => {
+    setCurrentEmailList([])
     switch (activeTab) {
       case TaskListType.RECEIVED_TASK:
-        console.log(TaskListType.RECEIVED_TASK)
+        _getUserReceivedTask()
         break
       case TaskListType.DRAFTS_TASK:
-        console.log(TaskListType.DRAFTS_TASK)
         break
       case TaskListType.SENDED_TASK:
-        console.log(TaskListType.SENDED_TASK)
+        _getUserSendedTask()
         break
       case TaskListType.DELETED_TASK:
         console.log(TaskListType.DELETED_TASK)
@@ -55,25 +73,30 @@ const EmailList: React.FC = (props: TEmailListProp) => {
         return
     }
   }, [activeTab])
-  const clickItem = (i: number) => {
+
+  const clickItem = (i: number, id: string) => {
     setActiveEmail(i)
+    setEmailId(id)
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.emailList}>
-        {test.map((item, i) => {
-          return (
+        <MySkeleton loading={loading} count={4}></MySkeleton>
+        {!loading && !currentEmailList.length && (
+          <div className={styles.emptyContent}>暂无内容</div>
+        )}
+        {!loading &&
+          currentEmailList.map((item, i) => (
             <EmailListItem
               key={i}
-              onClick={() => clickItem(i)}
+              onClick={() => clickItem(i, item.id)}
               selected={i === activeEmail}
               emailData={item}
             ></EmailListItem>
-          )
-        })}
+          ))}
       </div>
-      {activeEmail > -1 && <EmailDetail></EmailDetail>}
+      {activeEmail > -1 && <EmailDetail id={emailId}></EmailDetail>}
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import styles from './index.less'
 
-type TEmaliData = {
+export type TEmaliData = {
+  id: string
   type: number // 0-作业,1-公告
   title: string
   subtitle: string
@@ -13,7 +14,8 @@ type TProps = {
   onClick: () => void
 }
 
-const EmailListItem = (props: TProps) => {
+export const EmailListItem = (props: TProps) => {
+  const { emailData } = props
   const clickItem = () => {
     props.onClick()
   }
@@ -24,15 +26,14 @@ const EmailListItem = (props: TProps) => {
       className={`${styles.box} ${props.selected ? 'active' : ''}`}
     >
       <div className={styles.emailLabel}>
-        {props.emailData.type ? '公告' : '作业'}
+        {emailData.title.substring(0, 1).toLocaleUpperCase() +
+          emailData.title.substring(1, 2)}
       </div>
       <div className={styles.emailTextList}>
-        <span>{props.emailData.title}</span>
-        <span>{props.emailData.subtitle}</span>
-        <span>{props.emailData.desc}</span>
+        <span>{emailData.title}</span>
+        <span>{emailData.subtitle}</span>
+        <span>{emailData.desc}</span>
       </div>
     </div>
   )
 }
-
-export default EmailListItem
