@@ -79,7 +79,7 @@ export default defineConfig({
     'process.env.BASE_API': '/api', // 转发接口
     // 'process.env.dev_ip': '10.33.117.75:8081', // 开发环境地址
     'process.env.dev_ip': '121.40.170.103:8081', // 开发环境地址
-    'process.env.prod_ip': '62137560yh.vicp.fun', // 生产环境地址
+    'process.env.prod_ip': '121.40.170.103:8081', // 生产环境地址
   },
   // forkTSChecker: {}, // ts编译时类型检查
   routes,
@@ -89,11 +89,15 @@ export default defineConfig({
       apps: [
         {
           name: 'data-center',
-          entry: '//10.33.10.171:3000',
+          // entry: '//10.33.10.171:3000',
+          // entry: '//139.224.1.234:3000',
+          // entry: '//localhost:3000',
+          entry: '//10.33.51.220:3000',
         },
         {
           name: 'data-structure',
-          entry: '//10.33.10.171:8100',
+          // entry: '//10.33.10.171:8100',
+          entry: '//139.224.1.234:8100',
         },
       ],
     },
@@ -111,7 +115,10 @@ export default defineConfig({
     //   // xfwd: false,
     // },
     '/api/doc-base': {
-      target: 'http://10.33.10.171:3000',
+      // target: 'http://10.33.10.171:3000',
+      // target: 'http://139.224.1.234:3000',
+      // target: 'http://localhost:3000',
+      target: 'http://10.33.51.220:3000',
       changeOrigin: true,
       rewrite: { '^/api/doc-base': '' },
     },
