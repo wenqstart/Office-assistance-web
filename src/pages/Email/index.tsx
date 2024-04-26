@@ -25,7 +25,7 @@ const Email: React.FC = () => {
     <div className={styles.emailContainer}>
       <div>
         <Flex gap="small" wrap="wrap">
-          <Button onClick={showEmailEditor}>写邮件</Button>
+          <Button onClick={showEmailEditor}>发任务</Button>
           <Button>回复</Button>
           <Button>删除</Button>
         </Flex>
