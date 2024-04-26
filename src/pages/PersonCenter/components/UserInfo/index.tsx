@@ -4,7 +4,7 @@ import { getUsername } from '@/utils/tool'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { useModel } from '@umijs/max'
 import type { GetProp, UploadProps } from 'antd'
-import { Button, Form, Input, InputNumber, Radio, Upload } from 'antd'
+import { Button, Form, Input, InputNumber, Radio, Upload, message } from 'antd'
 import ImgCrop from 'antd-img-crop'
 import { useEffect, useState } from 'react'
 import styles from './index.less'
@@ -16,19 +16,31 @@ const UserInfo = () => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState<string>()
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
   const username = getUsername()
   const onFinish = (values: any) => {
     changeUserInfo({ number: username, userDto: { ...values, icon: imageUrl } })
   }
-  function beforeUpload(params: any) {
-    console.log('params', params)
+  function beforeUpload(file: any) {
+    console.log('file', file.size, file.size / 1024 / 1024)
+    const sizeCheck = file.size / 1024 / 1024 < 1
+    if (!sizeCheck) {
+      message.warning('文件大小不能超过1M!')
+    }
+    return sizeCheck
+  }
+  function onRemove(file: any) {
+    setImageUrl(null)
   }
   type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
-  const getBase64 = (img: FileType, callback: (url: string) => void) => {
-    const reader = new FileReader()
-    reader.addEventListener('load', () => callback(reader.result as string))
-    reader.readAsDataURL(img)
-  }
+  const getBase64 = (file: FileType): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = (error) => reject(error)
+    })
   const handleChange: UploadProps['onChange'] = (info) => {
     console.log('info 222', info.file)
     if (info.file.status === 'uploading') {
@@ -38,7 +50,7 @@ const UserInfo = () => {
 
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj as FileType, (url) => {
+      getBase64(info.file.originFileObj as FileType).then((url) => {
         setLoading(false)
         console.log('url', url)
 
@@ -52,23 +64,18 @@ const UserInfo = () => {
   }
 
   const onPreview = async (file: UploadFile) => {
-    let src = file.url as string
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader()
-        reader.readAsDataURL(file.originFileObj as FileType)
-        reader.onload = () => resolve(reader.result as string)
-      })
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType)
     }
-    const image = new Image()
-    image.src = src
-    const imgWindow = window.open(src)
-    imgWindow?.document.write(image.outerHTML)
+
+    setPreviewImage(file.url || (file.preview as string))
+    setPreviewOpen(true)
   }
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>上传头像</div>
+      {/* <div style={{ marginTop: 8 }}>上传头像</div> */}
+      <p>图片不小不超过1M</p>
     </button>
   )
   useEffect(() => {
@@ -97,17 +104,30 @@ const UserInfo = () => {
             <Upload
               name="file"
               listType="picture-card"
-              showUploadList={false}
               action={`${file_api}/update`}
               onChange={handleChange}
               onPreview={onPreview}
+              showUploadList={false}
+              beforeUpload={beforeUpload}
+              onRemove={onRemove}
             >
               {imageUrl ? (
-                <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+                <img src={imageUrl} style={{ width: '100%' }} />
               ) : (
                 uploadButton
               )}
             </Upload>
+            {previewImage && (
+              <Image
+                wrapperStyle={{ display: 'none' }}
+                preview={{
+                  visible: previewOpen,
+                  onVisibleChange: (visible) => setPreviewOpen(visible),
+                  afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                }}
+                src={previewImage}
+              />
+            )}
           </ImgCrop>
         </Form.Item>
         <Form.Item label="账号" name="number">
