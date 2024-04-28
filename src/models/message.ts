@@ -1,5 +1,5 @@
 import { getChatContent, getUsersChatId } from '@/services/chat'
-import { getChatId } from '@/utils/tool'
+import { getChatId, getMsgList } from '@/utils/tool'
 import { useModel } from '@umijs/max'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -72,6 +72,11 @@ export default function useMessage() {
     try {
       const res = await getChatContent({ chatId: currChatId })
       setMessageList(res.data?.reverse())
+      console.log('setMessageList')
+      sessionStorage.setItem(
+        'office_system_msgList',
+        JSON.stringify(res.data?.reverse()),
+      )
     } catch (error) {
       console.log('error', error)
     }
@@ -82,46 +87,54 @@ export default function useMessage() {
   }, [])
 
   // 收发信息
-  const socketOnMessage = (e: any) => {
-    console.log('onmessage', e.data)
-    // "MessageDvo(chatId=1770820205788975105, name=温泉, image=null, number=200030111, content=<p>www快快快</p>, read=null, createTime=Fri Mar 22 10:06:00 CST 2024)"
-    const messageRes = e.data.slice(11, -1)?.split(', ')
-    console.log('messageRes', messageRes)
-    // const chatId = messageRes[0].split('=')[1]
-    // const name = messageRes[1].split('=')[1]
-    // const number = messageRes[3].split('=')[1]
-    // const content = messageRes[4].split('=')[1]
-    // const createTime = messageRes[6].split('=')[1]
-    // console.log('{chatId, name, number, content, createTime}', {
-    //   chatId,
-    //   name,
-    //   number,
-    //   content,
-    //   createTime,
-    // })
-    // console.log([...messageList, { chatId, name, number, content, createTime }])
-    // console.log('messageList', messageList)
-    getChatMessage()
-    // setMessageList([...messageList, {chatId, name, number, content, createTime}])
-    // if (e.data === 'success') return
-    // const alarmCountObj = JSON.parse(e.data)
-    // const paramNameArr = Object.keys(alarmCountObj)
-    // // 判断返回告警保持连接否则断开连接
-    // if (paramNameArr[1] === 'UNREAD_WARN_COUNT') {
-    //   sendCount.current += 1
-    //   setAlarmCount(alarmCountObj.UNREAD_WARN_COUNT)
-    //   setMessageCount(alarmCountObj.UNREAD_MSG_COUNT)
-    // } else {
-    //   sendCount.current = 0
-    // }
-  }
+  const socketOnMessage = useCallback(
+    (e: any) => {
+      console.log('onmessage', e.data)
+      // "MessageDvo(chatId=1770820205788975105, name=温泉, image=null, number=200030111, content=<p>www快快快</p>, read=null, createTime=Fri Mar 22 10:06:00 CST 2024)"
+      // const messageRes = e.data.slice(11, -1)?.split(', ')
+      const messageRes = JSON.parse(e.data || '{}')
+      console.log('messageList', getMsgList())
+      const { content, createTime, number, readCount } = messageRes
+      // const chatId = messageRes[0].split('=')[1]
+      // const name = messageRes[1].split('=')[1]
+      // const number = messageRes[3].split('=')[1]
+      // const content = messageRes[4].split('=')[1]
+      // const createTime = messageRes[6].split('=')[1]
+      // console.log('{chatId, name, number, content, createTime}', {
+      //   chatId,
+      //   name,
+      //   number,
+      //   content,
+      //   createTime,
+      // })
+      // console.log([...messageList, { chatId, name, number, content, createTime }])
+      // console.log('messageList', messageList)
+      // getChatMessage()
+      setMessageList(
+        getMsgList().concat({ content, createTime, number, readCount }),
+      )
+      // setMessageList([...messageList, {chatId, name, number, content, createTime}])
+      // if (e.data === 'success') return
+      // const alarmCountObj = JSON.parse(e.data)
+      // const paramNameArr = Object.keys(alarmCountObj)
+      // // 判断返回告警保持连接否则断开连接
+      // if (paramNameArr[1] === 'UNREAD_WARN_COUNT') {
+      //   sendCount.current += 1
+      //   setAlarmCount(alarmCountObj.UNREAD_WARN_COUNT)
+      //   setMessageCount(alarmCountObj.UNREAD_MSG_COUNT)
+      // } else {
+      //   sendCount.current = 0
+      // }
+    },
+    [messageList],
+  )
   const sendMessage = useCallback(
     (message: any) => {
       console.log('message', JSON.stringify(message))
       console.log('socket?.current', socket?.current)
       if (socket?.current?.readyState === webSocketStatus.OPEN) {
         socket?.current?.send(JSON.stringify(message))
-        getChatMessage()
+        // getChatMessage()
       }
     },
     [chatId],
