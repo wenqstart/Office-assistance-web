@@ -1,5 +1,9 @@
 import MySkeleton from '@/components/MySkeleton/index'
-import { getUserReceivedTask, getUserSendedTask } from '@/services/task'
+import {
+  getDraftList,
+  getUserReceivedTask,
+  getUserSendedTask,
+} from '@/services/task'
 import { useModel } from '@umijs/max'
 import React, { useEffect, useState } from 'react'
 import EmailDetail from '../EmailDetail'
@@ -18,7 +22,8 @@ enum TaskListType {
 }
 
 const EmailList: React.FC = (props: TEmailListProp) => {
-  const { activeTab } = props
+  const { activeTab, onSelectEmailItem } = props
+
   const [activeEmail, setActiveEmail] = useState(0)
   const [emailId, setEmailId] = useState('')
   const { userInfo } = useModel('user', (model: any) => ({
@@ -29,6 +34,7 @@ const EmailList: React.FC = (props: TEmailListProp) => {
 
   const emailStateHandler = (listData: any[]) => {
     setEmailId(listData[0]?.id ?? '')
+    onSelectEmailItem(listData[0]?.id ?? '')
     setCurrentEmailList(
       listData.map((item) => ({
         id: item.id,
@@ -44,7 +50,6 @@ const EmailList: React.FC = (props: TEmailListProp) => {
     setLoading(true)
     const { data } = await getUserReceivedTask(userInfo.id, 10, 1)
     setLoading(false)
-
     emailStateHandler(data.records ?? [])
   }
 
@@ -55,13 +60,19 @@ const EmailList: React.FC = (props: TEmailListProp) => {
     emailStateHandler(data.records ?? [])
   }
 
+  const _getDraftList = async () => {
+    setLoading(true)
+    const { data } = await getDraftList(userInfo.id)
+    setLoading(false)
+  }
+
   useEffect(() => {
-    setCurrentEmailList([])
     switch (activeTab) {
       case TaskListType.RECEIVED_TASK:
         _getUserReceivedTask()
         break
       case TaskListType.DRAFTS_TASK:
+        _getDraftList()
         break
       case TaskListType.SENDED_TASK:
         _getUserSendedTask()
@@ -77,6 +88,7 @@ const EmailList: React.FC = (props: TEmailListProp) => {
   const clickItem = (i: number, id: string) => {
     setActiveEmail(i)
     setEmailId(id)
+    onSelectEmailItem(id)
   }
 
   return (

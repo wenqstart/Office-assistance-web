@@ -52,7 +52,7 @@ export const getUserReceivedTask = (
 
 // 删除接收到的任务
 export const deleteTask = (userId: string, taskId: string) => {
-  return request(`${task_api}/getTaskListForOther`, {
+  return request(`${task_api}/deleteTask`, {
     method: 'delete',
     params: {
       userId,
@@ -77,12 +77,34 @@ export const replyTask = (userId: string, data: TReplyContent) => {
   })
 }
 
+// 获取任务详情
 export const getTaskDetail = (userId: string, taskId: string) => {
   return request(`${task_api}/getTaskInfo`, {
     method: 'get',
     params: {
       userId,
       taskId,
+    },
+  })
+}
+
+// 保存编辑的任务
+export const saveTask = (userId: string, data: TTaskData) => {
+  return request(`${task_api}/saveTaskRecord`, {
+    method: 'post',
+    params: {
+      userId,
+    },
+    data,
+  })
+}
+
+// 获取草稿箱任务列表
+export const getDraftList = (userId: string) => {
+  return request(`${task_api}/getTaskRecord`, {
+    method: 'get',
+    params: {
+      userId,
     },
   })
 }
