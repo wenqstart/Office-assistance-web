@@ -11,6 +11,7 @@ const Organization: React.FC = () => {
   const { userInfo } = useModel('user', (model) => ({
     userInfo: model.userInfo,
   }))
+  const [lastClickTime, setLastClickTime] = useState(null)
 
   const [breadcrumbList, setBreadcrumbList] = useState<TBreadcrumb[]>([
     {
@@ -41,9 +42,17 @@ const Organization: React.FC = () => {
 
   const clickItem = async (item: any) => {
     if (!item.isDepartment) {
-      getCurrentChatId({ number: item.number, group: false })
-      await getMessageByPoint(userInfo.id, item.number, true)
-      history.push('/message')
+      const currentTime = Date.now()
+      if (lastClickTime && currentTime - lastClickTime < 300) {
+        // 如果两次点击之间的时间小于300毫秒，则视为双击
+        getCurrentChatId({ number: item.number, group: false })
+        await getMessageByPoint(userInfo.id, item.number, true)
+        history.push('/message')
+        setLastClickTime(null) // 重置时间，以便下一次双击检测
+      } else {
+        setLastClickTime(currentTime)
+      }
+
       return
     }
     if (breadcrumbList.find((data) => data.id === item.id)) return

@@ -50,21 +50,7 @@ const routes: RouteProps[] = [
     routes: [
       {
         path: '/',
-        redirect: '/message',
-      },
-      {
-        name: '消息',
-        path: 'message',
-        icon: 'message',
-        exact: true,
-        component: '@/pages/Message',
-      },
-      {
-        name: '通讯录',
-        path: 'contact',
-        icon: 'TeamOutlined',
-        exact: true,
-        component: '@/pages/Contact',
+        redirect: '/workBench',
       },
       {
         name: '工作台',
@@ -72,6 +58,22 @@ const routes: RouteProps[] = [
         icon: 'FundProjectionScreenOutlined',
         exact: true,
         component: '@/pages/WorkBench',
+      },
+      {
+        name: '消息',
+        path: 'message',
+        icon: 'message',
+        exact: true,
+        component: '@/pages/Message',
+        access: 'isUser',
+      },
+      {
+        name: '通讯录',
+        path: 'contact',
+        icon: 'TeamOutlined',
+        exact: true,
+        component: '@/pages/Contact',
+        access: 'isUser',
       },
       {
         name: '文档中心',
@@ -114,6 +116,7 @@ const routes: RouteProps[] = [
         icon: 'ProjectOutlined',
         exact: true,
         component: '@/pages/Email',
+        access: 'isUser',
       },
       {
         path: '/person-center',

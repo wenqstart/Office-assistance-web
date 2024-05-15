@@ -1,35 +1,40 @@
 import {
+  addUser,
+  batchAddUser,
+  deleteUser,
+  getGroupList,
+  getUserPage,
+  getUserTemplate,
+  updateUserGroup,
+  updateUserInfo,
+} from '@/services/admin'
+import { getUserinfo } from '@/utils/tool'
+import { InboxOutlined } from '@ant-design/icons'
+import {
   ActionType,
   FooterToolbar,
   PageContainer,
   ProDescriptions,
-  ProDescriptionsItemProps,
-  ProColumns,
   ProTable,
 } from '@ant-design/pro-components'
-import { Button, Divider, Drawer, message, Popconfirm, Select, Upload } from 'antd'
-import type { UploadProps } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
-import React, { useRef, useState, useEffect, useCallback } from 'react'
+import type { UploadProps } from 'antd'
+import {
+  Button,
+  Divider,
+  Drawer,
+  Popconfirm,
+  Select,
+  Upload,
+  message,
+} from 'antd'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import BatchImport from './components/BatchImport'
 import CreateForm from './components/CreateForm'
 import SetGroup from './components/SetGroup'
-import BatchImport from './components/BatchImport'
 import UpdateForm, { FormValueType } from './components/UpdateForm'
-import moment from 'moment'
-import {
-  getUserPage,
-  addUser,
-  deleteUser,
-  updateUserGroup,
-  getGroupList,
-  updateUserInfo,
-  getUserTemplate,
-  batchAddUser
-} from '@/services/admin'
-import { getUserinfo } from '@/utils/tool'
 // const { addUser, queryUserList, deleteUser, modifyUser } =
 //   services.UserController
-const { Dragger } = Upload;
+const { Dragger } = Upload
 /**
  * 添加节点
  * @param fields
@@ -281,7 +286,7 @@ const TableList: React.FC<unknown> = () => {
           <Divider type="vertical" />
           <Popconfirm
             title="删除分组"
-            description="确定删除该分组吗?"
+            description="确定删除该用户吗?"
             onConfirm={() => handledeleteUser(record)}
             okText="确定"
             cancelText="取消"
@@ -315,25 +320,25 @@ const TableList: React.FC<unknown> = () => {
     maxCount: 1,
     // action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
     onChange(info) {
-      const { status } = info.file;
+      const { status } = info.file
       if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
+        console.log(info.file, info.fileList)
       }
       if (status === 'done') {
-        message.success(`${info.file.name} 文件上传成功.`);
+        message.success(`${info.file.name} 文件上传成功.`)
       } else if (status === 'error') {
-        message.error(`${info.file.name} 文件上传失败.`);
+        message.error(`${info.file.name} 文件上传失败.`)
       }
     },
     beforeUpload: (file) => {
-      setCurrentFile(file);
-      return false;
+      setCurrentFile(file)
+      return false
     },
     onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
+      console.log('Dropped files', e.dataTransfer.files)
     },
-  };
-  
+  }
+
   const batchColumns: any = [
     {
       title: '导入用户',
@@ -352,12 +357,8 @@ const TableList: React.FC<unknown> = () => {
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
           </p>
-          <p className="ant-upload-text">
-          单击或拖动文件到此区域进行上传
-          </p>
-          <p className="ant-upload-hint">
-            支持单文件上传
-          </p>
+          <p className="ant-upload-text">单击或拖动文件到此区域进行上传</p>
+          <p className="ant-upload-hint">支持单文件上传</p>
         </Dragger>
       ),
     },
@@ -488,15 +489,18 @@ const TableList: React.FC<unknown> = () => {
       >
         <ProTable
           onSubmit={async (value) => {
-            console.log('value', value);
-            console.log('currentFile', currentFile);
+            console.log('value', value)
+            console.log('currentFile', currentFile)
             const { id: adminId } = getUserinfo()
-            
-            const formData = new FormData();
-            formData.append('file', currentFile);
-            console.log('formData', formData);
-            
-            const success = await batchAddUser({ adminId, groupId: value.groupId}, formData)
+
+            const formData = new FormData()
+            formData.append('file', currentFile)
+            console.log('formData', formData)
+
+            const success = await batchAddUser(
+              { adminId, groupId: value.groupId },
+              formData,
+            )
             if (success) {
               setBatchModalVisible(false)
               if (actionRef.current) {

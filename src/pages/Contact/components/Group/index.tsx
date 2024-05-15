@@ -14,6 +14,8 @@ const Group: React.FC = () => {
   const [groupList, setGroupList] = useState<any>([])
   const [joinGroupList, setJoinGroupList] = useState<any>([])
   const [currentKey, setCurrentKey] = useState<string>('1')
+  const [lastClickTime, setLastClickTime] = useState(null)
+
   const [open, setOpen] = useState(false)
 
   const { userInfo } = useModel('user', (model: any) => ({
@@ -62,9 +64,16 @@ const Group: React.FC = () => {
   }
 
   const clickItem = async (item) => {
-    getCurrentChatId({ labelId: item.id, group: true })
-    await getMessageByPoint(userInfo.id, item.id, false)
-    history.push('/message')
+    const currentTime = Date.now()
+    if (lastClickTime && currentTime - lastClickTime < 300) {
+      // 如果两次点击之间的时间小于300毫秒，则视为双击
+      getCurrentChatId({ labelId: item.id, group: true })
+      await getMessageByPoint(userInfo.id, item.id, false)
+      history.push('/message')
+      setLastClickTime(null) // 重置时间，以便下一次双击检测
+    } else {
+      setLastClickTime(currentTime)
+    }
   }
   useEffect(() => {
     _getUserCreateGroup()
