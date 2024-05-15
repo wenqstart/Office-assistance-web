@@ -115,7 +115,10 @@ const ViewList: React.FC = () => {
                           width: '200px',
                         }}
                         dangerouslySetInnerHTML={{
-                          __html: item.content,
+                          __html:
+                            item.content?.indexOf('<img') !== -1
+                              ? '[图片]'
+                              : item.content,
                         }}
                       ></div>
                     }

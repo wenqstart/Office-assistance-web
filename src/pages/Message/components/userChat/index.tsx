@@ -1,10 +1,9 @@
 import WangEditor from '@/components/WangEditor'
 import { getChatId } from '@/utils/tool'
 import { useModel } from '@umijs/max'
-import { Avatar, List, Skeleton } from 'antd'
+import { Avatar, Divider, List, Skeleton } from 'antd'
 import { useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { SlateTransforms } from '@wangeditor/editor'
 
 import { toolbarConfig } from './data'
 import styles from './index.less'
@@ -121,10 +120,10 @@ const UserChat = () => {
                 display: 'flex',
                 flexDirection: 'column-reverse',
               }}
-              hasMore={false}
+              hasMore={messageList.length < 30}
               inverse={true}
               loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-              // endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+              endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
               scrollableTarget="userChat"
             >
               <List

@@ -1,7 +1,7 @@
+import { uploadFileApi } from '@/services/file.ts'
 import { Boot } from '@wangeditor/editor'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import ctrlEnterModule from '@wangeditor/plugin-ctrl-enter'
-
 Boot.registerModule(ctrlEnterModule)
 
 // Then create editor and toolbar
@@ -123,8 +123,19 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
     MENU_CONF: {
       uploadImage: {
         async customUpload(file: File, insertFn: any) {
+          console.log('file', file)
+
           const formData = new FormData()
-          formData.append('files', file)
+          formData.append('file', file)
+          uploadFileApi(formData).then((resp) => {
+            console.log('resp', resp)
+            insertFn(resp.data, file.name, resp.data)
+            // if (res.code === 0) {
+            //   download({ id: res.data[0] }).then((resp) => {
+            //     if (resp.code === 0) insertFn(resp.data, file.name, resp.data);
+            //   });
+            // }
+          })
           // addAttachment(formData).then((res) => {
           //   if (res.code === 0) {
           //     download({ id: res.data[0] }).then((resp) => {
@@ -136,15 +147,19 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
       },
       uploadVideo: {
         async customUpload(file: File, insertFn: any) {
+          console.log('file', file)
+
           const formData = new FormData()
-          formData.append('files', file)
-          // addAttachment(formData).then((res) => {
-          //   if (res.code === 0) {
-          //     download({ id: res.data[0] }).then((resp) => {
-          //       if (resp.code === 0) insertFn(resp.data, file.name, resp.data);
-          //     });
-          //   }
-          // });
+          formData.append('file', file)
+          uploadFileApi(formData).then((resp) => {
+            console.log('resp', resp)
+            insertFn(resp.data, file.name, resp.data)
+            // if (res.code === 0) {
+            //   download({ id: res.data[0] }).then((resp) => {
+            //     if (resp.code === 0) insertFn(resp.data, file.name, resp.data);
+            //   });
+            // }
+          })
         },
       },
     },
