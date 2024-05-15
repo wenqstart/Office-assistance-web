@@ -1,4 +1,4 @@
-import { postTask } from '@/services/task'
+import { postTask, saveTask } from '@/services/task'
 import { useModel } from '@umijs/max'
 import { Button, Flex, Input, Modal, Upload } from 'antd'
 import { Suspense, lazy, useState } from 'react'
@@ -20,6 +20,7 @@ const EmailEditorDialog = (props: {
 
   const handleOk = () => {
     setIsModalOpen(false)
+    props.onClose(false)
   }
 
   const handleCancel = () => {
@@ -28,7 +29,6 @@ const EmailEditorDialog = (props: {
   }
 
   const sendTask = () => {
-    console.log('send')
     postTask(userInfo.id, {
       title: 'test',
       content: 'test content',
@@ -39,6 +39,15 @@ const EmailEditorDialog = (props: {
   }
   const saveEditTask = () => {
     console.log('save')
+    saveTask(userInfo.id, {
+      title: 'test',
+      content: 'test content',
+      type: 0,
+      numbers: [''],
+      endTime: '000',
+    })
+    setIsModalOpen(false)
+    props.onClose(false)
   }
   return (
     <>

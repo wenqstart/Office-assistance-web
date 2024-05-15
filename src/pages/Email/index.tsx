@@ -1,4 +1,6 @@
 import LazyComponent from '@/components/LazyComponent/index'
+import { deleteTask } from '@/services/task'
+import { useModel } from '@umijs/max'
 import { Button, Flex } from 'antd'
 import React, { useState } from 'react'
 import EmailEditorDialog from './components/EmailEditorDialog'
@@ -9,7 +11,10 @@ import styles from './index.less'
 const Email: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0)
   const [isShowEmailModal, setIsShowEmailModal] = useState(false)
-
+  const [activeEmailId, setActiveEmaiLId] = useState('')
+  const { userInfo } = useModel('user', (model: any) => ({
+    userInfo: model.userInfo,
+  }))
   const tabClick = (tabNum: number) => {
     setActiveTab(tabNum)
   }
@@ -17,8 +22,18 @@ const Email: React.FC = () => {
   const showEmailEditor = () => {
     setIsShowEmailModal(true)
   }
+
   const closeModal = (val: boolean) => {
     setIsShowEmailModal(val)
+  }
+
+  const deleteBtn = () => {
+    deleteTask(userInfo.id, activeEmailId)
+    setActiveEmaiLId('')
+  }
+
+  const onSelectEmailItem = (id) => {
+    setActiveEmaiLId(id)
   }
 
   return (
@@ -27,12 +42,15 @@ const Email: React.FC = () => {
         <Flex gap="small" wrap="wrap">
           <Button onClick={showEmailEditor}>发任务</Button>
           <Button>回复</Button>
-          <Button>删除</Button>
+          <Button onClick={deleteBtn}>删除</Button>
         </Flex>
       </div>
       <div className={styles.content}>
         <TabList tabClick={tabClick}></TabList>
-        <EmailList activeTab={activeTab}></EmailList>
+        <EmailList
+          activeTab={activeTab}
+          onSelectEmailItem={onSelectEmailItem}
+        ></EmailList>
       </div>
       <LazyComponent>
         <EmailEditorDialog
