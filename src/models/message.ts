@@ -94,7 +94,7 @@ export default function useMessage() {
       // const messageRes = e.data.slice(11, -1)?.split(', ')
       const messageRes = JSON.parse(e.data || '{}')
       console.log('messageList', getMsgList())
-      const { content, createTime, number, readCount } = messageRes
+      const { content, createTime, sayNumber, readCount, name } = messageRes
       // const chatId = messageRes[0].split('=')[1]
       // const name = messageRes[1].split('=')[1]
       // const number = messageRes[3].split('=')[1]
@@ -111,7 +111,13 @@ export default function useMessage() {
       // console.log('messageList', messageList)
       // getChatMessage()
       setMessageList(
-        getMsgList().concat({ content, createTime, number, readCount }),
+        getMsgList().concat({
+          content,
+          createTime,
+          number: sayNumber,
+          readCount,
+          name,
+        }),
       )
       // setMessageList([...messageList, {chatId, name, number, content, createTime}])
       // if (e.data === 'success') return

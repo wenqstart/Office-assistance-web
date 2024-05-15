@@ -17,6 +17,8 @@ const UserChat = () => {
   const inputRef = useRef()
   const editorRef = useRef(null)
   const scrollViewRef = useRef()
+  console.log('userInfo', userInfo)
+
   const userId = userInfo?.id
   const userName = userInfo?.name
   const userNumber = userInfo?.number

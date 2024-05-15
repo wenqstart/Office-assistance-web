@@ -116,7 +116,11 @@ const ViewList: React.FC = () => {
                         }}
                         dangerouslySetInnerHTML={{
                           __html:
-                            item.content?.indexOf('<img') !== -1
+                            item.content === null
+                              ? ''
+                              : item.content?.indexOf('<video') !== -1
+                              ? '[视频]'
+                              : item.content?.indexOf('<img') !== -1
                               ? '[图片]'
                               : item.content,
                         }}
