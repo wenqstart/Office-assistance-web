@@ -11,7 +11,7 @@ import styles from './index.less'
 const Email: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0)
   const [isShowEmailModal, setIsShowEmailModal] = useState(false)
-  const [activeEmailId, setActiveEmaiLId] = useState('')
+  const [activeEmailId, setActiveEmailId] = useState('')
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
   }))
@@ -29,20 +29,20 @@ const Email: React.FC = () => {
 
   const deleteBtn = () => {
     deleteTask(userInfo.id, activeEmailId)
-    setActiveEmaiLId('')
+    setActiveEmailId('')
   }
 
   const onSelectEmailItem = (id) => {
-    setActiveEmaiLId(id)
+    setActiveEmailId(id)
   }
 
   return (
     <div className={styles.emailContainer}>
       <div>
         <Flex gap="small" wrap="wrap">
-          <Button onClick={showEmailEditor}>发任务</Button>
-          <Button>回复</Button>
-          <Button onClick={deleteBtn}>删除</Button>
+          <Button onClick={showEmailEditor}>发布任务</Button>
+          {/* <Button>回复</Button> */}
+          <Button onClick={deleteBtn}>删除任务</Button>
         </Flex>
       </div>
       <div className={styles.content}>

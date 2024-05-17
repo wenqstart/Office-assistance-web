@@ -1,18 +1,74 @@
 import { postTask, saveTask } from '@/services/task'
+import { timeFormatter } from '@/utils/format'
 import { useModel } from '@umijs/max'
-import { Button, Flex, Input, Modal, Upload } from 'antd'
+import type { GetProps } from 'antd'
+import {
+  Button,
+  DatePicker,
+  Flex,
+  Input,
+  Modal,
+  TreeSelect,
+  Upload,
+} from 'antd'
 import { Suspense, lazy, useState } from 'react'
 import styles from './index.less'
 
+type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
+
 const WangEditor = lazy(() => import('@/components/WangEditor'))
+const { SHOW_PARENT } = TreeSelect
+
 const EmailEditorDialog = (props: {
   isShowModal: boolean
   onClose: (val: boolean) => void
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [endTime, setEndTime] = useState('')
+  const [treeValue, setTreeValue] = useState(['0-0-0'])
+
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
   }))
+
+  const treeData = [
+    {
+      title: '组织联系人',
+      value: '0-0',
+      key: '0-0',
+      children: [
+        {
+          title: 'Child Node1',
+          value: '0-0-0',
+          key: '0-0-0',
+        },
+      ],
+    },
+    {
+      title: '群组联系人',
+      value: '0-1',
+      key: '0-1',
+      children: [
+        {
+          title: '我创建的群组',
+          value: '0-1-0',
+          key: '0-1-0',
+        },
+        {
+          title: '我加入的群组',
+          value: '0-1-1',
+          key: '0-1-1',
+        },
+      ],
+    },
+  ]
+
+  const onSelectTreeChange = (newValue: string[]) => {
+    console.log('onChange ', newValue)
+    setTreeValue(newValue)
+  }
 
   const showModal = () => {
     setIsModalOpen(true)
@@ -30,25 +86,51 @@ const EmailEditorDialog = (props: {
 
   const sendTask = () => {
     postTask(userInfo.id, {
-      title: 'test',
-      content: 'test content',
+      title,
+      content,
       type: 0,
-      numbers: [''],
-      endTime: '000',
-    })
-  }
-  const saveEditTask = () => {
-    console.log('save')
-    saveTask(userInfo.id, {
-      title: 'test',
-      content: 'test content',
-      type: 0,
-      numbers: [''],
-      endTime: '000',
+      numbers: ['test2'],
+      endTime: timeFormatter(endTime),
     })
     setIsModalOpen(false)
     props.onClose(false)
   }
+  const saveEditTask = () => {
+    saveTask(userInfo.id, {
+      title,
+      content,
+      type: 0,
+      numbers: [''],
+      endTime,
+    })
+    setIsModalOpen(false)
+    props.onClose(false)
+  }
+
+  const titleChanged = (e) => {
+    setTitle(e.target.value)
+  }
+
+  const contentChanged = (html) => {
+    setContent(html)
+  }
+
+  const onTimeChanged = (value, dateString) => {
+    setEndTime(dateString)
+  }
+
+  const treeProps = {
+    treeData,
+    value: treeValue,
+    onChange: onSelectTreeChange,
+    treeCheckable: true,
+    showCheckedStrategy: SHOW_PARENT,
+    placeholder: '请选择收件人',
+    style: {
+      width: '100%',
+    },
+  }
+
   return (
     <>
       <Modal
@@ -74,20 +156,28 @@ const EmailEditorDialog = (props: {
 
         <div className={styles.modalContent}>
           <div className={styles.inputBox}>
-            <div>主题 :</div>
-            <Input></Input>
+            <div className={styles.inputLabel}>主题 :</div>
+            <Input onChange={(e) => titleChanged(e)}></Input>
+          </div>
+          <div className={`${styles.inputBox} ${styles.select}`}>
+            <div className={styles.inputLabel}>收件人 :</div>
+            <TreeSelect {...treeProps} />
           </div>
           <div className={styles.inputBox}>
-            <div>收件人 :</div>
-            <Input></Input>
-          </div>
-          <div className={styles.inputBox}>
-            <div>期限 :</div>
-            <Input></Input>
+            <div className={styles.inputLabel}>截止时间 :</div>
+            <DatePicker
+              showTime
+              onChange={(value, dateString) => onTimeChanged(value, dateString)}
+            />
           </div>
 
           <Suspense fallback={<div>loading...</div>}>
-            <WangEditor></WangEditor>
+            <div className={styles.editor}>
+              <WangEditor
+                contentChanged={(html) => contentChanged(html)}
+                style={{ height: '100%', maxHeight: '400px', overflow: 'auto' }}
+              ></WangEditor>
+            </div>
           </Suspense>
         </div>
       </Modal>
