@@ -100,14 +100,6 @@ const routes: RouteProps[] = [
         component: '@/pages/UserManage',
         access: 'isAdmin',
       },
-      {
-        name: '任务管理',
-        path: 'task',
-        icon: 'UnorderedListOutlined',
-        exact: true,
-        component: '@/pages/TaskManage',
-        access: 'isAdmin',
-      },
       { path: '/404', component: '@/pages/Error/404' },
       { path: '/noAuth', component: '@/pages/Error/noAuth' },
       {

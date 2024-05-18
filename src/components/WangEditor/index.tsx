@@ -17,6 +17,7 @@ interface PageProps {
   content: string
   style?: any
   handleKeydown?: (params: any) => void
+  contentChanged?: (html: string) => void
 }
 
 let imgList: any[] = []
@@ -30,6 +31,7 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
     content = '<p></p>',
     style,
     handleKeydown = defaultKeydown,
+    contentChanged,
   } = props
   const [editor, setEditor] = useState<IDomEditor | null>(null)
 
@@ -67,6 +69,9 @@ const MyEditor: React.FC<PageProps> = (props, ref) => {
         document.querySelector('.editorContent')?.getElementsByTagName('img') ||
         []
       imgList = [...imgs].map((v) => ({ dom: v, src: v.src }))
+      if (contentChanged) {
+        contentChanged(html)
+      }
     }
   }, [html])
 

@@ -4,7 +4,7 @@ import styles from './index.less'
 const TabList: React.FC<any> = (props) => {
   const listData = [
     {
-      text: '收件箱',
+      text: '任务箱',
       icon: '',
     },
     {

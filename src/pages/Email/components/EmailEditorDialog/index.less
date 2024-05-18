@@ -1,15 +1,17 @@
 .modalContent {
+  display: flex;
+  flex-direction: column;
   width: 900px;
   height: 600px;
   margin-top: 20px;
 
   .inputBox {
     display: flex;
-    width: 500px;
+    width: 600px;
     margin-bottom: 10px;
 
-    div {
-      width: 60px;
+    .inputLabel {
+      width: 80px;
     }
 
     input {
@@ -17,6 +19,37 @@
     }
 
     border-bottom: 1px solid rgb(210, 210, 210);
+  }
+
+  .select {
+    position: relative;
+
+    .selectBox {
+      position: absolute;
+      top: 24px;
+      width: 500px;
+      height: 350px;
+      background-color: #fff;
+      z-index: 9999;
+      border: 0;
+      border-radius: 8px;
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 8%),
+        0 3px 6px -4px rgba(0, 0, 0, 12%), 0 9px 28px 8px rgba(0, 0, 0, 5%);
+    }
+  }
+
+  .editor {
+    flex: 1;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+
+      .editorContent {
+        flex: 1 !important;
+      }
+    }
   }
 }
 

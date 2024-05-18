@@ -24,7 +24,7 @@ enum TaskListType {
 const EmailList: React.FC = (props: TEmailListProp) => {
   const { activeTab, onSelectEmailItem } = props
 
-  const [activeEmail, setActiveEmail] = useState(0)
+  const [activeEmail, setActiveEmail] = useState(-1)
   const [emailId, setEmailId] = useState('')
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
@@ -40,8 +40,8 @@ const EmailList: React.FC = (props: TEmailListProp) => {
         id: item.id,
         type: item.type,
         title: item.title,
-        subtitle: item.title,
-        desc: item.content ?? '',
+        subtitle: item.publisher,
+        desc: item.updateTime ?? '',
       })),
     )
   }
@@ -67,6 +67,7 @@ const EmailList: React.FC = (props: TEmailListProp) => {
   }
 
   useEffect(() => {
+    setCurrentEmailList([])
     switch (activeTab) {
       case TaskListType.RECEIVED_TASK:
         _getUserReceivedTask()
@@ -108,7 +109,9 @@ const EmailList: React.FC = (props: TEmailListProp) => {
             ></EmailListItem>
           ))}
       </div>
-      {activeEmail > -1 && <EmailDetail id={emailId}></EmailDetail>}
+      {activeEmail > -1 && emailId && (
+        <EmailDetail id={emailId} type={activeTab}></EmailDetail>
+      )}
     </div>
   )
 }
