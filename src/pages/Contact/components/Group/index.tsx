@@ -109,6 +109,7 @@ const Group: React.FC = () => {
       <GroupList
         style={{ display: currentKey === '2' ? 'block' : 'none' }}
         groupList={joinGroupList}
+        clickItem={clickItem}
       ></GroupList>
       <LazyComponent>
         {open && (

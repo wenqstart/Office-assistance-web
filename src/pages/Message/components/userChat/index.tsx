@@ -1,7 +1,7 @@
 import WangEditor from '@/components/WangEditor'
 import { getChatId } from '@/utils/tool'
 import { useModel } from '@umijs/max'
-import { Avatar, Divider, List, Skeleton } from 'antd'
+import { Avatar, Button, Divider, Drawer, List, Skeleton } from 'antd'
 import { useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
@@ -21,6 +21,7 @@ const UserChat = () => {
     setMessageTotal,
   } = useModel('message')
   const [loading, setLoading] = useState(false)
+  const [showDrawer, setShowDrawer] = useState(false)
   const [current, setCurrent] = useState(1)
 
   const inputRef = useRef()
@@ -91,7 +92,10 @@ const UserChat = () => {
       setLoading(false)
     }, 1000)
   }
-
+  function exitGroup() {
+    console.log('currentMsg', currentMsg)
+    // exitGroupApi(userId, )
+  }
   // useEffect(() => {
   //   loadMoreData()
   // }, [])
@@ -99,7 +103,7 @@ const UserChat = () => {
     <>
       <div className={topHeader}>
         {currentMsg.chatId && (
-          <div className={topLeft}>
+          <div className={topLeft} onClick={() => setShowDrawer(true)}>
             <Avatar
               shape="square"
               size={32}
@@ -209,6 +213,27 @@ const UserChat = () => {
           />
         )}
       </div>
+      <Drawer
+        title="基本信息"
+        open={showDrawer}
+        onClose={() => setShowDrawer(false)}
+        closable={false}
+      >
+        {currentMsg.group ? (
+          <p>群聊名称： {currentMsg.chatName}</p>
+        ) : (
+          <p>联系人： {currentMsg.chatName}</p>
+        )}
+        {currentMsg.group ? (
+          <Button
+            style={{ marginTop: '20px' }}
+            type="primary"
+            onClick={exitGroup}
+          >
+            退出群聊
+          </Button>
+        ) : null}
+      </Drawer>
     </>
   )
 }

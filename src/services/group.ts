@@ -15,3 +15,14 @@ export const createGroup = ({ userId, name, picture, members }) => {
     data: members,
   })
 }
+
+// 退群
+export const exitGroupApi = ({ userId, labelId }) => {
+  return request(`${group_api}/outLabel`, {
+    method: 'put',
+    params: {
+      userId,
+      labelId,
+    },
+  })
+}
