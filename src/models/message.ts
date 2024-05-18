@@ -1,5 +1,5 @@
 import { getChatContent, getUsersChatId } from '@/services/chat'
-import { getChatId, getMsgList } from '@/utils/tool'
+import { clearMsgList, getChatId, getMsgList } from '@/utils/tool'
 import { useModel } from '@umijs/max'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -27,6 +27,7 @@ export default function useMessage() {
   const sendCount = useRef<number>(1)
   const [alarmCount, setAlarmCount] = useState<number>(0)
   const [messageCount, setMessageCount] = useState<number>(0)
+  const [messageTotal, setMessageTotal] = useState<number>(0)
   const [chatId, setChatId] = useState<string>(getChatId() || '')
   const [currentMsg, setCurrentMsg] = useState({})
   const [messageList, setMessageList] = useState([])
@@ -68,15 +69,27 @@ export default function useMessage() {
 
     setReset(true)
   }, [])
-  async function getChatMessage(currChatId: string = getChatId() || '') {
+  async function getChatMessage(
+    currChatId: string = getChatId() || '',
+    current = 1,
+  ) {
     try {
-      const res = await getChatContent({ chatId: currChatId })
-      setMessageList(res.data?.reverse())
-      console.log('setMessageList')
-      sessionStorage.setItem(
-        'office_system_msgList',
-        JSON.stringify(res.data?.reverse()),
-      )
+      const res = await getChatContent({
+        chatId: currChatId,
+        size: 10,
+        current,
+      })
+      if (res.data) {
+        const { total, userChatIdChats } = res.data
+        console.log('messageList', getMsgList())
+
+        setMessageList(userChatIdChats?.reverse().concat(getMsgList()))
+        setMessageTotal(total)
+        sessionStorage.setItem(
+          'office_system_msgList',
+          JSON.stringify(userChatIdChats.concat(getMsgList())),
+        )
+      }
     } catch (error) {
       console.log('error', error)
     }
@@ -110,14 +123,31 @@ export default function useMessage() {
       // console.log([...messageList, { chatId, name, number, content, createTime }])
       // console.log('messageList', messageList)
       // getChatMessage()
+      const curMsgList = getMsgList()
       setMessageList(
-        getMsgList().concat({
-          content,
-          createTime,
-          number: sayNumber,
-          readCount,
-          name,
-        }),
+        curMsgList.concat([
+          {
+            content,
+            createTime,
+            number: sayNumber,
+            readCount,
+            name,
+          },
+        ]),
+      )
+      sessionStorage.setItem(
+        'office_system_msgList',
+        JSON.stringify(
+          curMsgList.concat([
+            {
+              content,
+              createTime,
+              number: sayNumber,
+              readCount,
+              name,
+            },
+          ]),
+        ),
       )
       // setMessageList([...messageList, {chatId, name, number, content, createTime}])
       // if (e.data === 'success') return
@@ -207,12 +237,13 @@ export default function useMessage() {
     console.log('msgInfo', msgInfo)
     setMessageList([])
     setCurrentMsg(msgInfo)
+    clearMsgList()
     sessionStorage.setItem('office_system_chatId', msgInfo.chatId)
     let url = `chat/${msgInfo.group ? 'group' : 'single'}/${userId}/${
       msgInfo.chatId
     }`
     socketInit(url)
-    getChatMessage(msgInfo.chatId)
+    getChatMessage(msgInfo.chatId, 1)
     setChatId(msgInfo.chatId)
   }
 
@@ -227,5 +258,7 @@ export default function useMessage() {
     messageList,
     chooseMessage,
     getCurrentChatId,
+    messageTotal,
+    setMessageTotal,
   }
 }

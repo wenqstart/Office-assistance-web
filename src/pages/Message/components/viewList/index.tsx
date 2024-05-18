@@ -21,11 +21,12 @@ interface DataType {
   nat: string
 }
 
-const ViewList: React.FC = () => {
+const ViewList: React.FC = (props: any) => {
   const { viewItem } = styles
   const [loading, setLoading] = useState(false)
   const { chooseMessage, currentMsg } = useModel('message')
 
+  const [totalData, setTotalData] = useState<DataType[]>([])
   const [data, setData] = useState<DataType[]>([])
   const { userInfo } = useModel('user')
 
@@ -51,6 +52,7 @@ const ViewList: React.FC = () => {
           }
           // setData([...data, ...res.data])
           setData(res.data)
+          setTotalData(res.data)
           setLoading(false)
         })
         .catch(() => {
@@ -58,6 +60,12 @@ const ViewList: React.FC = () => {
         })
     }
   }
+  useEffect(() => {
+    const filterData = totalData.filter(
+      (item) => item.chatName.indexOf(props.keyWord) !== -1,
+    )
+    setData(filterData)
+  }, [props.keyWord])
   useEffect(() => {
     loadMoreData()
   }, [userInfo])

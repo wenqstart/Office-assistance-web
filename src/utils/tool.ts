@@ -14,6 +14,9 @@ const getUserinfo = () => {
 const getMsgList = () => {
   return JSON.parse(sessionStorage.getItem('office_system_msgList') || '[]')
 }
+const clearMsgList = () => {
+  return sessionStorage.setItem('office_system_msgList', '[]')
+}
 const goHome = () => {
   history.push('/')
 }
@@ -54,6 +57,7 @@ const goBack = () => {
   history.back()
 }
 export {
+  clearMsgList,
   clearUserInfo,
   getChatId,
   getMsgList,

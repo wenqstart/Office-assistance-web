@@ -10,14 +10,22 @@ import styles from './index.less'
 
 const UserChat = () => {
   const { userInfo } = useModel('user')
-  const { chatId, setChatId, sendMessage, currentMsg, messageList } =
-    useModel('message')
+  const {
+    chatId,
+    setChatId,
+    sendMessage,
+    currentMsg,
+    messageList,
+    getChatMessage,
+    messageTotal,
+    setMessageTotal,
+  } = useModel('message')
   const [loading, setLoading] = useState(false)
+  const [current, setCurrent] = useState(1)
 
   const inputRef = useRef()
   const editorRef = useRef(null)
   const scrollViewRef = useRef()
-  console.log('userInfo', userInfo)
 
   const userId = userInfo?.id
   const userName = userInfo?.name
@@ -63,23 +71,25 @@ const UserChat = () => {
       editorRef?.current?.resetContent()
     }
   }
-  function loadMoreData(params: any) {
+  function loadMoreData() {
     console.log('loadMoreData')
-    // if (loading) {
-    //   return
-    // }
-    // setLoading(true)
 
-    // setTimeout(() => {
-    //   setMessageList([...messageList, ...defaultMessageList])
-    //   // 需要手动移动滚动条，防止一直触发
-    //   if (scrollViewRef.current && scrollViewRef.current.el) {
-    //     scrollViewRef.current.el.scrollTop += 150
-    //   }
-    //   console.log('scrollViewRef', scrollViewRef.current)
-    //   // userChatRef.scrollTop = 30
-    //   setLoading(false)
-    // }, 1000)
+    if (loading) {
+      return
+    }
+    setLoading(true)
+
+    setTimeout(() => {
+      getChatMessage(getChatId(), current + 1)
+      setCurrent(current + 1)
+      // 需要手动移动滚动条，防止一直触发
+      if (scrollViewRef.current && scrollViewRef.current.el) {
+        scrollViewRef.current.el.scrollTop += 150
+      }
+      console.log('scrollViewRef', scrollViewRef.current)
+      // userChatRef.scrollTop = 30
+      setLoading(false)
+    }, 1000)
   }
 
   // useEffect(() => {
@@ -122,7 +132,7 @@ const UserChat = () => {
                 display: 'flex',
                 flexDirection: 'column-reverse',
               }}
-              hasMore={messageList.length < 30}
+              hasMore={messageList.length < messageTotal}
               inverse={true}
               loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
               endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
