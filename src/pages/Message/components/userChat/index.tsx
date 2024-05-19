@@ -153,7 +153,10 @@ const UserChat = () => {
     console.log(treeData, currentMsg.chatId)
     pullUserToLabelApi({ userId, labelId: currentMsg.chatId, data: treeData })
       .then((res) => {
-        message.success('邀请成功！')
+        console.log('res', res)
+        if (res.code === 200) {
+          message.success('邀请成功！')
+        }
       })
       .finally((res) => {
         setTreeData('')
