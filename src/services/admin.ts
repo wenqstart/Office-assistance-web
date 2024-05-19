@@ -79,6 +79,6 @@ export const batchAddUser = (params, formData) => {
     method: 'post',
     params,
     data: formData,
-    contentType: 'multipart/form-data'
+    contentType: 'multipart/form-data',
   })
 }

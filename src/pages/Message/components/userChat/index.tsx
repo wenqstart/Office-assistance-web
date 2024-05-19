@@ -1,5 +1,6 @@
 import WangEditor from '@/components/WangEditor'
-import { exitGroupApi } from '@/services/group.ts'
+import { exitGroupApi, pullUserToLabelApi } from '@/services/group.ts'
+import { getAllPeopleApi } from '@/services/task.ts'
 import { getChatId } from '@/utils/tool'
 import { UnorderedListOutlined } from '@ant-design/icons'
 import { useModel } from '@umijs/max'
@@ -11,13 +12,13 @@ import {
   List,
   Modal,
   Skeleton,
+  TreeSelect,
   message,
 } from 'antd'
 import { useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { toolbarConfig } from './data'
 import styles from './index.less'
-
 const UserChat = () => {
   const { userInfo } = useModel('user')
   const {
@@ -35,6 +36,8 @@ const UserChat = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
   const [current, setCurrent] = useState(1)
+  const [allPeople, setAllPeople] = useState({})
+  const [treeData, setTreeData] = useState<string>()
 
   const inputRef = useRef()
   const editorRef = useRef(null)
@@ -104,10 +107,24 @@ const UserChat = () => {
       setLoading(false)
     }, 1000)
   }
-  function invitePeople() {
+  async function invitePeople() {
     // setIsModalOpen(true)
+    const res = await getAllPeopleApi()
+    console.log('res', Object.entries(res.data))
+    const data = Object.entries(res.data).map(([key, value]) => {
+      return {
+        value: key,
+        title: key,
+        disabled: true,
+        children: value.map((item) => ({
+          ...res,
+          value: item.number,
+          title: item.name,
+        })),
+      }
+    })
+    setAllPeople(data)
     setIsInviteModalOpen(true)
-    // exitGroupApi(userId, )
   }
   function exitGroup() {
     setIsModalOpen(true)
@@ -125,7 +142,24 @@ const UserChat = () => {
         setShowDrawer(false)
       })
   }
-  function handleInviteOk() {}
+  const onChange = (newValue: string) => {
+    setTreeData(newValue)
+  }
+
+  const onPopupScroll = (e: SyntheticEvent) => {
+    console.log('onPopupScroll', e)
+  }
+  function handleInviteOk() {
+    console.log(treeData, currentMsg.chatId)
+    pullUserToLabelApi({ userId, labelId: currentMsg.chatId, data: treeData })
+      .then((res) => {
+        message.success('邀请成功！')
+      })
+      .finally((res) => {
+        setTreeData('')
+        setIsInviteModalOpen(false)
+      })
+  }
   // useEffect(() => {
   //   loadMoreData()
   // }, [])
@@ -287,7 +321,21 @@ const UserChat = () => {
         onOk={handleInviteOk}
         onCancel={() => setIsInviteModalOpen(false)}
       >
-        <div style={{ width: '300px' }}></div>
+        <div style={{ width: '300px' }}>
+          <TreeSelect
+            showSearch
+            style={{ width: '100%' }}
+            value={treeData}
+            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+            placeholder="请选择"
+            allowClear
+            multiple
+            treeDefaultExpandAll
+            onChange={onChange}
+            treeData={allPeople}
+            onPopupScroll={onPopupScroll}
+          />
+        </div>
       </Modal>
     </>
   )

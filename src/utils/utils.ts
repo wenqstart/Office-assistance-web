@@ -24,7 +24,6 @@ export function debounce(fn: any, wait = 500, isImmediate = false) {
     }, wait)
   }
 }
-
 /**
  * @method
  * @desc 节流方法

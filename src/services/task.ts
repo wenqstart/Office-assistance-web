@@ -108,3 +108,10 @@ export const getDraftList = (userId: string) => {
     },
   })
 }
+
+// 获取草稿箱任务列表
+export const getAllPeopleApi = () => {
+  return request(`${task_api}/getAllPeople`, {
+    method: 'get',
+  })
+}

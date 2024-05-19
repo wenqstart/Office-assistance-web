@@ -26,3 +26,14 @@ export const exitGroupApi = ({ userId, labelId }) => {
     },
   })
 }
+// 拉用户进群
+export const pullUserToLabelApi = ({ userId, labelId, data }) => {
+  return request(`${group_api}/pullUserToLabel`, {
+    method: 'post',
+    params: {
+      userId,
+      labelId,
+    },
+    data: data,
+  })
+}
