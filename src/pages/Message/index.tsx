@@ -1,5 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons'
-import { Button, Input } from 'antd'
+import { Input } from 'antd'
 import * as React from 'react'
 import { useState } from 'react'
 import UserChat from './components/userChat'
@@ -23,10 +22,10 @@ const Contact: React.FC = () => {
             onSearch={onSearch}
             loading={searchLoading}
           />
-          <Button
+          {/* <Button
             style={{ marginLeft: '10px' }}
             icon={<PlusOutlined />}
-          ></Button>
+          ></Button> */}
         </div>
         <ViewList keyWord={keyWord} />
       </div>
