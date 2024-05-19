@@ -164,6 +164,18 @@ export default function useMessage() {
     },
     [messageList],
   )
+
+  const onTaskSend = useCallback((message) => {
+    console.log('taskSend-----------------', message)
+    if (socket?.current?.readyState === webSocketStatus.OPEN) {
+      socket?.current?.send(JSON.stringify(message))
+    }
+  }, [])
+
+  const onTaskReceived = useCallback((e) => {
+    console.log('onTaskReceived-----------------', e)
+  }, [])
+
   const sendMessage = useCallback(
     (message: any) => {
       console.log('message', JSON.stringify(message))
@@ -188,6 +200,7 @@ export default function useMessage() {
         socketObj.addEventListener('close', socketOnClose)
         socketObj.addEventListener('error', socketOnError)
         socketObj.addEventListener('message', socketOnMessage)
+        socketObj.addEventListener('message', onTaskReceived)
         socketObj.addEventListener('open', socketOnOpen)
         socket.current = socketObj
         sendCount.current = 1
@@ -195,7 +208,14 @@ export default function useMessage() {
         console.log('err: ', err)
       }
     },
-    [socketOnClose, socketOnError, socketOnMessage, socketOnOpen, chatId],
+    [
+      socketOnClose,
+      socketOnError,
+      socketOnMessage,
+      socketOnOpen,
+      chatId,
+      onTaskReceived,
+    ],
   )
   // 获取 chatId（会话列表不需要，后续放在联系人界面使用）
   async function getCurrentChatId(contactInfo: any = {}) {
@@ -248,6 +268,7 @@ export default function useMessage() {
   }
 
   return {
+    onTaskSend,
     alarmCount,
     messageCount,
     socketInit,
