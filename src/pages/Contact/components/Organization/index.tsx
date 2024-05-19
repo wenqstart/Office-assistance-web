@@ -3,6 +3,7 @@ import LoadingPage from '@/pages/LoadingPage/index.tsx'
 import { getMessageByPoint } from '@/services/chat'
 import { getOrganizationList } from '@/services/user'
 import { history, useModel } from '@umijs/max'
+import { Avatar } from 'antd'
 import React, { useEffect, useState } from 'react'
 import styles from './index.less'
 
@@ -93,7 +94,17 @@ const Organization: React.FC = () => {
                   onClick={() => clickItem(item)}
                 >
                   <div className={styles.listItemLeft}>
-                    <div className={styles.icon}></div>
+                    {/* <div className={styles.icon}></div> */}
+                    <Avatar
+                      shape="square"
+                      size={40}
+                      style={{
+                        backgroundColor: '#377DF7',
+                        marginRight: '10px',
+                      }}
+                    >
+                      {item.name?.slice(0, 1)}
+                    </Avatar>
                     <div>{item.name}</div>
                   </div>
                   {item.isDepartment > 0 && (

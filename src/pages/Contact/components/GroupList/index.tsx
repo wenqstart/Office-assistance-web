@@ -1,3 +1,4 @@
+import { Avatar } from 'antd'
 import React from 'react'
 import styles from './index.less'
 
@@ -13,7 +14,14 @@ const GroupList: React.FC<any> = (props: any) => {
               className={styles.groupListItem}
               onClick={() => clickItem(item)}
             >
-              <div className={styles.icon}></div>
+              {/* <div className={styles.icon}></div> */}
+              <Avatar
+                shape="square"
+                size={40}
+                style={{ backgroundColor: '#377DF7', marginRight: '10px' }}
+              >
+                {item.name?.slice(0, 1)}
+              </Avatar>
               <div className={styles.itemName}>{item.name}</div>
               {item.numberList.length > 0 && (
                 <span

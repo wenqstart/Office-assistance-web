@@ -1,10 +1,20 @@
 import WangEditor from '@/components/WangEditor'
+import { exitGroupApi } from '@/services/group.ts'
 import { getChatId } from '@/utils/tool'
+import { UnorderedListOutlined } from '@ant-design/icons'
 import { useModel } from '@umijs/max'
-import { Avatar, Button, Divider, Drawer, List, Skeleton } from 'antd'
+import {
+  Avatar,
+  Button,
+  Divider,
+  Drawer,
+  List,
+  Modal,
+  Skeleton,
+  message,
+} from 'antd'
 import { useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-
 import { toolbarConfig } from './data'
 import styles from './index.less'
 
@@ -22,6 +32,8 @@ const UserChat = () => {
   } = useModel('message')
   const [loading, setLoading] = useState(false)
   const [showDrawer, setShowDrawer] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
   const [current, setCurrent] = useState(1)
 
   const inputRef = useRef()
@@ -92,10 +104,28 @@ const UserChat = () => {
       setLoading(false)
     }, 1000)
   }
-  function exitGroup() {
-    console.log('currentMsg', currentMsg)
+  function invitePeople() {
+    // setIsModalOpen(true)
+    setIsInviteModalOpen(true)
     // exitGroupApi(userId, )
   }
+  function exitGroup() {
+    setIsModalOpen(true)
+    // exitGroupApi(userId, )
+  }
+  function handleOk() {
+    console.log('currentMsg', currentMsg)
+    exitGroupApi({ userId, labelId: currentMsg.chatId })
+      .then((res) => {
+        console.log('res', res)
+        message.success('退群成功！')
+      })
+      .finally((res) => {
+        setIsModalOpen(false)
+        setShowDrawer(false)
+      })
+  }
+  function handleInviteOk() {}
   // useEffect(() => {
   //   loadMoreData()
   // }, [])
@@ -112,6 +142,7 @@ const UserChat = () => {
               {currentMsg.chatName?.slice(0, 1)}
             </Avatar>
             <div className={title}>{currentMsg.chatName}</div>
+            <UnorderedListOutlined style={{ fontSize: '20px' }} />
           </div>
         )}
       </div>
@@ -220,20 +251,44 @@ const UserChat = () => {
         closable={false}
       >
         {currentMsg.group ? (
-          <p>群聊名称： {currentMsg.chatName}</p>
+          <>
+            <p>群聊名称： {currentMsg.chatName}</p>
+            <Button
+              style={{ marginTop: '20px', textAlign: 'center', width: '100%' }}
+              type="primary"
+              onClick={invitePeople}
+            >
+              邀请好友
+            </Button>
+            <Button
+              style={{ marginTop: '20px', textAlign: 'center', width: '100%' }}
+              type="primary"
+              onClick={exitGroup}
+              danger
+            >
+              退出群聊
+            </Button>
+          </>
         ) : (
           <p>联系人： {currentMsg.chatName}</p>
         )}
-        {currentMsg.group ? (
-          <Button
-            style={{ marginTop: '20px' }}
-            type="primary"
-            onClick={exitGroup}
-          >
-            退出群聊
-          </Button>
-        ) : null}
       </Drawer>
+      <Modal
+        title="确认退出群聊？"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={() => setIsModalOpen(false)}
+      >
+        <div style={{ width: '300px' }}></div>
+      </Modal>
+      <Modal
+        title="邀请好友"
+        open={isInviteModalOpen}
+        onOk={handleInviteOk}
+        onCancel={() => setIsInviteModalOpen(false)}
+      >
+        <div style={{ width: '300px' }}></div>
+      </Modal>
     </>
   )
 }
