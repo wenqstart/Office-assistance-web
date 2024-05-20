@@ -2,6 +2,7 @@ import { getChatContent, getUsersChatId } from '@/services/chat'
 import { clearMsgList, getChatId, getMsgList } from '@/utils/tool'
 import { useModel } from '@umijs/max'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import moment from 'moment'
 
 const ws_ip =
   process.env.NODE_ENV === 'development'
@@ -128,7 +129,7 @@ export default function useMessage() {
         curMsgList.concat([
           {
             content,
-            createTime,
+            createTime: moment(createTime).format('YYYY-MM-DD HH:mm:ss'),
             number: sayNumber,
             readCount,
             name,
@@ -141,7 +142,7 @@ export default function useMessage() {
           curMsgList.concat([
             {
               content,
-              createTime,
+              createTime: moment(createTime).format('YYYY-MM-DD HH:mm:ss'),
               number: sayNumber,
               readCount,
               name,
