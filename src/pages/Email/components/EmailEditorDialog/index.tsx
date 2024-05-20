@@ -100,26 +100,26 @@ const EmailEditorDialog = (props: {
 
   const _getAllMember = async () => {
     const { data } = await getAllMember()
-    const list = Object.values(data[0])[0].map((item) => ({
-      title: item.name,
-      value: item.number,
-    }))
-    setTreeData([
-      {
-        title: '组织联系人',
-        value: '0',
-        key: '0',
-        children: [
-          ...list
-            .map((item, idx) => ({
-              title: item.title,
-              value: item.value,
-              key: item.value,
-            }))
-            .filter((item) => item.value !== userInfo.number),
-        ],
-      },
-    ])
+    // const list = Object.values(data[0])[0].map((item) => ({
+    //   title: item.name,
+    //   value: item.number,
+    // }))
+    const list = data.map((obj) => {
+      let key, value
+      key = Object.keys(obj)?.[0]
+      value = obj[key]
+      return {
+        value: key,
+        title: key,
+        disabled: true,
+        children: value.map((item) => ({
+          ...data,
+          value: item.number,
+          title: item.name,
+        })),
+      }
+    })
+    setTreeData(list)
   }
   const handleFileUpload = (info) => {
     if (info.file.status === 'done') {
