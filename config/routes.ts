@@ -50,15 +50,15 @@ const routes: RouteProps[] = [
     routes: [
       {
         path: '/',
-        redirect: '/workBench',
+        redirect: '/person-center',
       },
-      {
-        name: '工作台',
-        path: 'workBench',
-        icon: 'FundProjectionScreenOutlined',
-        exact: true,
-        component: '@/pages/WorkBench',
-      },
+      // {
+      //   name: '工作台',
+      //   path: 'workBench',
+      //   icon: 'FundProjectionScreenOutlined',
+      //   exact: true,
+      //   component: '@/pages/WorkBench',
+      // },
       {
         name: '消息',
         path: 'message',
