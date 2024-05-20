@@ -17,7 +17,7 @@ const Organization: React.FC = () => {
   const [breadcrumbList, setBreadcrumbList] = useState<TBreadcrumb[]>([
     {
       id: '0',
-      label: '计算机与信息安全学院',
+      label: '桂林电子科技大学',
     },
   ])
   const [organizationData, setOrganizationData] = useState<any>([])
