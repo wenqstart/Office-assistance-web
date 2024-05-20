@@ -103,7 +103,7 @@ const routes: RouteProps[] = [
       { path: '/404', component: '@/pages/Error/404' },
       { path: '/noAuth', component: '@/pages/Error/noAuth' },
       {
-        name: '任务管理',
+        name: '任务统计',
         path: 'task',
         icon: 'ProjectOutlined',
         exact: true,

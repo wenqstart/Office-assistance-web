@@ -82,3 +82,10 @@ export const batchAddUser = (params, formData) => {
     contentType: 'multipart/form-data',
   })
 }
+export const getTaskCountApi = (adminId, data = {}) => {
+  return request(`${admin_api}/getTaskCount`, {
+    method: 'post',
+    params: { adminId },
+    data: data,
+  })
+}
