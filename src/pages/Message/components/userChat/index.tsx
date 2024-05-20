@@ -110,8 +110,13 @@ const UserChat = () => {
   async function invitePeople() {
     // setIsModalOpen(true)
     const res = await getAllMember()
-    console.log('res', Object.entries(res.data))
-    const data = Object.entries(res.data).map(([key, value]) => {
+    console.log('res', res.data)
+    const data = res.data.map((obj) => {
+      let key, value
+      key = Object.keys(obj)?.[0]
+      value = obj[key]
+      console.log('key, value', key, value)
+
       return {
         value: key,
         title: key,
