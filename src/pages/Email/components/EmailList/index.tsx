@@ -1,5 +1,6 @@
 import MySkeleton from '@/components/MySkeleton/index'
 import {
+  getDeletedTaskList,
   getDraftList,
   getUserReceivedTask,
   getUserSendedTask,
@@ -33,7 +34,14 @@ const EmailList: React.FC = (props: TEmailListProp) => {
   const [currentEmailList, setCurrentEmailList] = useState<TEmaliData[]>([])
 
   const emailStateHandler = (listData: any[]) => {
-    setEmailId(listData[0]?.id ?? '')
+    if (listData.length > 0) {
+      setActiveEmail(0)
+      setEmailId(listData[0].id)
+    } else {
+      setActiveEmail(-1)
+      setEmailId('')
+    }
+
     onSelectEmailItem(listData[0]?.id ?? '')
     setCurrentEmailList(
       listData.map((item) => ({
@@ -50,24 +58,33 @@ const EmailList: React.FC = (props: TEmailListProp) => {
     setLoading(true)
     const { data } = await getUserReceivedTask(userInfo.id, 10, 1)
     setLoading(false)
-    emailStateHandler(data.records ?? [])
+    emailStateHandler(data.records.reverse() || [])
   }
 
   const _getUserSendedTask = async () => {
     setLoading(true)
     const { data } = await getUserSendedTask(userInfo.id, 10, 1)
     setLoading(false)
-    emailStateHandler(data.records ?? [])
+    emailStateHandler(data.records.reverse() || [])
   }
 
   const _getDraftList = async () => {
     setLoading(true)
     const { data } = await getDraftList(userInfo.id)
     setLoading(false)
+    emailStateHandler(data.records.reverse() || [])
+  }
+
+  const _getDeletedTaskList = async () => {
+    setLoading(true)
+    const { data } = await getDeletedTaskList(userInfo.id, 10, 1)
+    setLoading(false)
+    emailStateHandler(data.records.reverse() || [])
   }
 
   useEffect(() => {
     setCurrentEmailList([])
+    setActiveEmail(-1)
     switch (activeTab) {
       case TaskListType.RECEIVED_TASK:
         _getUserReceivedTask()
@@ -79,7 +96,7 @@ const EmailList: React.FC = (props: TEmailListProp) => {
         _getUserSendedTask()
         break
       case TaskListType.DELETED_TASK:
-        console.log(TaskListType.DELETED_TASK)
+        _getDeletedTaskList()
         break
       default:
         return

@@ -69,10 +69,12 @@ export type TReplyContent = {
 // 回复接收的任务
 export const replyTask = (userId: string, data: TReplyContent) => {
   return request(`${task_api}/feedback`, {
-    method: 'delete',
-    params: {
-      userId,
-      taskId,
+    method: 'post',
+    params: { userId },
+    data: {
+      taskId: data.taskId,
+      content: data.content,
+      fatherId: null,
     },
   })
 }
@@ -109,9 +111,28 @@ export const getDraftList = (userId: string) => {
   })
 }
 
-// 获取草稿箱任务列表
-export const getAllPeopleApi = () => {
+// 获取组织内所有人
+export const getAllMember = (search?: string) => {
   return request(`${task_api}/getAllPeople`, {
     method: 'get',
   })
 }
+
+// 获取我删除的任务
+export const getDeletedTaskList = (
+  userId: string,
+  size: number,
+  current: number,
+) => {
+  return request(`${task_api}/getTaskListDeleteForMe`, {
+    method: 'get',
+    params: {
+      userId,
+      size,
+      current,
+    },
+  })
+}
+
+// 提醒任务中的人
+export const remindTaskMember = () => {}

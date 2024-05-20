@@ -1,7 +1,7 @@
-import { getTaskDetail } from '@/services/task'
+import { getTaskDetail, replyTask } from '@/services/task'
 import { useModel } from '@umijs/max'
-import { Button } from 'antd'
-import React, { useEffect, useRef, useState } from 'react'
+import { Button, Drawer, Flex, Modal, Upload } from 'antd'
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import styles from './index.less'
 
 enum TaskListType {
@@ -29,6 +29,8 @@ type TEmailContent = {
   updateTime: string
 }
 
+const WangEditor = lazy(() => import('@/components/WangEditor'))
+
 const EmailDetail: React.FC = (props: TEmailDetailProp) => {
   const { id, type } = props
   const { userInfo } = useModel('user', (model: any) => ({
@@ -37,30 +39,61 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
 
   const htmlDetail = useRef()
   const [emailContent, setEmailContent] = useState<TEmailContent>(null)
+  const [showTaskResModal, setShowTaskResModal] = useState(false)
+  const [resContent, setResContent] = useState('')
+  const [drawerLoading, setDrawerLoading] = useState(false)
+  const [openDrawer, setOpenDrawer] = useState(false)
 
   const _getTaskDetail = async () => {
-    if (!id) return
+    if (!id) {
+      setEmailContent(null)
+      return
+    }
     const { code, data } = await getTaskDetail(userInfo.id, id)
 
-    if (code === 200 && data) {
+    if (code === 200 && data && data.content !== null) {
       setEmailContent(data)
+      htmlDetail.current.innerHTML = data?.content || '暂无内容'
+    } else {
+      htmlDetail.current.innerHTML = '暂无内容'
     }
   }
+  const contentChanged = (html) => {
+    setResContent(html)
+  }
+  const taskResponse = () => {
+    setShowTaskResModal(true)
+  }
+  const handleOk = () => {
+    setShowTaskResModal(false)
+  }
 
+  const handleCancel = () => {
+    setShowTaskResModal(false)
+  }
+
+  const confirmReply = async () => {
+    const { data } = await replyTask(userInfo.id, {
+      taskId: id,
+      content: resContent,
+      fatherId: '',
+    })
+  }
+  const showDrawerDetail = () => {
+    setOpenDrawer(true)
+  }
   useEffect(() => {
     _getTaskDetail()
-    console.log(htmlDetail)
-    htmlDetail.current.innerHTML = emailContent?.content || '暂无内容'
   }, [id])
 
   const button = (() => {
     switch (type) {
       case TaskListType.RECEIVED_TASK:
-        return <Button>回复</Button>
+        return <Button onClick={taskResponse}>回复</Button>
       case TaskListType.DRAFTS_TASK:
         return <Button>继续编写</Button>
       case TaskListType.SENDED_TASK:
-        return <Button>查看详情</Button>
+        return <Button onClick={showDrawerDetail}>查看反馈详情</Button>
       case TaskListType.DELETED_TASK:
         return <></>
       default:
@@ -70,15 +103,73 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
 
   return (
     <div className={styles.emailDetail}>
-      <div className={styles.title}>{emailContent?.title || '(暂无主题)'}</div>
+      <div className={styles.title}>
+        <span>{emailContent?.title || '(暂无主题)'}</span>
+        {button}
+      </div>
       <div className={styles.content}>
         <div>
-          <span>{emailContent?.publisher || '无发送人'}</span>
+          <div className={styles.label}>发件人:</div>
+          <div>{emailContent?.publisher ?? '暂无发送人'}</div>
         </div>
+        <div>
+          <div className={styles.label}>收件人:</div>
+          <div className={styles.tagList}>
+            {emailContent?.numberUserList &&
+              emailContent.numberUserList.length > 0 &&
+              emailContent.numberUserList.map((item) => {
+                return (
+                  <span key={item.number} className={styles.tagItem}>
+                    {item.name}
+                  </span>
+                )
+              })}
+          </div>
+        </div>
+        <div>
+          <div className={styles.label}>截止时间:</div>
+          <div>{emailContent?.endTime ?? '暂无发送人'}</div>
+        </div>
+        <div className={styles.label}>任务描述:</div>
         <div ref={htmlDetail}></div>
-        <div></div>
       </div>
-      {button}
+      <Modal
+        open={showTaskResModal}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[]}
+        mask={false}
+      >
+        <Flex gap="small" wrap="wrap">
+          <Button type="primary" disabled={false} onClick={confirmReply}>
+            确认回复
+          </Button>
+          <Upload>
+            <Button>添加附件</Button>
+          </Upload>
+        </Flex>
+        <div className={styles.modalContent}>
+          <Suspense fallback={<div>loading...</div>}>
+            <div className={styles.editor}>
+              <WangEditor
+                contentChanged={(html) => contentChanged(html)}
+                style={{ height: '100%', maxHeight: '400px', overflow: 'auto' }}
+              ></WangEditor>
+            </div>
+          </Suspense>
+        </div>
+      </Modal>
+      <Drawer
+        styles={{ mask: { width: '450px' } }}
+        destroyOnClose
+        title="反馈详情"
+        placement="right"
+        closable={true}
+        mask={false}
+        open={openDrawer}
+        loading={drawerLoading}
+        onClose={() => setOpenDrawer(false)}
+      ></Drawer>
     </div>
   )
 }

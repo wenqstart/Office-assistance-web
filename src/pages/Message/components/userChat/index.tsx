@@ -1,6 +1,6 @@
 import WangEditor from '@/components/WangEditor'
 import { exitGroupApi, pullUserToLabelApi } from '@/services/group.ts'
-import { getAllPeopleApi } from '@/services/task.ts'
+import { getAllMember } from '@/services/task.ts'
 import { getChatId } from '@/utils/tool'
 import { UnorderedListOutlined } from '@ant-design/icons'
 import { useModel } from '@umijs/max'
@@ -109,7 +109,7 @@ const UserChat = () => {
   }
   async function invitePeople() {
     // setIsModalOpen(true)
-    const res = await getAllPeopleApi()
+    const res = await getAllMember()
     console.log('res', Object.entries(res.data))
     const data = Object.entries(res.data).map(([key, value]) => {
       return {

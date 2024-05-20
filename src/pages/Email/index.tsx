@@ -2,7 +2,7 @@ import LazyComponent from '@/components/LazyComponent/index'
 import { deleteTask } from '@/services/task'
 import { useModel } from '@umijs/max'
 import { Button, Flex } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import EmailEditorDialog from './components/EmailEditorDialog'
 import EmailList from './components/EmailList'
 import TabList from './components/TabList'
@@ -15,6 +15,7 @@ const Email: React.FC = () => {
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
   }))
+  const { socketInit } = useModel('taskSocket')
   const tabClick = (tabNum: number) => {
     setActiveTab(tabNum)
   }
@@ -35,6 +36,10 @@ const Email: React.FC = () => {
   const onSelectEmailItem = (id) => {
     setActiveEmailId(id)
   }
+
+  useEffect(() => {
+    socketInit(`/task/${userInfo.id}`)
+  }, [])
 
   return (
     <div className={styles.emailContainer}>

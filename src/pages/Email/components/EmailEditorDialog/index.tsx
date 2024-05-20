@@ -1,4 +1,4 @@
-import { postTask, saveTask } from '@/services/task'
+import { getAllMember, postTask, saveTask } from '@/services/task'
 import { timeFormatter } from '@/utils/format'
 import { useModel } from '@umijs/max'
 import type { GetProps } from 'antd'
@@ -11,7 +11,7 @@ import {
   TreeSelect,
   Upload,
 } from 'antd'
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import styles from './index.less'
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
@@ -23,6 +23,8 @@ const EmailEditorDialog = (props: {
   isShowModal: boolean
   onClose: (val: boolean) => void
 }) => {
+  const { isShowModal, onClose } = props
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -32,6 +34,7 @@ const EmailEditorDialog = (props: {
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
   }))
+  const { onTaskSend } = useModel('taskSocket')
 
   const treeData = [
     {
@@ -66,7 +69,6 @@ const EmailEditorDialog = (props: {
   ]
 
   const onSelectTreeChange = (newValue: string[]) => {
-    console.log('onChange ', newValue)
     setTreeValue(newValue)
   }
 
@@ -76,22 +78,24 @@ const EmailEditorDialog = (props: {
 
   const handleOk = () => {
     setIsModalOpen(false)
-    props.onClose(false)
+    onClose(false)
   }
 
   const handleCancel = () => {
     setIsModalOpen(false)
-    props.onClose(false)
+    onClose(false)
   }
 
   const sendTask = () => {
-    postTask(userInfo.id, {
+    const taskData = {
       title,
       content,
       type: 0,
-      numbers: ['test2'],
+      numbers: ['test1'],
       endTime: timeFormatter(endTime),
-    })
+    }
+    postTask(userInfo.id, taskData)
+    onTaskSend(taskData)
     setIsModalOpen(false)
     props.onClose(false)
   }
@@ -101,7 +105,7 @@ const EmailEditorDialog = (props: {
       content,
       type: 0,
       numbers: [''],
-      endTime,
+      endTime: timeFormatter(endTime),
     })
     setIsModalOpen(false)
     props.onClose(false)
@@ -119,6 +123,15 @@ const EmailEditorDialog = (props: {
     setEndTime(dateString)
   }
 
+  const _getAllMember = async () => {
+    const { data } = await getAllMember()
+  }
+  useEffect(() => {
+    if (isShowModal) {
+      _getAllMember()
+    }
+  }, [isShowModal])
+
   const treeProps = {
     treeData,
     value: treeValue,
@@ -134,7 +147,7 @@ const EmailEditorDialog = (props: {
   return (
     <>
       <Modal
-        open={props.isShowModal}
+        open={isShowModal}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[]}
