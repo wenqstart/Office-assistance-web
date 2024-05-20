@@ -29,46 +29,17 @@ const EmailEditorDialog = (props: {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [endTime, setEndTime] = useState('')
-  const [treeValue, setTreeValue] = useState(['0-0-0'])
+  const [treeValue, setTreeValue] = useState([])
+  const [treeData, setTreeData] = useState([])
 
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
   }))
   const { onTaskSend } = useModel('taskSocket')
 
-  const treeData = [
-    {
-      title: '组织联系人',
-      value: '0-0',
-      key: '0-0',
-      children: [
-        {
-          title: 'Child Node1',
-          value: '0-0-0',
-          key: '0-0-0',
-        },
-      ],
-    },
-    {
-      title: '群组联系人',
-      value: '0-1',
-      key: '0-1',
-      children: [
-        {
-          title: '我创建的群组',
-          value: '0-1-0',
-          key: '0-1-0',
-        },
-        {
-          title: '我加入的群组',
-          value: '0-1-1',
-          key: '0-1-1',
-        },
-      ],
-    },
-  ]
-
   const onSelectTreeChange = (newValue: string[]) => {
+    console.log(newValue)
+
     setTreeValue(newValue)
   }
 
@@ -91,7 +62,7 @@ const EmailEditorDialog = (props: {
       title,
       content,
       type: 0,
-      numbers: ['test1'],
+      numbers: treeValue,
       endTime: timeFormatter(endTime),
     }
     postTask(userInfo.id, taskData)
@@ -104,7 +75,7 @@ const EmailEditorDialog = (props: {
       title,
       content,
       type: 0,
-      numbers: [''],
+      numbers: treeValue,
       endTime: timeFormatter(endTime),
     })
     setIsModalOpen(false)
@@ -125,6 +96,27 @@ const EmailEditorDialog = (props: {
 
   const _getAllMember = async () => {
     const { data } = await getAllMember()
+    const list = Object.values(data[0])[0].map((item) => ({
+      title: item.name,
+      value: item.number,
+    }))
+    setTreeData([
+      {
+        title: '组织联系人',
+        value: '0',
+        key: '0',
+        children: [
+          ...list
+            .map((item, idx) => ({
+              title: item.title,
+              value: item.value,
+              key: item.value,
+            }))
+            .filter((item) => item.value !== userInfo.number),
+        ],
+      },
+    ])
+    console.log(list)
   }
   useEffect(() => {
     if (isShowModal) {
@@ -160,10 +152,7 @@ const EmailEditorDialog = (props: {
           </Button>
           <Button onClick={saveEditTask}>保存</Button>
           <Upload>
-            <Button>附件</Button>
-          </Upload>
-          <Upload>
-            <Button>超大附件</Button>
+            <Button>添加附件</Button>
           </Upload>
         </Flex>
 

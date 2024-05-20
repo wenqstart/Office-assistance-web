@@ -74,3 +74,26 @@
     }
   }
 }
+
+.submitStatusTabs {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+
+  .submitStatusTabsItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid rgb(210, 210, 210);
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 8%),
+      0 3px 6px -4px rgba(0, 0, 0, 12%), 0 9px 28px 8px rgba(0, 0, 0, 5%);
+  }
+
+  .activeStatus {
+    border-color: rgb(34, 119, 255);
+    color: rgb(34, 119, 255);
+  }
+}

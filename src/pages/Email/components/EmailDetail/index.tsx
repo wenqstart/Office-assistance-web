@@ -1,4 +1,4 @@
-import { getTaskDetail, replyTask } from '@/services/task'
+import { getTaskDetail, getTaskReplyInfo, replyTask } from '@/services/task'
 import { useModel } from '@umijs/max'
 import { Button, Drawer, Flex, Modal, Upload } from 'antd'
 import React, { Suspense, lazy, useEffect, useRef, useState } from 'react'
@@ -43,6 +43,8 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
   const [resContent, setResContent] = useState('')
   const [drawerLoading, setDrawerLoading] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState(1)
+  const submitStatusList = ['已提交', '未提交', '已打回']
 
   const _getTaskDetail = async () => {
     if (!id) {
@@ -79,9 +81,19 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
       fatherId: '',
     })
   }
-  const showDrawerDetail = () => {
+  const showDrawerDetail = async () => {
     setOpenDrawer(true)
+    const { data } = await getTaskReplyInfo(userInfo.id, id)
   }
+
+  const clickStatus = (status: number) => {
+    if (status === submitStatus) return
+    setSubmitStatus(status)
+    if (status === 1) {
+    } else {
+    }
+  }
+
   useEffect(() => {
     _getTaskDetail()
   }, [id])
@@ -169,7 +181,23 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
         open={openDrawer}
         loading={drawerLoading}
         onClose={() => setOpenDrawer(false)}
-      ></Drawer>
+      >
+        <div className={styles.submitStatusTabs}>
+          {submitStatusList.map((item, i) => {
+            return (
+              <div
+                key={item}
+                className={`${styles.submitStatusTabsItem} ${
+                  submitStatus === i + 1 ? styles.activeStatus : ''
+                }`}
+                onClick={() => clickStatus(i + 1)}
+              >
+                {item}
+              </div>
+            )
+          })}
+        </div>
+      </Drawer>
     </div>
   )
 }

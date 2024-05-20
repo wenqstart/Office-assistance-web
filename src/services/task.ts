@@ -136,3 +136,13 @@ export const getDeletedTaskList = (
 
 // 提醒任务中的人
 export const remindTaskMember = () => {}
+
+export const getTaskReplyInfo = (userId: string, taskId: string) => {
+  return request(`${task_api}/getFeedback`, {
+    method: 'get',
+    params: {
+      userId,
+      taskId,
+    },
+  })
+}

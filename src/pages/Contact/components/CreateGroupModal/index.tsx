@@ -67,9 +67,9 @@ const CreateGroupModal: React.FC<any> = (props) => {
     const { data } = await createGroup(newGroupInfo.current)
     setBtnLoading(false)
 
-    // getCurrentChatId({ labelId: item.id, group: true })
-    // await getMessageByPoint(userInfo.id, item.id, false)
-    // history.push('/message')
+    getCurrentChatId({ labelId: item.id, group: true })
+    await getMessageByPoint(userInfo.id, item.id, false)
+    history.push('/message')
     closeModal(false)
     dataRef.current = null
   }
