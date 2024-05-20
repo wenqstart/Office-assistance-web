@@ -130,7 +130,8 @@ export default defineConfig({
       // 本地
       // target: 'http://10.60.80.148:8081',
       // 云服务器
-      target: 'http://10.33.7.241:8081',
+      // target: 'http://10.33.7.241:8081',
+      target: 'http://121.40.170.103:8081',
       // 花生壳
       // target: 'http://62137560yh.vicp.fun',
       changeOrigin: true,

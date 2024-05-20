@@ -66,7 +66,8 @@ export default function useMessage() {
         console.log('socketInit ws_ip', ws_ip)
         console.log('socketInit url', url)
         setSocketUrl(url)
-        let wsUrl = `ws://10.33.7.241:8081//${url}`
+        // let wsUrl = `ws://10.33.7.241:8081//${url}`
+        let wsUrl = `ws://121.40.170.103:8081//${url}`
         const socketObj = new WebSocket(wsUrl)
         socketObj.addEventListener('close', socketOnClose)
         socketObj.addEventListener('error', socketOnError)
