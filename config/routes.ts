@@ -85,7 +85,7 @@ const routes: RouteProps[] = [
         },
       },
       {
-        name: '分组管理',
+        name: '部门管理',
         path: 'account',
         icon: 'SnippetsOutlined',
         exact: true,

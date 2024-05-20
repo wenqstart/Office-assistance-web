@@ -12,7 +12,7 @@ const SetGroup: React.FC<PropsWithChildren<SetGroupProps>> = (props) => {
   return (
     <Modal
       destroyOnClose
-      title="设置分组"
+      title="设置部门"
       open={modalVisible}
       onCancel={() => onCancel()}
       footer={null}

@@ -112,7 +112,7 @@ const TableList: React.FC<unknown> = () => {
   }
   const createColumns = [
     {
-      title: '分组名称',
+      title: '部门名称',
       dataIndex: 'name',
       tip: '名称不可重复',
       formItemProps: {
@@ -125,9 +125,9 @@ const TableList: React.FC<unknown> = () => {
       },
     },
     {
-      title: '上级分组',
+      title: '上级部门',
       dataIndex: 'fatherId',
-      tip: '可选择上级分组',
+      tip: '可选择上级部门',
       valueEnum: Object.fromEntries(
         parentGroupList.map((item) => [item.id, item.name]),
       ),
@@ -135,7 +135,7 @@ const TableList: React.FC<unknown> = () => {
   ]
   const columns: any = [
     {
-      title: '分组名称',
+      title: '部门名称',
       dataIndex: 'name',
       // tip: '名称不可重复',
       // hideInSearch: true,
@@ -149,9 +149,9 @@ const TableList: React.FC<unknown> = () => {
       },
     },
     {
-      title: '上级分组',
+      title: '上级部门',
       dataIndex: 'fatherId',
-      tip: '查询某个分组下的子分组',
+      tip: '查询某个部门下的子部门',
       hideInTable: true,
       hideInForm: true,
       renderFormItem: () => (
@@ -205,8 +205,8 @@ const TableList: React.FC<unknown> = () => {
           </a>
           <Divider type="vertical" />
           <Popconfirm
-            title="删除分组"
-            description="确定删除该分组吗?"
+            title="删除部门"
+            description="确定删除该部门吗?"
             onConfirm={() => handleDeleteGroup(record)}
             okText="确定"
             cancelText="取消"
@@ -221,11 +221,11 @@ const TableList: React.FC<unknown> = () => {
   return (
     <PageContainer
       header={{
-        title: '分组管理',
+        title: '部门管理',
       }}
     >
       <ProTable
-        headerTitle="分组列表"
+        headerTitle="部门列表"
         actionRef={actionRef}
         rowKey="id"
         search={{

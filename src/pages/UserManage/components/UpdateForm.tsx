@@ -76,9 +76,9 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
         <ProFormText
           width="md"
           name="number"
-          label="用户学号"
+          label="用户编号"
           readonly
-          rules={[{ required: true, message: '请输入用户学号！' }]}
+          rules={[{ required: true, message: '请输入用户编号！' }]}
         />
         <ProFormText
           width="md"
@@ -138,13 +138,13 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
         initialValues={{
           adminGroupsId: props.values.adminGroupsId,
         }}
-        title="设置分组"
+        title="设置部门"
       >
         <ProFormSelect
           width="md"
           name="adminGroupsId"
-          label="选择分组"
-          rules={[{ required: true, message: '请选择分组！' }]}
+          label="选择部门"
+          rules={[{ required: true, message: '请选择部门！' }]}
           valueEnum={Object.fromEntries(
             props.groupList.map((item) => [item.id, item.name]),
           )}

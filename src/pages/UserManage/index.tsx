@@ -192,7 +192,7 @@ const TableList: React.FC<unknown> = () => {
       },
     },
     {
-      title: '学号',
+      title: '编号',
       dataIndex: 'number',
       // tip: '名称不可重复',
       // hideInSearch: true,
@@ -200,7 +200,7 @@ const TableList: React.FC<unknown> = () => {
         rules: [
           {
             required: true,
-            message: '学号为必填项',
+            message: '编号为必填项',
           },
         ],
       },
@@ -220,15 +220,15 @@ const TableList: React.FC<unknown> = () => {
       },
     },
     {
-      title: '选择分组',
+      title: '选择部门',
       dataIndex: 'adminGroupsId',
-      tip: '选择分组',
+      tip: '选择部门',
       hideInTable: true,
       formItemProps: {
         rules: [
           {
             required: true,
-            message: '请选择分组',
+            message: '请选择部门',
           },
         ],
       },
@@ -300,9 +300,9 @@ const TableList: React.FC<unknown> = () => {
 
   const groupColumns: any = [
     {
-      title: '选择分组',
+      title: '选择部门',
       dataIndex: 'groupId',
-      tip: '选择分组',
+      tip: '选择部门',
       hideInTable: true,
       renderFormItem: () => (
         <Select
@@ -363,14 +363,14 @@ const TableList: React.FC<unknown> = () => {
       ),
     },
     {
-      title: '选择分组',
+      title: '选择部门',
       dataIndex: 'groupId',
-      tip: '选择分组',
+      tip: '选择部门',
       formItemProps: {
         rules: [
           {
             required: true,
-            message: '请选择分组',
+            message: '请选择部门',
           },
         ],
       },
@@ -479,7 +479,7 @@ const TableList: React.FC<unknown> = () => {
               setGroupModalVisible(true)
             }}
           >
-            设置分组
+            设置部门
           </Button>
         </FooterToolbar>
       )}
