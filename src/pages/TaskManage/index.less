@@ -1,0 +1,33 @@
+.wrap {
+  display: flex;
+//   align-items: center;
+  .leftcontent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    .charts {
+      margin-top: 50px;
+      width: 600px;
+    }
+  }
+
+  .userList {
+    flex: 1;
+    border-left: 1px solid #dee0e3;
+    .search {
+        margin-left: 10px;
+      }
+  }
+  .viewItem {
+    padding: 10px !important;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    display: flex;
+    align-items: start !important;
+    &:hover {
+      background-color: #dee0e3;
+    }
+
+  }
+}
