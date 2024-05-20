@@ -3,7 +3,7 @@ import { useModel } from '@umijs/max'
 import ReactECharts from 'echarts-for-react'
 import { useEffect, useState, useRef } from 'react'
 import styles from './index.less'
-import { Avatar, List, Skeleton, DatePicker, Input } from 'antd'
+import { Avatar, List, Skeleton, DatePicker, Input, Divider } from 'antd'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { getUserPage } from '@/services/admin'
 const { RangePicker } = DatePicker
@@ -33,6 +33,9 @@ const TaskManage = () => {
     borderLeft: '2px solid #436FF6',
     backgroundColor: '#EFF0F1',
   }
+  function choosePerson(item: any) {
+    setCurrentUser(item)
+  }
   async function getTaskCount(params = {}) {
     const res = await getTaskCountApi(userId, params)
     console.log('res', res)
@@ -47,9 +50,10 @@ const TaskManage = () => {
     setTotalCount(res.data?.total)
     setPersonList(res.data?.records)
     setData(res.data?.records)
+    choosePerson(res.data?.records[0])
   }
   useEffect(() => {
-    getTaskCount()
+    // getTaskCount()
     getAllUser(current)
   }, [])
   useEffect(() => {
@@ -57,7 +61,7 @@ const TaskManage = () => {
     setPersonList(filterData)
   }, [keyWord])
   useEffect(() => {
-    if (currentUser.number) {
+    if (currentUser && currentUser.number) {
       getTaskCount({
         number: currentUser.number,
         startTime2: startTime,
@@ -85,7 +89,7 @@ const TaskManage = () => {
           radius: '50%',
           data: [
             {
-              value: chartData?.taskSum - chartData?.finishSum || 0,
+              value: (chartData.taskSum - chartData.finishSum) || 0,
               name: '未完成任务',
             },
             { value: chartData?.finishSum || 0, name: '已完成任务' },
@@ -113,7 +117,7 @@ const TaskManage = () => {
       setCurrent(current + 1)
       // 需要手动移动滚动条，防止一直触发
       if (scrollViewRef.current && scrollViewRef.current.el) {
-        scrollViewRef.current.el.scrollTop += 150
+        scrollViewRef.current.el.scrollTop -= 150
       }
       console.log('scrollViewRef', scrollViewRef.current)
       // userChatRef.scrollTop = 30
@@ -125,16 +129,14 @@ const TaskManage = () => {
     setStartTime(dateString[0])
     setEndTime(dateString[1])
   }
-  function choosePerson(item: any) {
-    setCurrentUser(item)
-  }
+
   return (
     <div className={styles.wrap}>
       <div className={styles.leftcontent}>
         <RangePicker showTime onChange={onTimeChange} />
         <ReactECharts className={styles.charts} option={option} />
         {chartData?.title && chartData?.taskSum !== 0 && (
-          <div>任务完成率：{chartData?.finishSum / chartData?.taskSum} %</div>
+          <div>任务完成率：{chartData?.finishSum / chartData?.taskSum * 100} %</div>
         )}
       </div>
       <div
@@ -156,7 +158,7 @@ const TaskManage = () => {
           next={loadMoreData}
           hasMore={personList.length < totalCount}
           loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-          // endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+          endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
           scrollableTarget="userList"
         >
           <List
