@@ -2,12 +2,13 @@ import ImgUploader from '@/components/ImgUploader'
 import { MyBreadcrumb, type TBreadcrumb } from '@/components/MyBreadcrumb'
 import CloseBtn from '@/components/MyButton/CloseBtn'
 import MySkeleton from '@/components/MySkeleton'
+import { getMessageByPoint } from '@/services/chat.ts'
 import { getUserCreateGroup } from '@/services/contact'
 import { createGroup } from '@/services/group.ts'
 import { getOrganizationList, searchContactList } from '@/services/user'
 import { debounce } from '@/utils/utils'
 import { SearchOutlined } from '@ant-design/icons'
-import { useModel } from '@umijs/max'
+import { history, useModel } from '@umijs/max'
 import { Button, Checkbox, Input, Modal } from 'antd'
 import React, { useRef, useState } from 'react'
 import styles from './index.less'
@@ -21,6 +22,7 @@ const CreateGroupModal: React.FC<any> = (props) => {
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
   }))
+  const { getCurrentChatId } = useModel('message')
   const { open, closeModal } = props
   const contactList = [
     {
