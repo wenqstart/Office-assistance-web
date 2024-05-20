@@ -19,7 +19,6 @@ export const EmailListItem = (props: TProps) => {
   const clickItem = () => {
     props.onClick()
   }
-
   return (
     <div
       onClick={clickItem}
@@ -34,6 +33,7 @@ export const EmailListItem = (props: TProps) => {
         <span>{emailData.subtitle}</span>
         <span>{emailData.desc}</span>
       </div>
+      {emailData.taskStatus > -1 && <div className={styles.tag}></div>}
     </div>
   )
 }

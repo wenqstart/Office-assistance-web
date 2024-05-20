@@ -15,7 +15,7 @@ import { Suspense, lazy, useEffect, useState } from 'react'
 import styles from './index.less'
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
-
+const BASE_API = process.env.BASE_API
 const WangEditor = lazy(() => import('@/components/WangEditor'))
 const { SHOW_PARENT } = TreeSelect
 
@@ -31,6 +31,7 @@ const EmailEditorDialog = (props: {
   const [endTime, setEndTime] = useState('')
   const [treeValue, setTreeValue] = useState([])
   const [treeData, setTreeData] = useState([])
+  const [fileUrl, setFileUrl] = useState('')
 
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
@@ -59,11 +60,13 @@ const EmailEditorDialog = (props: {
 
   const sendTask = () => {
     const taskData = {
+      taskId: null,
       title,
       content,
       type: 0,
       numbers: treeValue,
       endTime: timeFormatter(endTime),
+      file: fileUrl,
     }
     postTask(userInfo.id, taskData)
     onTaskSend(taskData)
@@ -72,6 +75,7 @@ const EmailEditorDialog = (props: {
   }
   const saveEditTask = () => {
     saveTask(userInfo.id, {
+      taskId: null,
       title,
       content,
       type: 0,
@@ -82,15 +86,15 @@ const EmailEditorDialog = (props: {
     props.onClose(false)
   }
 
-  const titleChanged = (e) => {
+  const titleChanged = (e: any) => {
     setTitle(e.target.value)
   }
 
-  const contentChanged = (html) => {
+  const contentChanged = (html: any) => {
     setContent(html)
   }
 
-  const onTimeChanged = (value, dateString) => {
+  const onTimeChanged = (value: any, dateString: any) => {
     setEndTime(dateString)
   }
 
@@ -116,7 +120,13 @@ const EmailEditorDialog = (props: {
         ],
       },
     ])
-    console.log(list)
+  }
+  const handleFileUpload = (info) => {
+    if (info.file.status === 'done') {
+      if (info.file.response.code === 200) {
+        setFileUrl(info.file.response.data)
+      }
+    }
   }
   useEffect(() => {
     if (isShowModal) {
@@ -151,7 +161,12 @@ const EmailEditorDialog = (props: {
             发送
           </Button>
           <Button onClick={saveEditTask}>保存</Button>
-          <Upload>
+          <Upload
+            name="file"
+            crossOrigin=""
+            action={`${BASE_API}/file/update`}
+            onChange={handleFileUpload}
+          >
             <Button>添加附件</Button>
           </Upload>
         </Flex>

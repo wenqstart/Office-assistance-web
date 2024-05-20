@@ -23,7 +23,7 @@ enum TaskListType {
 }
 
 const EmailList: React.FC = (props: TEmailListProp) => {
-  const { activeTab, onSelectEmailItem } = props
+  const { activeTab, onSelectEmailItem, deleteStatus } = props
 
   const [activeEmail, setActiveEmail] = useState(-1)
   const [emailId, setEmailId] = useState('')
@@ -58,7 +58,12 @@ const EmailList: React.FC = (props: TEmailListProp) => {
     setLoading(true)
     const { data } = await getUserReceivedTask(userInfo.id, 10, 1)
     setLoading(false)
-    emailStateHandler(data.records.reverse() || [])
+    emailStateHandler(
+      data.records.reverse().map((item, i) => ({
+        ...item,
+        taskStatus: (i + 3) % i,
+      })) || [],
+    )
   }
 
   const _getUserSendedTask = async () => {
@@ -72,14 +77,14 @@ const EmailList: React.FC = (props: TEmailListProp) => {
     setLoading(true)
     const { data } = await getDraftList(userInfo.id)
     setLoading(false)
-    emailStateHandler(data.records.reverse() || [])
+    emailStateHandler(data.records || [])
   }
 
   const _getDeletedTaskList = async () => {
     setLoading(true)
     const { data } = await getDeletedTaskList(userInfo.id, 10, 1)
     setLoading(false)
-    emailStateHandler(data.records.reverse() || [])
+    emailStateHandler(data.records || [])
   }
 
   useEffect(() => {
@@ -101,7 +106,7 @@ const EmailList: React.FC = (props: TEmailListProp) => {
       default:
         return
     }
-  }, [activeTab])
+  }, [activeTab, deleteStatus])
 
   const clickItem = (i: number, id: string) => {
     setActiveEmail(i)

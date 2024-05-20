@@ -12,6 +12,7 @@ const Email: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0)
   const [isShowEmailModal, setIsShowEmailModal] = useState(false)
   const [activeEmailId, setActiveEmailId] = useState('')
+  const [deleteStatus, setDeleteStatus] = useState(false)
   const { userInfo } = useModel('user', (model: any) => ({
     userInfo: model.userInfo,
   }))
@@ -31,6 +32,7 @@ const Email: React.FC = () => {
   const deleteBtn = () => {
     deleteTask(userInfo.id, activeEmailId)
     setActiveEmailId('')
+    setDeleteStatus(!deleteStatus)
   }
 
   const onSelectEmailItem = (id) => {
@@ -38,7 +40,7 @@ const Email: React.FC = () => {
   }
 
   useEffect(() => {
-    socketInit(`/task/${userInfo.id}`)
+    socketInit(`task/${userInfo.id}`)
   }, [])
 
   return (
@@ -53,6 +55,7 @@ const Email: React.FC = () => {
       <div className={styles.content}>
         <TabList tabClick={tabClick}></TabList>
         <EmailList
+          deleteStatus={deleteStatus}
           activeTab={activeTab}
           onSelectEmailItem={onSelectEmailItem}
         ></EmailList>

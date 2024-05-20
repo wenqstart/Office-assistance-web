@@ -3,11 +3,13 @@ const BASE_API = process.env.BASE_API
 const task_api = BASE_API + '/task'
 
 export type TTaskData = {
+  taskId: string | null
   title: string
   content: string
   type: number
   numbers: string[]
   endTime: string
+  file: string | null
 }
 
 // 发布任务(发布邮件)
@@ -61,20 +63,14 @@ export const deleteTask = (userId: string, taskId: string) => {
   })
 }
 
-export type TReplyContent = {
-  taskId: string
-  content: string
-  fatherId: string
-}
 // 回复接收的任务
-export const replyTask = (userId: string, data: TReplyContent) => {
-  return request(`${task_api}/feedback`, {
+export const replyTask = (userId: string, taskId: string, file: string) => {
+  return request(`${BASE_API}/file/uploadFile`, {
     method: 'post',
-    params: { userId },
-    data: {
-      taskId: data.taskId,
-      content: data.content,
-      fatherId: null,
+    params: {
+      userId,
+      taskId,
+      file,
     },
   })
 }
@@ -134,15 +130,46 @@ export const getDeletedTaskList = (
   })
 }
 
-// 提醒任务中的人
-export const remindTaskMember = () => {}
-
+// 获取已提交的列表
 export const getTaskReplyInfo = (userId: string, taskId: string) => {
-  return request(`${task_api}/getFeedback`, {
+  return request(`${BASE_API}/file/getTaskCommitFile`, {
     method: 'get',
     params: {
       userId,
       taskId,
+    },
+  })
+}
+
+// 获取没有提交的列表
+export const getUnCommitList = (userId: string, taskId: string) => {
+  return request(`${BASE_API}/file/getPeopleNoCommit`, {
+    method: 'get',
+    params: {
+      userId,
+      taskId,
+    },
+  })
+}
+
+// 获取被打回列表
+export const getRepulseList = (userId: string, taskId: string) => {
+  return request(`${BASE_API}/file/getTaskBackFile`, {
+    method: 'get',
+    params: {
+      userId,
+      taskId,
+    },
+  })
+}
+
+// 打回材料
+export const repulseTask = (userId: string, fileId: string) => {
+  return request(`${BASE_API}/file/backFile`, {
+    method: 'post',
+    params: {
+      userId,
+      fileId,
     },
   })
 }

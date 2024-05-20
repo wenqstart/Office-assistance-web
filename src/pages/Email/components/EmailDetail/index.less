@@ -11,6 +11,7 @@
   }
 
   .content {
+    position: relative;
     width: 100%;
     margin-top: 20px;
     min-height: 360px;
@@ -23,14 +24,10 @@
     box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 8%),
       0 3px 6px -4px rgba(0, 0, 0, 12%), 0 9px 28px 8px rgba(0, 0, 0, 5%);
 
-    > div:nth-child(1),
-    :nth-child(2),
-    :nth-child(3) {
+    > div {
       display: flex;
-    }
-
-    > div:nth-child(2) {
-      margin: 10px 0;
+      align-items: center;
+      margin-top: 10px;
     }
 
     .label {
@@ -79,13 +76,15 @@
   display: flex;
   width: 100%;
   justify-content: space-around;
+  gap: 20px;
 
   .submitStatusTabsItem {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100px;
-    height: 40px;
+    flex-grow: 1;
+    height: 60px;
+    font-size: 18px;
     border-radius: 8px;
     border: 1px solid rgb(210, 210, 210);
     box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 8%),
@@ -95,5 +94,84 @@
   .activeStatus {
     border-color: rgb(34, 119, 255);
     color: rgb(34, 119, 255);
+  }
+}
+
+.submitList {
+  .listItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    width: 100%;
+    margin-top: 20px;
+    height: 150px;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 8%),
+      0 3px 6px -4px rgba(0, 0, 0, 12%), 0 9px 28px 8px rgba(0, 0, 0, 5%);
+
+    .itemContent {
+      width: 80%;
+
+      .userInfo {
+        > span {
+          font-size: 18px;
+        }
+      }
+    }
+
+    .btnFlex {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+  }
+}
+
+.unSubmitListBox {
+  margin-top: 20px;
+
+  .unSubmitList {
+    .unSubmitListItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      width: 100%;
+      margin-top: 20px;
+      height: 60px;
+      font-size: 18px;
+      background-color: #d7e4f6;
+      border-radius: 8px;
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 8%),
+        0 3px 6px -4px rgba(0, 0, 0, 12%), 0 9px 28px 8px rgba(0, 0, 0, 5%);
+
+      > div {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.empty {
+  margin-top: 100px;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #d7e4f6;
+
+  img {
+    margin-right: 6px;
+    width: 16px;
+    height: 16px;
   }
 }
