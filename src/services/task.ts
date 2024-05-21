@@ -173,3 +173,30 @@ export const repulseTask = (userId: string, fileId: string) => {
     },
   })
 }
+
+// 获取暂存的任务
+export const getSaveTaskInfo = (userId: string, taskId: string) => {
+  return request(`${task_api}/getTaskRecordInfo`, {
+    method: 'get',
+    params: {
+      userId,
+      taskId,
+    },
+  })
+}
+
+// 提醒
+export const remindTask = (
+  userId: string,
+  taskId: string,
+  member: string[],
+) => {
+  return request(`${task_api}/remind`, {
+    method: 'put',
+    params: {
+      userId,
+      taskId,
+    },
+    data: member,
+  })
+}

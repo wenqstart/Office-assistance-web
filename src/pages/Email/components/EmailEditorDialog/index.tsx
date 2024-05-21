@@ -20,10 +20,11 @@ const WangEditor = lazy(() => import('@/components/WangEditor'))
 const { SHOW_PARENT } = TreeSelect
 
 const EmailEditorDialog = (props: {
+  saveData?: any
   isShowModal: boolean
   onClose: (val: boolean) => void
 }) => {
-  const { isShowModal, onClose } = props
+  const { isShowModal, onClose, saveData } = props
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [title, setTitle] = useState('')
@@ -58,7 +59,7 @@ const EmailEditorDialog = (props: {
     onClose(false)
   }
 
-  const sendTask = () => {
+  const sendTask = async () => {
     const taskData = {
       taskId: null,
       title,
@@ -68,19 +69,20 @@ const EmailEditorDialog = (props: {
       endTime: timeFormatter(endTime),
       file: fileUrl,
     }
-    postTask(userInfo.id, taskData)
+    await postTask(userInfo.id, taskData)
     onTaskSend(taskData)
     setIsModalOpen(false)
     props.onClose(false)
   }
-  const saveEditTask = () => {
-    saveTask(userInfo.id, {
-      taskId: null,
+  const saveEditTask = async () => {
+    await saveTask(userInfo.id, {
+      taskId: saveData?.taskId || null,
       title,
       content,
       type: 0,
       numbers: treeValue,
       endTime: timeFormatter(endTime),
+      file: fileUrl,
     })
     setIsModalOpen(false)
     props.onClose(false)
@@ -100,10 +102,6 @@ const EmailEditorDialog = (props: {
 
   const _getAllMember = async () => {
     const { data } = await getAllMember()
-    // const list = Object.values(data[0])[0].map((item) => ({
-    //   title: item.name,
-    //   value: item.number,
-    // }))
     const list = data.map((obj) => {
       let key, value
       key = Object.keys(obj)?.[0]
@@ -131,6 +129,11 @@ const EmailEditorDialog = (props: {
   useEffect(() => {
     if (isShowModal) {
       _getAllMember()
+      if (saveData) {
+        setContent(saveData.content)
+        setTitle(saveData.title)
+        setFileUrl(saveData.file || '')
+      }
     }
   }, [isShowModal])
 
@@ -174,7 +177,7 @@ const EmailEditorDialog = (props: {
         <div className={styles.modalContent}>
           <div className={styles.inputBox}>
             <div className={styles.inputLabel}>主题 :</div>
-            <Input onChange={(e) => titleChanged(e)}></Input>
+            <Input value={title} onChange={(e) => titleChanged(e)}></Input>
           </div>
           <div className={`${styles.inputBox} ${styles.select}`}>
             <div className={styles.inputLabel}>收件人 :</div>
@@ -191,6 +194,7 @@ const EmailEditorDialog = (props: {
           <Suspense fallback={<div>loading...</div>}>
             <div className={styles.editor}>
               <WangEditor
+                content={content}
                 contentChanged={(html) => contentChanged(html)}
                 style={{ height: '100%', maxHeight: '400px', overflow: 'auto' }}
               ></WangEditor>

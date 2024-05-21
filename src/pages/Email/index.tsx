@@ -29,10 +29,12 @@ const Email: React.FC = () => {
     setIsShowEmailModal(val)
   }
 
-  const deleteBtn = () => {
-    deleteTask(userInfo.id, activeEmailId)
-    setActiveEmailId('')
-    setDeleteStatus(!deleteStatus)
+  const deleteBtn = async () => {
+    const { code } = await deleteTask(userInfo.id, activeEmailId)
+    if (code === 200) {
+      setActiveEmailId('')
+      setDeleteStatus(!deleteStatus)
+    }
   }
 
   const onSelectEmailItem = (id) => {

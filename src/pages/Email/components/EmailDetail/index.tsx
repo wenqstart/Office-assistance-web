@@ -2,15 +2,18 @@ import download from '@/assets/icons/download.png'
 import LazyComponent from '@/components/LazyComponent/index'
 import {
   getRepulseList,
+  getSaveTaskInfo,
   getTaskDetail,
   getTaskReplyInfo,
   getUnCommitList,
+  remindTask,
   replyTask,
   repulseTask,
 } from '@/services/task'
 import { useModel } from '@umijs/max'
 import { Button, Drawer, Empty, Flex, Modal, Upload, message } from 'antd'
 import React, { Suspense, lazy, useEffect, useRef, useState } from 'react'
+import EmailEditorDialog from '../EmailEditorDialog'
 import styles from './index.less'
 
 const BASE_API = process.env.BASE_API
@@ -68,7 +71,10 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
       setEmailContent(null)
       return
     }
-    const { code, data } = await getTaskDetail(userInfo.id, id)
+    const { code, data } =
+      type === 1
+        ? await getSaveTaskInfo(userInfo.id, id)
+        : await getTaskDetail(userInfo.id, id)
 
     if (code === 200 && data && data.content !== null) {
       setEmailContent(data)
@@ -190,7 +196,46 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
 
   const pass = () => {}
 
-  const alarm = () => {}
+  const remind = async (account: string) => {
+    const { data, code } = await remindTask(userInfo.id, emailContent.id, [
+      account,
+    ])
+    if (code === 200) {
+      messageApi.open({
+        type: 'success',
+        content: '提醒成功!',
+      })
+    }
+  }
+
+  const remindAll = async () => {
+    const { data, code } = await remindTask(
+      userInfo.id,
+      emailContent.id,
+      unSubmitList.map((item) => item.number),
+    )
+    if (code === 200) {
+      messageApi.open({
+        type: 'success',
+        content: '提醒成功!',
+      })
+    }
+  }
+
+  const [showPreview, setShowPreview] = useState(false)
+  const [previewUrl, setPreviewUrl] = useState('')
+  const previewFile = (fileUrl: string) => {
+    setShowPreview(true)
+    setPreviewUrl(fileUrl)
+  }
+
+  const [showEditor, setShowEditor] = useState(false)
+  const continueEditTask = () => {
+    setShowEditor(true)
+  }
+  const closeModal = (val: boolean) => {
+    setShowEditor(val)
+  }
 
   useEffect(() => {
     _getTaskDetail()
@@ -199,6 +244,9 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
 
   useEffect(() => {
     if (openDrawer) {
+      setSubmitStatus(1)
+      setUnSubmitList([])
+      setRepulsedList([])
       _getTaskReplyInfo()
     }
   }, [openDrawer])
@@ -208,7 +256,7 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
       case TaskListType.RECEIVED_TASK:
         return <Button onClick={taskResponse}>上传材料</Button>
       case TaskListType.DRAFTS_TASK:
-        return <Button>继续编写</Button>
+        return <Button onClick={continueEditTask}>继续编写</Button>
       case TaskListType.SENDED_TASK:
         return <Button onClick={showDrawerDetail}>查看提交情况</Button>
       case TaskListType.DELETED_TASK:
@@ -255,6 +303,7 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
             <a href={emailContent.file}>{`附件: ${
               emailContent.file.split('test/')[1]
             }`}</a>
+            {/* <div onClick={() => previewFile(emailContent.file)}>预览</div> */}
           </div>
         )}
         <div className={styles.label}>任务描述:</div>
@@ -297,7 +346,17 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
           </div>
         </Modal>
         <Drawer
-          style={{ width: '550px !important' }}
+          destroyOnClose
+          title="预览文件"
+          size="large"
+          placement="left"
+          closable={true}
+          open={showPreview}
+          onClose={() => setShowPreview(false)}
+        >
+          <iframe src={previewUrl} width="100%" height="100%"></iframe>
+        </Drawer>
+        <Drawer
           destroyOnClose
           title="提交情况"
           size="large"
@@ -328,11 +387,11 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
                   <div key={item.id} className={styles.listItem}>
                     <div className={styles.itemContent}>
                       <div className={styles.userInfo}>
-                        <span>姓名:</span>
+                        <span>姓名/单位:</span>
                         <span>{item.userName}</span>
                       </div>
                       <div className={styles.userInfo}>
-                        <span>学号:</span>
+                        <span>学号/工号:</span>
                         <span>{item.number}</span>
                       </div>
                       <div className={styles.file}>
@@ -354,18 +413,20 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
           {unSubmitList.length > 0 && (
             <div className={styles.unSubmitListBox}>
               <div>
-                <Button>一键提醒</Button>
+                <Button size="large" onClick={remindAll}>
+                  一键提醒
+                </Button>
               </div>
               <div className={styles.unSubmitList}>
                 {unSubmitList.map((item) => {
                   return (
                     <div key={item.number} className={styles.unSubmitListItem}>
                       <div>
-                        <div>{`学号: ${item.number}`}</div>
-                        <div>{`姓名: ${item.name}`}</div>
+                        <div>{`学号/工号: ${item.number}`}</div>
+                        <div>{`姓名/单位: ${item.name}`}</div>
                       </div>
 
-                      <Button onClick={alarm}>提醒</Button>
+                      <Button onClick={() => remind(item.number)}>提醒</Button>
                     </div>
                   )
                 })}
@@ -379,11 +440,11 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
                   <div key={item.id} className={styles.listItem}>
                     <div className={styles.itemContent}>
                       <div>
-                        <span>姓名:</span>
+                        <span>姓名/单位:</span>
                         <span>{item.userName}</span>
                       </div>
                       <div>
-                        <span>学号:</span>
+                        <span>学号/工号:</span>
                         <span>{item.number}</span>
                       </div>
                       <div className={styles.file}>
@@ -392,7 +453,7 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
                       </div>
                     </div>
                     <div className={styles.btnFlex}>
-                      <Button onClick={alarm}>提醒</Button>
+                      <Button onClick={() => remind(item.number)}>提醒</Button>
                       {/* <Button danger onClick={() => repulse(item.id)}>
                         打回
                       </Button> */}
@@ -406,6 +467,11 @@ const EmailDetail: React.FC = (props: TEmailDetailProp) => {
             !unSubmitList.length &&
             !repulsedList.length && <Empty className={styles.empty}></Empty>}
         </Drawer>
+        <EmailEditorDialog
+          isShowModal={showEditor}
+          onClose={closeModal}
+          saveData={emailContent}
+        ></EmailEditorDialog>
       </LazyComponent>
     </div>
   )
