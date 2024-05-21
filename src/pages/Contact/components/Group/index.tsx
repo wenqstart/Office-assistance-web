@@ -67,7 +67,7 @@ const Group: React.FC = () => {
     const currentTime = Date.now()
     if (lastClickTime && currentTime - lastClickTime < 300) {
       // 如果两次点击之间的时间小于300毫秒，则视为双击
-      getCurrentChatId({ labelId: item.id, group: true })
+      // getCurrentChatId({ labelId: item.id, group: true })
       await getMessageByPoint(userInfo.id, item.id, false)
       history.push('/message')
       setLastClickTime(null) // 重置时间，以便下一次双击检测

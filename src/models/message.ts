@@ -1,8 +1,8 @@
 import { getChatContent, getUsersChatId } from '@/services/chat'
 import { clearMsgList, getChatId, getMsgList } from '@/utils/tool'
 import { useModel } from '@umijs/max'
-import { useCallback, useEffect, useRef, useState } from 'react'
 import moment from 'moment'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 const ws_ip =
   process.env.NODE_ENV === 'development'
@@ -109,22 +109,10 @@ export default function useMessage() {
       const messageRes = JSON.parse(e.data || '{}')
       console.log('messageList', getMsgList())
       const { content, createTime, sayNumber, readCount, name } = messageRes
-      // const chatId = messageRes[0].split('=')[1]
-      // const name = messageRes[1].split('=')[1]
-      // const number = messageRes[3].split('=')[1]
-      // const content = messageRes[4].split('=')[1]
-      // const createTime = messageRes[6].split('=')[1]
-      // console.log('{chatId, name, number, content, createTime}', {
-      //   chatId,
-      //   name,
-      //   number,
-      //   content,
-      //   createTime,
-      // })
-      // console.log([...messageList, { chatId, name, number, content, createTime }])
-      // console.log('messageList', messageList)
-      // getChatMessage()
+
       const curMsgList = getMsgList()
+      console.log('curMsgList', curMsgList)
+
       setMessageList(
         curMsgList.concat([
           {
@@ -150,18 +138,6 @@ export default function useMessage() {
           ]),
         ),
       )
-      // setMessageList([...messageList, {chatId, name, number, content, createTime}])
-      // if (e.data === 'success') return
-      // const alarmCountObj = JSON.parse(e.data)
-      // const paramNameArr = Object.keys(alarmCountObj)
-      // // 判断返回告警保持连接否则断开连接
-      // if (paramNameArr[1] === 'UNREAD_WARN_COUNT') {
-      //   sendCount.current += 1
-      //   setAlarmCount(alarmCountObj.UNREAD_WARN_COUNT)
-      //   setMessageCount(alarmCountObj.UNREAD_MSG_COUNT)
-      // } else {
-      //   sendCount.current = 0
-      // }
     },
     [messageList],
   )
@@ -197,6 +173,8 @@ export default function useMessage() {
         console.log('socketInit url', url)
         setSocketUrl(url)
         let wsUrl = `ws://${ws_ip}/${url}`
+        // let wsUrl = `ws://10.33.7.241:8081/${url}`
+
         const socketObj = new WebSocket(wsUrl)
         socketObj.addEventListener('close', socketOnClose)
         socketObj.addEventListener('error', socketOnError)
