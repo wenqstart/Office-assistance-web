@@ -1,3 +1,3 @@
 # README
 
-`@umijs/max` 模板项目，更多功能参考 [Umi Max 简介](https://umijs.org/docs/max/introduce)
+使用 yjs、luckysheet等技术实现多人文档协同在线编辑的功能，支持 excel、md、txt文件
